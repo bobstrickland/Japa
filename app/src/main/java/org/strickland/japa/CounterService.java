@@ -17,7 +17,9 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -44,6 +46,9 @@ public class CounterService extends Service {
     // ── Notification ─────────────────────────────────────────────────────────
     static final String CHANNEL_ID   = "japa_counter_channel";
     static final int    NOTIF_ID     = 1;
+
+    // ── Wake-lock idle timeout ────────────────────────────────────────────────
+    private static final long WAKE_IDLE_MS = 5 * 60 * 1000L; // 5 minutes
 
     // ── SharedPreferences keys ────────────────────────────────────────────────
     static final String PREFS_NAME            = "JapaPrefs";
@@ -78,6 +83,10 @@ public class CounterService extends Service {
 
     // ── Hardware / OS resources ───────────────────────────────────────────────
     private PowerManager.WakeLock wakeLock;
+    private final Handler         wakeHandler           = new Handler(Looper.getMainLooper());
+    private final Runnable        releaseWakeLockOnIdle = () -> {
+        if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+    };
     private MediaSession          mediaSession;
     private Vibrator              vibrator;
     private SoundPool             soundPool;
@@ -157,6 +166,7 @@ public class CounterService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        wakeHandler.removeCallbacks(releaseWakeLockOnIdle);
         try { unregisterReceiver(volumeReceiver); } catch (Exception ignored) {}
         if (mediaSession != null) {
             mediaSession.setActive(false);
@@ -180,6 +190,7 @@ public class CounterService extends Service {
     public synchronized void countBead() {
         if (!isRunning || isComplete) return;
 
+        resetWakeLockTimeout();
         currentBead++;
 
         boolean roundComplete = (currentBead >= totalBeads);
@@ -203,6 +214,7 @@ public class CounterService extends Service {
         currentBead  = 0;
         currentRound = 1;
         isComplete   = false;
+        resetWakeLockTimeout();
         updateNotification();
         notifyCallback();
     }
@@ -235,6 +247,18 @@ public class CounterService extends Service {
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JapaCounter:WakeLock");
         wakeLock.acquire();
+        scheduleWakeLockRelease();
+    }
+
+    /** Restart the 5-minute idle countdown, re-acquiring the lock if it lapsed. */
+    private void resetWakeLockTimeout() {
+        if (wakeLock != null && !wakeLock.isHeld()) wakeLock.acquire();
+        scheduleWakeLockRelease();
+    }
+
+    private void scheduleWakeLockRelease() {
+        wakeHandler.removeCallbacks(releaseWakeLockOnIdle);
+        wakeHandler.postDelayed(releaseWakeLockOnIdle, WAKE_IDLE_MS);
     }
 
     /**
