@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Deep navy background — easy on eyes in the dark -->
+    <color name="bg_dark">#FF0F0F1A</color>
+
+    <!-- Primary text — bright white -->
+    <color name="text_primary">#FFFFFFFF</color>
+
+    <!-- Secondary text / labels — muted -->
+    <color name="text_secondary">#FFB0B0C8</color>
+
+    <!-- Hint / footnote text -->
+    <color name="text_hint">#FF606080</color>
+
+    <!-- Accent: warm gold for the progress ring and active elements -->
+    <color name="accent_gold">#FFC9A84C</color>
+
+    <!-- Track colour for the progress ring background -->
+    <color name="track_dim">#FF2A2A40</color>
+
+    <!-- Material theme colours -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Japa Counter</string>
+    <string name="settings_title">Settings</string>
+
+    <!-- Main screen -->
+    <string name="of_total">/ %d</string>
+    <string name="round_label">Round %d / %d</string>
+    <string name="complete">✓ Complete</string>
+    <string name="reset">Reset</string>
+    <string name="hint_volume">Press either volume button to count</string>
+    <string name="reset_toast">Counter reset</string>
+    <string name="settings_applied">Settings applied — counter reset</string>
+
+    <!-- Settings screen -->
+    <string name="label_beads">Beads per round</string>
+    <string name="label_rounds">Total rounds</string>
+    <string name="label_feedback">Feedback on each bead</string>
+    <string name="feedback_vibration">Vibration</string>
+    <string name="feedback_sound">Sound (place mp3 files in res/raw/)</string>
+    <string name="feedback_none">None</string>
+    <string name="sound_note">To enable sound: add bead_sound.mp3 and round_sound.mp3 to app/src/main/res/raw/ then rebuild.</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="settings_saved">Settings saved</string>
+
+    <!-- Notification -->
+    <string name="notif_progress">Bead %d/%d · Round %d/%d</string>
+    <string name="notif_complete">All rounds complete!</string>
+</resources>
