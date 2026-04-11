@@ -25,6 +25,10 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
@@ -56,6 +60,9 @@ public class CounterService extends Service {
     static final String PREF_TOTAL_ROUNDS     = "totalRounds";
     static final String PREF_FEEDBACK         = "feedback";
     static final String PREF_SETTINGS_CHANGED = "settingsChanged";
+    static final String PREF_CURRENT_BEAD     = "currentBead";
+    static final String PREF_CURRENT_ROUND    = "currentRound";
+    static final String PREF_SAVED_DATE       = "savedDate";
 
     static final String FEEDBACK_VIBRATION = "vibration";
     static final String FEEDBACK_SOUND     = "sound";
@@ -205,6 +212,7 @@ public class CounterService extends Service {
             }
         }
 
+        saveState();
         updateNotification();
         notifyCallback();
     }
@@ -215,6 +223,7 @@ public class CounterService extends Service {
         currentRound = 1;
         isComplete   = false;
         resetWakeLockTimeout();
+        saveState();
         updateNotification();
         notifyCallback();
     }
@@ -241,6 +250,32 @@ public class CounterService extends Service {
         SharedPreferences p = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         totalBeads  = p.getInt(PREF_TOTAL_BEADS,  108);
         totalRounds = p.getInt(PREF_TOTAL_ROUNDS,  16);
+
+        String savedDate = p.getString(PREF_SAVED_DATE, "");
+        String today     = todayString();
+        if (today.equals(savedDate)) {
+            // Same day — restore saved position
+            currentBead  = p.getInt(PREF_CURRENT_BEAD,  0);
+            currentRound = p.getInt(PREF_CURRENT_ROUND, 1);
+        } else {
+            // New day — start fresh
+            currentBead  = 0;
+            currentRound = 1;
+        }
+        isComplete = false;
+    }
+
+    public synchronized void saveState() {
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putInt(PREF_CURRENT_BEAD,  currentBead)
+                .putInt(PREF_CURRENT_ROUND, currentRound)
+                .putString(PREF_SAVED_DATE, todayString())
+                .apply();
+    }
+
+    private static String todayString() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
     }
 
     private void acquireWakeLock() {

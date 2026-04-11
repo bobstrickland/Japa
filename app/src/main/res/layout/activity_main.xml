@@ -5,22 +5,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
     tools:context=".MainActivity">
 
-    <!-- Settings icon — bottom-right -->
+    <!-- Krishna background image -->
+    <ImageView
+        android:id="@+id/bg_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/krishna"
+        android:contentDescription=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Semi-transparent overlay so UI text stays readable -->
+    <View
+        android:id="@+id/bg_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#99000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Settings icon — top-right -->
     <ImageButton
         android:id="@+id/btn_settings"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/settings_title"
         android:src="@drawable/ic_settings"
         android:tint="@color/text_secondary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- App title -->
     <TextView
@@ -33,14 +56,12 @@
         android:textSize="14sp"
         android:letterSpacing="0.15"
         android:textAllCaps="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_settings"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- ─── Circular bead progress + centred count ─────────────────────────── -->
 
-    <!-- The progress indicator sits in a FrameLayout so the text can be
-         overlaid exactly in its centre. -->
     <FrameLayout
         android:id="@+id/frame_counter"
         android:layout_width="260dp"
@@ -123,12 +144,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_round" />
 
-    <!-- Hint text at bottom -->
+    <!-- Hint text above buttons -->
     <TextView
         android:id="@+id/tv_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/hint_volume"
         android:textColor="@color/text_hint"
         android:textSize="12sp"
@@ -136,18 +157,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Reset button -->
+    <!-- Reset button — bottom-left -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_reset"
         style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="160dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="32dp"
         android:text="@string/reset"
         android:textColor="@color/text_secondary"
         app:strokeColor="@color/track_dim"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_exit"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Exit button — bottom-right -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_exit"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/exit"
+        android:textColor="@color/accent_gold"
+        app:strokeColor="@color/accent_gold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_reset" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,10 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_beads"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.1"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
                 android:layout_marginBottom="8dp" />
 
             <NumberPicker
@@ -60,10 +58,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_rounds"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.1"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
                 android:layout_marginBottom="8dp" />
 
             <NumberPicker
@@ -84,10 +80,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_feedback"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.1"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup

@@ -7,6 +7,7 @@
     <string name="round_label">Round %d / %d</string>
     <string name="complete">✓ Complete</string>
     <string name="reset">Reset</string>
+    <string name="exit">Exit</string>
     <string name="hint_volume">Press either volume button to count</string>
     <string name="reset_toast">Counter reset</string>
     <string name="settings_applied">Settings applied — counter reset</string>

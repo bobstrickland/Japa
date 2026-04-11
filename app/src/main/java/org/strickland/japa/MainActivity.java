@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private TextView tvComplete;
     private LinearLayout roundDotsLayout;
     private MaterialButton btnReset;
+    private MaterialButton btnExit;
     private ImageButton    btnSettings;
 
     // ── Notification permission (Android 13+) ─────────────────────────────────
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         tvComplete     = findViewById(R.id.tv_complete);
         roundDotsLayout= findViewById(R.id.round_dots);
         btnReset       = findViewById(R.id.btn_reset);
+        btnExit        = findViewById(R.id.btn_exit);
         btnSettings    = findViewById(R.id.btn_settings);
 
         btnReset.setOnClickListener(v -> {
@@ -88,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 Toast.makeText(this, R.string.reset_toast, Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnExit.setOnClickListener(v -> exitApp());
 
         btnSettings.setOnClickListener(v ->
                 startActivity(new Intent(this, SettingsActivity.class)));
@@ -204,6 +208,20 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
 
         // Round progress dots (shown when ≤ 24 rounds)
         buildRoundDots(currentRound, totalRounds);
+    }
+
+    /**
+     * Save state, stop the foreground service (disconnects volume buttons), and finish.
+     */
+    private void exitApp() {
+        if (isBound) {
+            counterService.saveState();
+            counterService.setCallback(null);
+            unbindService(serviceConn);
+            isBound = false;
+        }
+        stopService(new Intent(this, CounterService.class));
+        finish();
     }
 
     /**
