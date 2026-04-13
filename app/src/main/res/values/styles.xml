@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="NumberPickerEditTextStyle">
+        <item name="android:textSize">24sp</item> <!-- Desired text size in sp -->
+        <item name="android:textColor">@color/text_primary</item> <!-- Optional: Custom color -->
+        <item name="android:padding">8dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+
+
+        <item name="android:layout_width">125dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:layout_height">100dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:layout_gravity">center_horizontal</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:background">@color/accent_gold</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+
+    </style>
+</resources>

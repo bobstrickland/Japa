@@ -213,7 +213,7 @@ public class CounterService extends Service {
         }
 
         saveState();
-        updateNotification();
+//        updateNotification();
         notifyCallback();
     }
 
@@ -224,7 +224,7 @@ public class CounterService extends Service {
         isComplete   = false;
         resetWakeLockTimeout();
         saveState();
-        updateNotification();
+//        updateNotification();
         notifyCallback();
     }
 
@@ -359,7 +359,14 @@ public class CounterService extends Service {
 
     private void vibrateFor(boolean roundComplete) {
         if (vibrator == null || !vibrator.hasVibrator()) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            VibrationEffect effect = roundComplete
+                    // Double-pulse: short tap followed by a longer thud
+                    ? VibrationEffect.createWaveform(new long[]{0, 60, 60, 140}, -1)
+                    // Single pulse — createOneShot applies device-tuned DEFAULT_AMPLITUDE
+                    : VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK);
+            vibrator.vibrate(effect);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             VibrationEffect effect = roundComplete
                     // Double-pulse: short tap followed by a longer thud
                     ? VibrationEffect.createWaveform(new long[]{0, 60, 60, 140}, -1)
@@ -419,8 +426,8 @@ public class CounterService extends Service {
                 .build();
     }
 
-    private void updateNotification() {
-        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (nm != null) nm.notify(NOTIF_ID, buildNotification());
-    }
+//    private void updateNotification() {
+//        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        if (nm != null) nm.notify(NOTIF_ID, buildNotification());
+//    }
 }

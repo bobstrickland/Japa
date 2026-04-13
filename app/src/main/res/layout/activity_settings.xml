@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/bg_dark">
+    android:background="@color/bg_dark"
+    android:orientation="vertical">
 
     <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/bg_dark"
+        app:navigationIconTint="@color/text_secondary"
         app:title="@string/settings_title"
-        app:titleTextColor="@color/text_primary"
-        app:navigationIconTint="@color/text_secondary" />
+        app:titleTextColor="@color/text_primary" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,57 +32,78 @@
             android:paddingBottom="32dp">
 
             <!-- ── Beads per round ──────────────────────────────────────────── -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_beads"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp" />
 
-            <NumberPicker
-                android:id="@+id/picker_beads"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/text_primary" />
-
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/track_dim"
-                android:layout_marginVertical="24dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/label_beads"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <NumberPicker
+                    android:id="@+id/picker_beads"
+                    style="@style/NumberPickerEditTextStyle"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
 
             <!-- ── Rounds ───────────────────────────────────────────────────── -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_rounds"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp" />
-
-            <NumberPicker
-                android:id="@+id/picker_rounds"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/text_primary" />
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/track_dim"
-                android:layout_marginVertical="24dp" />
+                android:layout_marginVertical="24dp"
+                android:background="@color/track_dim" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/label_rounds"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <NumberPicker
+                    android:id="@+id/picker_rounds"
+                    style="@style/NumberPickerEditTextStyle"
+                    />
+            </LinearLayout>
 
             <!-- ── Feedback type ────────────────────────────────────────────── -->
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="24dp"
+                android:background="@color/track_dim" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="@string/label_feedback"
                 android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp" />
+                android:textSize="18sp" />
 
             <RadioGroup
                 android:id="@+id/radio_feedback"
@@ -94,9 +115,9 @@
                     android:id="@+id/radio_vibration"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:checked="true"
                     android:text="@string/feedback_vibration"
-                    android:textColor="@color/text_primary"
-                    android:checked="true" />
+                    android:textColor="@color/text_primary" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/radio_sound"
@@ -115,35 +136,31 @@
             </RadioGroup>
 
             <!-- Sound file note -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/sound_note"
-                android:textColor="@color/text_hint"
-                android:textSize="12sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/track_dim"
-                android:layout_marginVertical="24dp" />
+                android:layout_marginVertical="24dp"
+                android:background="@color/track_dim" />
 
             <!-- ── Buttons ──────────────────────────────────────────────────── -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="end">
+                android:gravity="end"
+                android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_cancel"
-                    style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:text="@string/cancel"
-                    android:textColor="@color/text_secondary" />
+                    app:backgroundTint="#E91E63" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_save"

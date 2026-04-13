@@ -21,6 +21,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Semi-transparent overlay so UI text stays readable -->
+
+    <!-- Settings icon — top-right -->
+
+    <!-- App title -->
+
     <View
         android:id="@+id/bg_overlay"
         android:layout_width="0dp"
@@ -28,67 +33,71 @@
         android:background="#99000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <!-- Settings icon — top-right -->
     <ImageButton
         android:id="@+id/btn_settings"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="20dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/settings_title"
         android:src="@drawable/ic_settings"
-        android:tint="@color/text_secondary"
+        app:tint="@color/accent_gold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- App title -->
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/app_name"
-        android:textColor="@color/text_secondary"
-        android:textSize="14sp"
-        android:letterSpacing="0.15"
-        android:textAllCaps="true"
-        app:layout_constraintEnd_toStartOf="@id/btn_settings"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- ─── Circular bead progress + centred count ─────────────────────────── -->
 
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:letterSpacing="0.15"
+        android:text="@string/app_name"
+        android:textAllCaps="true"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@id/btn_settings"
+        app:layout_constraintHorizontal_bias="0.654"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <FrameLayout
         android:id="@+id/frame_counter"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="75dp"
         app:layout_constraintBottom_toTopOf="@id/tv_round"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.45">
+        app:layout_constraintVertical_bias="0.45"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <!-- Current bead number — large -->
 
         <org.strickland.japa.BeadNecklaceView
             android:id="@+id/progress_bead"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:rotationX="180" />
 
-        <!-- Current bead number — large -->
         <TextView
             android:id="@+id/tv_bead_current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
+            android:fontFamily="sans-serif-light"
             android:textColor="@color/text_primary"
             android:textSize="72sp"
-            android:fontFamily="sans-serif-light"
             tools:text="45" />
 
         <!-- "/ 108" label below the number -->
@@ -103,28 +112,24 @@
             tools:text="/ 108" />
 
         <!-- Complete overlay -->
-        <TextView
-            android:id="@+id/tv_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="110dp"
-            android:text="@string/complete"
-            android:textColor="@color/accent_gold"
-            android:textSize="13sp"
-            android:textAllCaps="true"
-            android:letterSpacing="0.1"
-            android:visibility="invisible"
-            tools:visibility="visible" />
 
     </FrameLayout>
 
     <!-- Round label -->
+
+    <!-- Round progress dots -->
+
+    <!-- Hint text above buttons -->
+
+    <!-- Reset button — bottom-left -->
+
+    <!-- Exit button — bottom-right -->
+
     <TextView
         android:id="@+id/tv_round"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:textColor="@color/text_secondary"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -132,32 +137,31 @@
         app:layout_constraintTop_toBottomOf="@id/frame_counter"
         tools:text="Round 3 / 16" />
 
-    <!-- Round progress dots -->
     <LinearLayout
         android:id="@+id/round_dots"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_round" />
 
-    <!-- Hint text above buttons -->
     <TextView
         android:id="@+id/tv_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:text="@string/hint_volume"
-        android:textColor="@color/text_hint"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@id/btn_reset"
+        android:textColor="@color/accent_gold"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="681dp"
+        tools:ignore="MissingConstraints" />
 
-    <!-- Reset button — bottom-left -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_reset"
         style="@style/Widget.Material3.Button.OutlinedButton"
@@ -165,15 +169,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="64dp"
         android:text="@string/reset"
-        android:textColor="@color/text_secondary"
-        app:strokeColor="@color/track_dim"
+        android:textColor="@color/accent_gold"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_exit"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="@color/accent_gold"
+        app:strokeWidth="2dp" />
 
-    <!-- Exit button — bottom-right -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_exit"
         style="@style/Widget.Material3.Button.OutlinedButton"
@@ -181,12 +187,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="64dp"
         android:text="@string/exit"
         android:textColor="@color/accent_gold"
-        app:strokeColor="@color/accent_gold"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_reset" />
+        app:layout_constraintStart_toEndOf="@id/btn_reset"
+        app:strokeColor="@color/accent_gold"
+        app:strokeWidth="2dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

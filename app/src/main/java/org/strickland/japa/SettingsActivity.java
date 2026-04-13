@@ -63,12 +63,12 @@ public class SettingsActivity extends AppCompatActivity {
     private void setupPickers() {
         // Beads per round: 1 – 1000
         pickerBeads.setMinValue(1);
-        pickerBeads.setMaxValue(1000);
+        pickerBeads.setMaxValue(200);
         pickerBeads.setWrapSelectorWheel(false);
 
         // Rounds: 1 – 108
         pickerRounds.setMinValue(1);
-        pickerRounds.setMaxValue(108);
+        pickerRounds.setMaxValue(50);
         pickerRounds.setWrapSelectorWheel(false);
     }
 

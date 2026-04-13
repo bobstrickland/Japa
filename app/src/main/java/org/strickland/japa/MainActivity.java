@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private TextView tvBeadCurrent;
     private TextView tvBeadOf;
     private TextView tvRound;
-    private TextView tvComplete;
     private LinearLayout roundDotsLayout;
     private MaterialButton btnReset;
     private MaterialButton btnExit;
@@ -78,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         tvBeadCurrent  = findViewById(R.id.tv_bead_current);
         tvBeadOf       = findViewById(R.id.tv_bead_of);
         tvRound        = findViewById(R.id.tv_round);
-        tvComplete     = findViewById(R.id.tv_complete);
         roundDotsLayout= findViewById(R.id.round_dots);
         btnReset       = findViewById(R.id.btn_reset);
         btnExit        = findViewById(R.id.btn_exit);
@@ -203,9 +201,6 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         // Round text
         tvRound.setText(getString(R.string.round_label, currentRound, totalRounds));
 
-        // Completion banner
-        tvComplete.setVisibility(isComplete ? View.VISIBLE : View.INVISIBLE);
-
         // Round progress dots (shown when ≤ 24 rounds)
         buildRoundDots(currentRound, totalRounds);
     }
@@ -221,7 +216,12 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             isBound = false;
         }
         stopService(new Intent(this, CounterService.class));
-        finish();
+        //finish();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask(); // Closes activity and removes from Recents list
+        } else {
+            finishAffinity(); // Closes all activities in the task
+        }
     }
 
     /**
