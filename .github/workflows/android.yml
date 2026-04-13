@@ -35,6 +35,10 @@ jobs:
       - name: Build release APK
         run: ./gradlew assembleRelease
 
+      - name: list directory
+        run: |
+          ls -l app/build/outputs/apk/release
+
       - name: Sign APK
         run: |
           jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
