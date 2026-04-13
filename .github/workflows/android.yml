@@ -29,6 +29,15 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
+
+      - name: Decode everything
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE }}"
+          echo "${{ secrets.KEYSTORE_PASSWORD }}"
+          echo "${{ secrets.KEY_PASSWORD }}"
+          echo "${{ secrets.KEY_ALIAS }}"
+
+        
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > my-release-key.jks
 
