@@ -38,6 +38,7 @@ jobs:
       - name: list directory
         run: |
           ls -l app/build/outputs/apk/release
+          ls -l app/build/outputs/bundle/release
 
       - name: Sign APK
         run: |
