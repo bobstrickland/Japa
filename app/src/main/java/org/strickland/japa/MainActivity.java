@@ -105,6 +105,10 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 serviceConn, Context.BIND_AUTO_CREATE);
     }
 
+    public void onTaskRemoved(Intent rootIntent) {
+        exitApp();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
