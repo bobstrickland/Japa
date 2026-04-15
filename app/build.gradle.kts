@@ -1,6 +1,5 @@
 import java.util.Properties
 import java.io.FileInputStream
-import java.io.FileOutputStream
 
 // 1. Function to read the current version code
 fun getVersionCode(): Int {
@@ -8,29 +7,12 @@ fun getVersionCode(): Int {
     if (versionPropsFile.exists()) {
         val versionProps = Properties()
         versionProps.load(FileInputStream(versionPropsFile))
-        val nextCode = versionProps.getProperty("VERSION_CODE").toInt() + 1
-        versionProps["VERSION_CODE"] = nextCode.toString()
-        versionProps.store(FileOutputStream(versionPropsFile), null)
-        println("Version code incremented to $nextCode")
         return versionProps.getProperty("VERSION_CODE").toInt()
     } else {
         println("version.properties does not exist")
     }
     return 1 // Default if file doesn't exist
 }
-
-// 2. Custom task to increment the version code
-//tasks.register("incrementVersionCode") {
-//    doLast {
-//        val versionPropsFile = file("version.properties")
-//        val versionProps = Properties()
-//        versionProps.load(FileInputStream(versionPropsFile))
-//        val nextCode = versionProps.getProperty("VERSION_CODE").toInt() + 1
-//        versionProps["VERSION_CODE"] = nextCode.toString()
-//        versionProps.store(FileOutputStream(versionPropsFile), null)
-//        println("Version code incremented to $nextCode")
-//    }
-//}
 
 plugins {
     alias(libs.plugins.android.application)
