@@ -33,7 +33,7 @@ jobs:
       - name: Update GitHub Variable
         run: gh variable set VERSION_NUMBER --body ${{ vars.VERSION_NUMBER }}+1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Build release AAB
         run: |
