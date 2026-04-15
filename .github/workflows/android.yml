@@ -34,13 +34,8 @@ jobs:
 
       - name: Build release APK
         run: |
-          ./gradlew bundleRelease
           ./gradlew assembleRelease
-
-      - name: list directory
-        run: |
-          ls -l app/build/outputs/apk/release
-          ls -l app/build/outputs/bundle/release
+        # ./gradlew bundleRelease
 
       - name: Sign AAB
         run: |
@@ -50,32 +45,32 @@ jobs:
             app/build/outputs/bundle/release/app-release.aab ${{ secrets.KEY_ALIAS }}
 
 
-      - name: Sign APK
-        run: |
-          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-            -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
-            -keypass ${{ secrets.KEY_PASSWORD }} \
-            app/build/outputs/apk/release/app-release-unsigned.apk ${{ secrets.KEY_ALIAS }}
+      #- name: Sign APK
+      #  run: |
+      #    jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+      #      -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+      #      -keypass ${{ secrets.KEY_PASSWORD }} \
+      #      app/build/outputs/apk/release/app-release-unsigned.apk ${{ secrets.KEY_ALIAS }}
 
       - name: Verify signature
         run: |
-          jarsigner -verify -verbose -certs app/build/outputs/apk/release/app-release-unsigned.apk
           jarsigner -verify -verbose -certs app/build/outputs/bundle/release/app-release.aab
+        #  jarsigner -verify -verbose -certs app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Align APK
         run: |
           $ANDROID_HOME/build-tools/34.0.0/zipalign -v 4 \
-            app/build/outputs/apk/release/app-release-unsigned.apk \
-            app/build/outputs/apk/release/app-release.apk
-          $ANDROID_HOME/build-tools/34.0.0/zipalign -v 4 \
             app/build/outputs/bundle/release/app-release.aab \
             app/build/outputs/bundle/release/app-release-signed.aab
+        #  $ANDROID_HOME/build-tools/34.0.0/zipalign -v 4 \
+        #    app/build/outputs/apk/release/app-release-unsigned.apk \
+        #    app/build/outputs/apk/release/app-release.apk
 
-      - name: Upload Signed AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: Signed-APK
-          path: app/build/outputs/apk/release/app-release.apk
+      #- name: Upload Signed AAB
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: Signed-APK
+      #    path: app/build/outputs/apk/release/app-release.apk
 
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
@@ -84,3 +79,4 @@ jobs:
           packageName: org.strickland.japa
           releaseFiles: app/build/outputs/bundle/release/app-release-signed.aab
           track: internal # Options: internal, alpha, beta, production
+          status: draft

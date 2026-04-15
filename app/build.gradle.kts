@@ -1,3 +1,35 @@
+import java.util.Properties
+import java.io.FileInputStream
+import java.io.FileOutputStream
+
+// 1. Function to read the current version code
+fun getVersionCode(): Int {
+    val versionPropsFile = file("version.properties")
+    if (versionPropsFile.exists()) {
+        val versionProps = Properties()
+        versionProps.load(FileInputStream(versionPropsFile))
+        val nextCode = versionProps.getProperty("VERSION_CODE").toInt() + 1
+        versionProps["VERSION_CODE"] = nextCode.toString()
+        versionProps.store(FileOutputStream(versionPropsFile), null)
+        println("Version code incremented to $nextCode")
+        return versionProps.getProperty("VERSION_CODE").toInt()
+    }
+    return 1 // Default if file doesn't exist
+}
+
+// 2. Custom task to increment the version code
+//tasks.register("incrementVersionCode") {
+//    doLast {
+//        val versionPropsFile = file("version.properties")
+//        val versionProps = Properties()
+//        versionProps.load(FileInputStream(versionPropsFile))
+//        val nextCode = versionProps.getProperty("VERSION_CODE").toInt() + 1
+//        versionProps["VERSION_CODE"] = nextCode.toString()
+//        versionProps.store(FileOutputStream(versionPropsFile), null)
+//        println("Version code incremented to $nextCode")
+//    }
+//}
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -10,8 +42,8 @@ android {
         applicationId = "org.strickland.japa"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "0.2"
+        versionCode = getVersionCode()
+        versionName = "0.0.$versionCode"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
