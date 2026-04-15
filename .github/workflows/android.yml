@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.BUILD_JAPA_TOKEN }}
 
       - name: Set Version Code
-        run: echo VERSION_CODE=${{ vars.VERSION_NUMBER }} > app/version.properties
+        run: echo VERSION_CODE=$((${{ vars.VERSION_NUMBER }}+1)) > app/version.properties
 
       - name: Build release AAB
         run: |
