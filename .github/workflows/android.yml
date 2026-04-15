@@ -23,18 +23,11 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
 
-#      - name: Run Unit Tests
-#        run: ./gradlew test
-#
-#      - name: Build Debug APK
-#        run: ./gradlew assembleDebug
-
       - name: Decode keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
 
       - name: Build release AAB
         run: |
-        #  ./gradlew assembleRelease
           ./gradlew bundleRelease
 
       - name: Sign AAB
