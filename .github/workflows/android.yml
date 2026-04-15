@@ -38,7 +38,6 @@ jobs:
       - name: Build release AAB
         run: |
           ./gradlew bundleRelease
-          
 
       - name: Sign AAB
         run: |
@@ -63,5 +62,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: org.strickland.japa
           releaseFiles: app/build/outputs/bundle/release/app-release-signed.aab
-          tracks: alpha # Options: internal, qa, alpha, beta, production
+          track: alpha # Options: internal, qa, alpha, beta, production
           status: completed # completed, inProgress, halted, draft

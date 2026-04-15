@@ -7,7 +7,7 @@ fun getVersionCode(): Int {
     if (versionPropsFile.exists()) {
         val versionProps = Properties()
         versionProps.load(FileInputStream(versionPropsFile))
-        val nextCode = versionProps.getProperty("VERSION_CODE").toInt() + 1
+        val nextCode = versionProps.getProperty("VERSION_CODE").toInt()
         println("Version code set to $nextCode")
         return nextCode
     } else {
