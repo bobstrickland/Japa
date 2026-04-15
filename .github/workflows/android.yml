@@ -31,9 +31,9 @@ jobs:
         run: echo VERSION_CODE=${{ vars.VERSION_NUMBER }} > app/version.properties
 
       - name: Update GitHub Variable
-        run: gh variable set VERSION_NUMBER --body ${{ vars.VERSION_NUMBER }}+1
+        run: gh variable set VERSION_NUMBER --body $((${{ vars.VERSION_NUMBER }}+1))
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.BUILD_JAPA_TOKEN }}
 
       - name: Build release AAB
         run: |
