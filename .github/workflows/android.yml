@@ -10,6 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -26,9 +27,18 @@ jobs:
       - name: Decode keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
 
+      - name: foo
+        run: echo VERSION_CODE=${{ vars.VERSION_NUMBER }} > app/version.properties
+
+      - name: Update GitHub Variable
+        run: gh variable set VERSION_NUMBER --body ${{ vars.VERSION_NUMBER }}+1
+        #env:
+        #  GITHUB_TOKEN: ${{ secrets.YOUR_PAT_OR_TOKEN }}
+
       - name: Build release AAB
         run: |
           ./gradlew bundleRelease
+          
 
       - name: Sign AAB
         run: |
@@ -50,7 +60,7 @@ jobs:
           jarsigner -verify -verbose -certs app/build/outputs/bundle/release/app-release.aab
         #  jarsigner -verify -verbose -certs app/build/outputs/apk/release/app-release-unsigned.apk
 
-      - name: Align APK
+      - name: Align AAB
         run: |
           $ANDROID_HOME/build-tools/34.0.0/zipalign -v 4 \
             app/build/outputs/bundle/release/app-release.aab \
