@@ -13,6 +13,8 @@ fun getVersionCode(): Int {
         versionProps.store(FileOutputStream(versionPropsFile), null)
         println("Version code incremented to $nextCode")
         return versionProps.getProperty("VERSION_CODE").toInt()
+    } else {
+        println("version.properties does not exist")
     }
     return 1 // Default if file doesn't exist
 }
