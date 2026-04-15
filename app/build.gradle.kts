@@ -16,6 +16,21 @@ fun getVersionCode(): Int {
     return 1 // Default if file doesn't exist
 }
 
+fun getVersionName(): String {
+    val versionPropsFile = file("version.properties")
+    if (versionPropsFile.exists()) {
+        val versionProps = Properties()
+        versionProps.load(FileInputStream(versionPropsFile))
+        val nextCode = versionProps.getProperty("VERSION_CODE")
+        val versionName = versionProps.getProperty("VERSION_NAME")+nextCode
+        println("Version Name set to $versionName")
+        return versionName
+    } else {
+        println("version.properties does not exist")
+    }
+    return "0." // Default if file doesn't exist
+}
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -29,7 +44,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = getVersionCode()
-        versionName = "0.0.$versionCode"
+        versionName = getVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
