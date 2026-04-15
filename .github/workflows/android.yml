@@ -27,13 +27,13 @@ jobs:
       - name: Decode keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
 
+      - name: Set Version Code
+        run: echo VERSION_CODE=$((${{ vars.VERSION_NUMBER }}+1)) > app/version.properties
+
       - name: Increment GitHub Variable
         run: gh variable set VERSION_NUMBER --body $((${{ vars.VERSION_NUMBER }}+1))
         env:
           GITHUB_TOKEN: ${{ secrets.BUILD_JAPA_TOKEN }}
-
-      - name: Set Version Code
-        run: echo VERSION_CODE=$((${{ vars.VERSION_NUMBER }}+1)) > app/version.properties
 
       - name: Build release AAB
         run: |
