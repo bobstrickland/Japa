@@ -9,49 +9,49 @@
     </string-array>
     <string-array name="om_namah_shivaya_mantra">
         <item>Om Namah Shivaya</item>
-        <item>omnamahshivaya</item>
+        <item>om_namaha_shivaya</item>
         <item>shiva</item>
         <item>Om Namah Shivaya</item>
     </string-array>
     <string-array name="om_mani_padme_hum_mantra">
         <item>Om Mani Padme Hum</item>
-        <item>missing</item>
+        <item>om_mani_padme_hum</item>
         <item>buddha</item>
         <item>Om Mani Padme Hum</item>
     </string-array>
     <string-array name="gayatri_mantra">
         <item>Gayatri</item>
-        <item>missing</item>
+        <item>gayatri</item>
         <item>gayatri</item>
         <item>Om bhūr bhuvaḥ svaḥ, tat savitur vareṇyaṃ, bhargo devasya dhīmahi, dhiyo yo naḥ pracodayāt.</item>
     </string-array>
     <string-array name="mahamrutyunjay">
         <item>Mahamrutyunjay</item>
-        <item>missing</item>
+        <item>mahamrityunjaya</item>
         <item>shiva</item>
         <item>Om Tryambakam yajaamahe sugandhim pushtivardhanam\nUrvaarukamiva bandhanaan-mrityormuksheeya maamritaat</item>
     </string-array>
     <string-array name="saraswati_mantra">
         <item>Saraswati Beej</item>
-        <item>missing</item>
+        <item>saraswati_beej</item>
         <item>saraswati</item>
         <item>Om Aim Saraswatyai Namah</item>
     </string-array>
     <string-array name="ganesh_mantra">
         <item>Ganesha Mantra</item>
-        <item>missing</item>
+        <item>ganesha</item>
         <item>ganesha</item>
         <item>Om Gam Ganapataye Namah</item>
     </string-array>
     <string-array name="vishnu_mantra">
         <item>Vishnu Mantra</item>
-        <item>missing</item>
         <item>vishnu</item>
-        <item>Om Namo Bhagavate Vasudevaya</item>
+        <item>vishnu</item>
+        <item>Om Namo Bhagavate Vasudevaya Namaha</item>
     </string-array>
     <string-array name="shanti_mantra">
         <item>Shanti</item>
-        <item>missing</item>
+        <item>shanti</item>
         <item>durga</item>
         <item>Om Shanti, Shanti, Shanti</item>
     </string-array>
