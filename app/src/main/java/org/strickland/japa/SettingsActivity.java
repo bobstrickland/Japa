@@ -14,6 +14,8 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.slider.Slider;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -33,6 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
     private NumberPicker pickerBeads;
     private NumberPicker pickerRounds;
     private Spinner      spinnerMantra;
+    private Slider       sliderMantraSpeed;
     private RadioGroup   radioFeedback;
     private MaterialButton btnSave;
     private MaterialButton btnCancel;
@@ -69,8 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         pickerBeads   = findViewById(R.id.picker_beads);
         pickerRounds  = findViewById(R.id.picker_rounds);
-        spinnerMantra = findViewById(R.id.spinner_mantra);
-        radioFeedback = findViewById(R.id.radio_feedback);
+        spinnerMantra      = findViewById(R.id.spinner_mantra);
+        sliderMantraSpeed  = findViewById(R.id.slider_mantra_speed);
+        radioFeedback      = findViewById(R.id.radio_feedback);
         btnSave       = findViewById(R.id.btn_save);
         btnCancel     = findViewById(R.id.btn_cancel);
 
@@ -145,6 +149,7 @@ public class SettingsActivity extends AppCompatActivity {
         pickerBeads.setValue( p.getInt(CounterService.PREF_TOTAL_BEADS,  108));
         pickerRounds.setValue(p.getInt(CounterService.PREF_TOTAL_ROUNDS,  16));
         spinnerMantra.setSelection(p.getInt(CounterService.PREF_MANTRA_INDEX, 0));
+        sliderMantraSpeed.setValue(p.getInt(CounterService.PREF_MANTRA_SPEED, 0));
 
         String feedback = p.getString(CounterService.PREF_FEEDBACK, CounterService.FEEDBACK_VIBRATION);
         switch (feedback) {
@@ -182,6 +187,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .putInt(CounterService.PREF_TOTAL_ROUNDS, rounds)
                 .putString(CounterService.PREF_FEEDBACK,  feedback)
                 .putInt(CounterService.PREF_MANTRA_INDEX, mantaIndex)
+                .putInt(CounterService.PREF_MANTRA_SPEED, (int) sliderMantraSpeed.getValue())
                 .putBoolean(CounterService.PREF_SETTINGS_CHANGED, true)
                 .apply();
 

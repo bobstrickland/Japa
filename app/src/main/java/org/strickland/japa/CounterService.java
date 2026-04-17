@@ -67,6 +67,7 @@ public class CounterService extends Service {
     static final String PREF_CURRENT_ROUND    = "currentRound";
     static final String PREF_SAVED_DATE       = "savedDate";
     static final String PREF_MANTRA_INDEX     = "mantaIndex";
+    static final String PREF_MANTRA_SPEED     = "mantaSpeed"; // 0–100, default 50 = 1.0x rate
 
     static final String FEEDBACK_VIBRATION = "vibration";
     static final String FEEDBACK_SOUND     = "sound";
@@ -427,10 +428,12 @@ public class CounterService extends Service {
 
     private void playSound(boolean roundComplete) {
         if (soundPool == null) return;
+        int speedPref = 50+getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_SPEED, 50);
+        float rate = 0.5f + (speedPref / 100.0f);
         if (roundComplete && roundSoundId != -1) {
-            soundPool.play(roundSoundId, 1f, 1f, 0, 0, 1f);
+            soundPool.play(roundSoundId, 1f, 1f, 0, 0, rate);
         } else if (beadSoundId != -1) {
-            soundPool.play(beadSoundId, 1f, 1f, 0, 0, 1f);
+            soundPool.play(beadSoundId, 1f, 1f, 0, 0, rate);
         }
     }
 

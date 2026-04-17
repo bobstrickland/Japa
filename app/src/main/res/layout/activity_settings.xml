@@ -62,7 +62,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginVertical="24dp"
+                android:layout_marginVertical="10dp"
                 android:background="@color/track_dim" />
 
             <LinearLayout
@@ -93,7 +93,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginVertical="24dp"
+                android:layout_marginVertical="10dp"
                 android:background="@color/track_dim" />
 
             <LinearLayout
@@ -120,10 +120,68 @@
 
             </LinearLayout>
 
+            <!-- ── Mantra speed ─────────────────────────────────────────────── -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginVertical="24dp"
+                android:layout_marginVertical="10dp"
+                android:background="@color/track_dim" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/label_mantra_speed"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&#8722;"
+                    android:textColor="@color/text_primary"
+                    android:textSize="22sp"
+                    android:layout_marginEnd="4dp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/slider_mantra_speed"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="-50"
+                    android:valueTo="50"
+                    android:stepSize="1"
+                    android:value="0" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:textColor="@color/text_primary"
+                    android:textSize="22sp"
+                    android:layout_marginStart="4dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+            <!-- ── Feedback ──────────────────────────────────────────────────── -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
                 android:background="@color/track_dim" />
 
             <TextView
@@ -143,7 +201,7 @@
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/radio_vibration"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:checked="true"
                     android:text="@string/feedback_vibration"
                     android:textColor="@color/text_primary" />
@@ -151,14 +209,14 @@
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/radio_sound"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:text="@string/feedback_sound"
                     android:textColor="@color/text_primary" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/radio_none"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:text="@string/feedback_none"
                     android:textColor="@color/text_primary" />
 
@@ -169,7 +227,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginVertical="24dp"
+                android:layout_marginVertical="10dp"
                 android:background="@color/track_dim" />
 
             <!-- ── Buttons ──────────────────────────────────────────────────── -->

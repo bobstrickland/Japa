@@ -55,7 +55,22 @@
         <item>durga</item>
         <item>Om Shanti, Shanti, Shanti</item>
     </string-array>
-
+    <string-array name="shree_ram">
+        <item>Rama Taraka</item>
+        <item>shree_ram</item>
+        <item>rama</item>
+        <item>Shri Ram Jay Ram Jay Jay Ram</item>
+    </string-array>
+    <!-- title  -->
+    <!-- mp3  -->
+    <!-- image  -->
+    <!-- mantra  -->
+    <string-array name="hanuman_moola">
+        <item>Hanuman Moola</item>
+        <item>hanuman</item>
+        <item>hanuman</item>
+        <item>Om Shri Hanumate Namah</item>
+    </string-array>
     <array name="mantra_array">
         <item>@array/hare_krishna_mantra</item>
         <item>@array/om_namah_shivaya_mantra</item>
@@ -66,6 +81,8 @@
         <item>@array/saraswati_mantra</item>
         <item>@array/vishnu_mantra</item>
         <item>@array/shanti_mantra</item>
+        <item>@array/shree_ram</item>
+        <item>@array/hanuman_moola</item>
     </array>
 
 </resources>
