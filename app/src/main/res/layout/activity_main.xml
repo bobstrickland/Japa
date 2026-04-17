@@ -198,4 +198,18 @@
         app:strokeColor="@color/accent_gold"
         app:strokeWidth="2dp" />
 
+    <TextView
+        android:id="@+id/mantraText"
+        android:layout_width="355dp"
+        android:layout_height="89dp"
+        android:layout_marginBottom="128dp"
+        android:text="Hare Krishna Hare Krishna\nKrishna Krishna Hare Hare\nHare Rama Hare Rama\nRama Rama Hare Hare"
+        android:textAlignment="center"
+        android:textColor="@color/accent_gold"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,11 +15,11 @@
     <!-- Settings screen -->
     <string name="label_beads">Beads per round</string>
     <string name="label_rounds">Total rounds</string>
+    <string name="label_mantra">Mantra</string>
     <string name="label_feedback">Feedback on each bead</string>
     <string name="feedback_vibration">Vibration</string>
     <string name="feedback_sound">Sound</string>
     <string name="feedback_none">None</string>
-    <string name="sound_note">To enable sound: add bead_sound.mp3 and round_sound.mp3 to app/src/main/res/raw/ then rebuild.</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="settings_saved">Settings saved</string>

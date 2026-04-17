@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+
+import java.lang.ref.WeakReference;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,14 +31,18 @@ import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity implements CounterCallback {
 
+    static WeakReference<MainActivity> instance;
+
     private CounterService counterService;
     private boolean        isBound = false;
 
     // Views
+    private ImageView        bgImage;
     private BeadNecklaceView progressBead;
     private TextView tvBeadCurrent;
     private TextView tvBeadOf;
     private TextView tvRound;
+    private TextView mantraText;
     private LinearLayout roundDotsLayout;
     private MaterialButton btnReset;
     private MaterialButton btnExit;
@@ -73,10 +81,12 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
 
+        bgImage        = findViewById(R.id.bg_image);
         progressBead   = findViewById(R.id.progress_bead);
         tvBeadCurrent  = findViewById(R.id.tv_bead_current);
         tvBeadOf       = findViewById(R.id.tv_bead_of);
         tvRound        = findViewById(R.id.tv_round);
+        mantraText = findViewById(R.id.mantraText);
         roundDotsLayout= findViewById(R.id.round_dots);
         btnReset       = findViewById(R.id.btn_reset);
         btnExit        = findViewById(R.id.btn_exit);
@@ -94,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         btnSettings.setOnClickListener(v ->
                 startActivity(new Intent(this, SettingsActivity.class)));
 
+        instance = new WeakReference<>(this);
+        applyMantraBackground();
         requestNotificationPermissionIfNeeded();
         ensureServiceRunning();
     }
@@ -118,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             if (p.getBoolean(CounterService.PREF_SETTINGS_CHANGED, false)) {
                 p.edit().putBoolean(CounterService.PREF_SETTINGS_CHANGED, false).apply();
                 counterService.reloadPreferences();
+                applyMantraBackground();
                 Toast.makeText(this, R.string.settings_applied, Toast.LENGTH_SHORT).show();
             }
         }
@@ -163,6 +176,26 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
+
+    void applyMantraBackground() {
+        SharedPreferences p = getSharedPreferences(CounterService.PREFS_NAME, MODE_PRIVATE);
+        int index = p.getInt(CounterService.PREF_MANTRA_INDEX, 0);
+        TypedArray mantras = getResources().obtainTypedArray(R.array.mantra_array);
+        if (index >= 0 && index < mantras.length()) {
+            int subId = mantras.getResourceId(index, 0);
+            if (subId != 0) {
+                String[] sub = getResources().getStringArray(subId);
+                if (sub.length > 2) {
+                    int resId = getResources().getIdentifier(sub[2], "drawable", getPackageName());
+                    if (resId != 0) bgImage.setImageResource(resId);
+                }
+                if (sub.length > 3) {
+                    mantraText.setText(sub[3]);
+                }
+            }
+        }
+        mantras.recycle();
+    }
 
     private void ensureServiceRunning() {
         Intent intent = new Intent(this, CounterService.class);
@@ -213,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
      * Save state, stop the foreground service (disconnects volume buttons), and finish.
      */
     private void exitApp() {
+        instance = null;
         if (isBound) {
             counterService.saveState();
             counterService.setCallback(null);

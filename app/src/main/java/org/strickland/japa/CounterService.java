@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.session.MediaSession;
@@ -24,6 +25,8 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.provider.Settings;
+import android.view.Display;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,6 +66,7 @@ public class CounterService extends Service {
     static final String PREF_CURRENT_BEAD     = "currentBead";
     static final String PREF_CURRENT_ROUND    = "currentRound";
     static final String PREF_SAVED_DATE       = "savedDate";
+    static final String PREF_MANTRA_INDEX     = "mantaIndex";
 
     static final String FEEDBACK_VIBRATION = "vibration";
     static final String FEEDBACK_SOUND     = "sound";
@@ -234,6 +238,8 @@ public class CounterService extends Service {
      */
     public synchronized void reloadPreferences() {
         loadPreferences();
+        int index = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_INDEX, 0);
+        updateBeadSound(getMantraBeadSound(index));
         reset();
     }
 
@@ -276,6 +282,17 @@ public class CounterService extends Service {
 
     private static String todayString() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
+    }
+
+    private boolean foo() {
+        DisplayManager dm = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+        for (Display display : dm.getDisplays()) {
+            if (display.getState() == Display.STATE_ON) { //            if (display.getState() != Display.STATE_OFF) {
+                boolean f = Settings.canDrawOverlays(this);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void acquireWakeLock() {
@@ -340,11 +357,41 @@ public class CounterService extends Service {
     }
 
     private void initSoundPool() {
-        soundPool = new SoundPool.Builder().setMaxStreams(2).build();
-        int beadRes  = getResources().getIdentifier("bead_sound",  "raw", getPackageName());
-        int roundRes = getResources().getIdentifier("round_sound", "raw", getPackageName());
-        if (beadRes  != 0) beadSoundId  = soundPool.load(this, beadRes,  1);
-        if (roundRes != 0) roundSoundId = soundPool.load(this, roundRes, 1);
+        int index = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_INDEX, 0);
+        updateSoundPool(getMantraBeadSound(index), null);
+    }
+
+    String getMantraBeadSound(int index) {
+        android.content.res.TypedArray mantras = getResources().obtainTypedArray(R.array.mantra_array);
+        String sound = "harekrishna";
+        if (index >= 0 && index < mantras.length()) {
+            int subId = mantras.getResourceId(index, 0);
+            if (subId != 0) {
+                String[] sub = getResources().getStringArray(subId);
+                if (sub.length > 1) sound = sub[1];
+            }
+        }
+        mantras.recycle();
+        return sound;
+    }
+
+    void updateSoundPool(String beadSound, String roundSound) {
+        beadSoundId = -1;
+        roundSoundId = -1;
+        if (soundPool == null) {
+            soundPool = new SoundPool.Builder().setMaxStreams(2).build();
+        }
+        if (beadSound != null) {
+            int beadRes = getResources().getIdentifier(beadSound, "raw", getPackageName());
+            if (beadRes != 0) beadSoundId = soundPool.load(this, beadRes, 1);
+        }
+        if (roundSound != null) {
+            int roundRes = getResources().getIdentifier(roundSound, "raw", getPackageName());
+            if (roundRes != 0) roundSoundId = soundPool.load(this, roundRes, 1);
+        }
+    }
+    void updateBeadSound(String beadSound) {
+        updateSoundPool(beadSound, null);
     }
 
     private void deliverFeedback(boolean roundComplete) {
