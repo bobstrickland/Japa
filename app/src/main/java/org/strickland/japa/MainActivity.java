@@ -4,8 +4,10 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -27,11 +29,30 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+
 import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity implements CounterCallback {
 
     static WeakReference<MainActivity> instance;
+
+    private static final int UPDATE_REQUEST_CODE = 100;
+
+    private AppUpdateManager appUpdateManager;
+    private final InstallStateUpdatedListener installStateListener = state -> {
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            showUpdateReadySnackbar();
+        }
+    };
 
     private CounterService counterService;
     private boolean        isBound = false;
@@ -108,6 +129,26 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         applyMantraBackground();
         requestNotificationPermissionIfNeeded();
         ensureServiceRunning();
+
+
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            int verCode = pInfo.versionCode;
+            TextView appVersionView = findViewById(R.id.appVersionView);
+            appVersionView.setText(version+" -- "+verCode);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+
+
+
+
+        checkForUpdate();
     }
 
     @Override
@@ -134,15 +175,31 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 Toast.makeText(this, R.string.settings_applied, Toast.LENGTH_SHORT).show();
             }
         }
+        appUpdateManager.registerListener(installStateListener);
+        // Prompt to complete if an update was already downloaded (e.g. app was backgrounded)
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
+            if (info.installStatus() == InstallStatus.DOWNLOADED) {
+                showUpdateReadySnackbar();
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        appUpdateManager.unregisterListener(installStateListener);
         if (isBound) {
             counterService.setCallback(null);
             unbindService(serviceConn);
             isBound = false;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == UPDATE_REQUEST_CODE && resultCode != RESULT_OK) {
+            // Update was cancelled or failed — silently ignore
         }
     }
 
@@ -240,6 +297,34 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
 
         // Round progress dots (shown when ≤ 24 rounds)
         buildRoundDots(currentRound, totalRounds);
+    }
+
+    private void checkForUpdate() {
+
+        TextView appVersionView = findViewById(R.id.appVersionView);
+        appVersionView.setText(appVersionView.getText()+" - C" );
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
+            if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    && info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                appVersionView.setText(appVersionView.getText()+" - Y" );
+                try {
+                    //appUpdateManager.startUpdateFlowForResult(info, AppUpdateType.FLEXIBLE, this, UPDATE_REQUEST_CODE);
+                    appUpdateManager.startUpdateFlowForResult(info, this, AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),UPDATE_REQUEST_CODE);
+           } catch (IntentSender.SendIntentException e) {
+                    // Update flow could not start — silently ignore
+                }
+            } else {
+                appVersionView.setText(appVersionView.getText()+" - N" );
+            }
+        });
+    }
+
+    private void showUpdateReadySnackbar() {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                "Update downloaded. Restart to apply.",
+                Snackbar.LENGTH_INDEFINITE
+        ).setAction("Restart", v -> appUpdateManager.completeUpdate()).show();
     }
 
     /**
