@@ -65,5 +65,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: org.strickland.japa
           releaseFiles: app/build/outputs/bundle/release/app-release-signed.aab
-          track: alpha # Options: internal, qa, alpha, beta, production
+          tracks: alpha # Options: internal, qa, alpha, beta, production
           status: completed # completed, inProgress, halted, draft
