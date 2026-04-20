@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private MaterialButton btnReset;
     private MaterialButton btnExit;
     private ImageButton    btnSettings;
+    private ImageButton    btnInfo;
 
     // ── Notification permission (Android 13+) ─────────────────────────────────
     private final ActivityResultLauncher<String> notifPermLauncher =
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         btnReset       = findViewById(R.id.btn_reset);
         btnExit        = findViewById(R.id.btn_exit);
         btnSettings    = findViewById(R.id.btn_settings);
+        btnInfo        = findViewById(R.id.btn_info);
 
         btnReset.setOnClickListener(v -> {
             if (isBound) {
@@ -124,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
 
         btnSettings.setOnClickListener(v ->
                 startActivity(new Intent(this, SettingsActivity.class)));
+
+        btnInfo.setOnClickListener(v ->
+                startActivity(new Intent(this, InfoActivity.class)));
 
         instance = new WeakReference<>(this);
         applyMantraBackground();
@@ -310,8 +315,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 try {
                     //appUpdateManager.startUpdateFlowForResult(info, AppUpdateType.FLEXIBLE, this, UPDATE_REQUEST_CODE);
                     appUpdateManager.startUpdateFlowForResult(info, this, AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),UPDATE_REQUEST_CODE);
-           } catch (IntentSender.SendIntentException e) {
-                    // Update flow could not start — silently ignore
+                } catch (IntentSender.SendIntentException e) {
+                    appVersionView.setText(appVersionView.getText()+" - X "+e.getLocalizedMessage() );
                 }
             } else {
                 appVersionView.setText(appVersionView.getText()+" - N" );

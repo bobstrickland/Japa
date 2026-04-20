@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Japa Counter</string>
     <string name="settings_title">Settings</string>
+    <string name="info_title">Info</string>
+    <string name="close">Close</string>
 
     <!-- Main screen -->
     <string name="of_total">/ %d</string>
