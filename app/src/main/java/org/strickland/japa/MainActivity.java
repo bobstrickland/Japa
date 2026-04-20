@@ -136,16 +136,6 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         ensureServiceRunning();
 
 
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            int verCode = pInfo.versionCode;
-            TextView appVersionView = findViewById(R.id.appVersionView);
-            appVersionView.setText(version+" -- "+verCode);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
 
 
         appUpdateManager = AppUpdateManagerFactory.create(this);
@@ -306,20 +296,15 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
 
     private void checkForUpdate() {
 
-        TextView appVersionView = findViewById(R.id.appVersionView);
-        appVersionView.setText(appVersionView.getText()+" - C" );
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
             if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                appVersionView.setText(appVersionView.getText()+" - Y" );
                 try {
                     //appUpdateManager.startUpdateFlowForResult(info, AppUpdateType.FLEXIBLE, this, UPDATE_REQUEST_CODE);
                     appUpdateManager.startUpdateFlowForResult(info, this, AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),UPDATE_REQUEST_CODE);
                 } catch (IntentSender.SendIntentException e) {
-                    appVersionView.setText(appVersionView.getText()+" - X "+e.getLocalizedMessage() );
                 }
             } else {
-                appVersionView.setText(appVersionView.getText()+" - N" );
             }
         });
     }

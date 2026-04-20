@@ -1,5 +1,7 @@
 package org.strickland.japa;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.widget.ImageButton;
@@ -15,6 +17,7 @@ import java.io.InputStreamReader;
 public class InfoActivity extends AppCompatActivity {
 
     private TextView tvInfoContent;
+    private TextView appVersionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +25,15 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
 
         tvInfoContent = findViewById(R.id.tv_info_content);
-
+        appVersionName = findViewById(R.id.appVersionName);
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String versionName = pInfo.versionName;
+            //int verCode = pInfo.versionCode;
+            appVersionName.setText("v"+versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         String text = "nothing here.";
         AssetManager assetManager = getAssets();
         try (InputStream is = assetManager.open("info.txt");
@@ -37,13 +48,7 @@ public class InfoActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-
         tvInfoContent.setText(text);
-
         ImageButton btnClose = findViewById(R.id.btn_close_info);
         btnClose.setOnClickListener(v -> finish());
     }

@@ -52,7 +52,7 @@
     <string-array name="shanti_mantra">
         <item>Shanti</item>
         <item>shanti</item>
-        <item>durga</item>
+        <item>durga_shanti</item>
         <item>Om Shanti, Shanti, Shanti</item>
     </string-array>
     <string-array name="shree_ram">
@@ -71,6 +71,12 @@
         <item>hanuman</item>
         <item>Om Shri Hanumate Namah</item>
     </string-array>
+    <string-array name="hanuman_beeja">
+        <item>Hanuman Beeja</item>
+        <item>hanuman_beeja</item>
+        <item>hanuman</item>
+        <item>Om Aim Bhreem Hanumate Shree Ram Dootaaya Namaha</item>
+    </string-array>
     <array name="mantra_array">
         <item>@array/hare_krishna_mantra</item>
         <item>@array/om_namah_shivaya_mantra</item>
@@ -83,6 +89,7 @@
         <item>@array/shanti_mantra</item>
         <item>@array/shree_ram</item>
         <item>@array/hanuman_moola</item>
+        <item>@array/hanuman_beeja</item>
     </array>
 
 </resources>
