@@ -1,0 +1,3 @@
+Mantra text can be set to either Roman or Devanagari
+Mantra audio updated
+Misc other minor fixes
