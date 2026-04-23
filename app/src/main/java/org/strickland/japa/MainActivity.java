@@ -1,6 +1,13 @@
 package org.strickland.japa;
 
+//import static org.strickland.japa.CounterService.CHANNEL_ID;
+
 import android.Manifest;
+//import android.app.Notification;
+//import android.app.NotificationChannel;
+//import android.app.NotificationManager;
+//import android.app.PendingIntent;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,11 +16,16 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,10 +39,10 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+//import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.appupdate.AppUpdateOptions;
@@ -47,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
 
     private static final int UPDATE_REQUEST_CODE = 100;
 
+    private String VERSION_NAME;
+    private int VERSION_CODE;
     private AppUpdateManager appUpdateManager;
     private final InstallStateUpdatedListener installStateListener = state -> {
         if (state.installStatus() == InstallStatus.DOWNLOADED) {
@@ -135,14 +149,20 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         requestNotificationPermissionIfNeeded();
         ensureServiceRunning();
 
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            VERSION_NAME = pInfo.versionName;
+            VERSION_CODE = pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        checkWhatIsNew();
+
+
 
 
 
         appUpdateManager = AppUpdateManagerFactory.create(this);
-
-
-
-
         checkForUpdate();
     }
 
@@ -156,6 +176,40 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     public void onTaskRemoved(Intent rootIntent) {
         exitApp();
     }
+
+//    private void notify(String body) {
+//        int notificationId = (int) System.currentTimeMillis();
+//        int fuId = notificationId % 1000000;
+//        Intent open = new Intent(this, MainActivity.class);
+//        open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        PendingIntent pi = PendingIntent.getActivity(this, 0, open,
+//                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+//
+//        Notification notification =  new NotificationCompat.Builder(this, CHANNEL_ID)
+//                .setContentTitle(getString(R.string.app_name))
+//                .setContentText(fuId+"-"+body)
+//                .setSmallIcon(R.drawable.ic_notification)
+//                .setContentIntent(pi)
+//                .setOngoing(true)
+//                .setOnlyAlertOnce(true)
+//                .setPriority(NotificationCompat.PRIORITY_LOW)
+//                .build();
+//
+//        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        if (nm != null) nm.notify(notificationId, notification);
+//    }
+//
+//    final String GROUP_KEY_MESSAGES = "org.strickland.japa.MESSAGES";
+//
+//    private void createNotificationChannel() {
+//        NotificationChannel channel = new NotificationChannel(
+//                CHANNEL_ID, "Japa Counter", NotificationManager.IMPORTANCE_HIGH);
+//        channel.setDescription("Prayer bead counter running in background");
+//        channel.setShowBadge(true);
+//        channel.enableVibration(true);
+//        NotificationManager nm = getSystemService(NotificationManager.class);
+//        if (nm != null) nm.createNotificationChannel(channel);
+//    }
 
     @Override
     protected void onResume() {
@@ -180,8 +234,24 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+//        notify("onpause");
+//        exitApp();
+        appUpdateManager.unregisterListener(installStateListener);
+        if (isBound) {
+            counterService.setCallback(null);
+            unbindService(serviceConn);
+            isBound = false;
+        }
+    }
+
+
+    @Override
     protected void onStop() {
         super.onStop();
+//        notify("onStop");
+//        exitApp();
         appUpdateManager.unregisterListener(installStateListener);
         if (isBound) {
             counterService.setCallback(null);
@@ -241,7 +311,12 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                     int resId = getResources().getIdentifier(sub[2], "drawable", getPackageName());
                     if (resId != 0) bgImage.setImageResource(resId);
                 }
-                if (sub.length > 3) {
+                int textIndex = p.getInt(CounterService.PREF_MANTRA_TEXT, 0);
+
+                //boolean hindi = true;
+                if (textIndex == 1 && sub.length > 4) {
+                    mantraText.setText(sub[4]);
+                } else if (sub.length > 3) {
                     mantraText.setText(sub[3]);
                 }
             }
@@ -364,4 +439,41 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             roundDotsLayout.addView(dot);
         }
     }
+
+
+
+
+
+    private void checkWhatIsNew() {
+        SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        int lastVersionCode = prefs.getInt("last_version_code", -1);
+        int currentVersionCode = VERSION_CODE;
+        if (currentVersionCode > lastVersionCode) { //
+            showWhatsNewDialog();
+            prefs.edit().putInt("last_version_code", currentVersionCode).apply();
+        }
+    }
+
+    private void showWhatsNewDialog() {
+        String message = "";
+        AssetManager assetManager = getAssets();
+        try (InputStream is = assetManager.open("whatsnew.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            message = content.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("What's New in v" + VERSION_NAME)
+                .setMessage(message)
+                .setPositiveButton("Awesome!", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
+    }
+
 }
