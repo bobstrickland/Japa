@@ -1,11 +1,6 @@
 package org.strickland.japa;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.pm.ServiceInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +28,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
 /**
  * Foreground service that:
@@ -67,6 +61,7 @@ public class CounterService extends Service {
     static final String PREF_CURRENT_ROUND    = "currentRound";
     static final String PREF_SAVED_DATE       = "savedDate";
     static final String PREF_MANTRA_INDEX     = "mantaIndex";
+    static final String PREF_MANTRA_TEXT     = "mantaText";
     static final String PREF_MANTRA_SPEED     = "mantaSpeed"; // 0–100, default 50 = 1.0x rate
 
     static final String FEEDBACK_VIBRATION = "vibration";
@@ -122,6 +117,9 @@ public class CounterService extends Service {
             if (!isRunning || isComplete) return;
             if (!"android.media.VOLUME_CHANGED_ACTION".equals(intent.getAction())) return;
 
+//            if (!screenOffOrFocus()) { // screenOffOrFocus  appOnTop
+//                return;
+//            }
             // Skip the broadcast triggered by our own midpoint reset
             if (isResettingVolume) {
                 isResettingVolume = false;
@@ -151,12 +149,6 @@ public class CounterService extends Service {
     public void onCreate() {
         super.onCreate();
         loadPreferences();
-        createNotificationChannel();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(NOTIF_ID, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
-        } else {
-            startForeground(NOTIF_ID, buildNotification());
-        }
         acquireWakeLock();
         initMediaSession();
         initVibrator();
@@ -218,7 +210,6 @@ public class CounterService extends Service {
         }
 
         saveState();
-//        updateNotification();
         notifyCallback();
     }
 
@@ -229,7 +220,6 @@ public class CounterService extends Service {
         isComplete   = false;
         resetWakeLockTimeout();
         saveState();
-//        updateNotification();
         notifyCallback();
     }
 
@@ -285,11 +275,13 @@ public class CounterService extends Service {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
     }
 
-    private boolean foo() {
+    private boolean screenOffOrFocus() {
         DisplayManager dm = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
         for (Display display : dm.getDisplays()) {
             if (display.getState() == Display.STATE_ON) { //            if (display.getState() != Display.STATE_OFF) {
                 boolean f = Settings.canDrawOverlays(this);
+                return f;
+            } else {
                 return true;
             }
         }
@@ -443,41 +435,4 @@ public class CounterService extends Service {
         }
     }
 
-    // ── Notification ──────────────────────────────────────────────────────────
-
-    private void createNotificationChannel() {
-        NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID, "Japa Counter", NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription("Prayer bead counter running in background");
-        channel.setShowBadge(false);
-        channel.enableVibration(false);
-        NotificationManager nm = getSystemService(NotificationManager.class);
-        if (nm != null) nm.createNotificationChannel(channel);
-    }
-
-    private Notification buildNotification() {
-        Intent open = new Intent(this, MainActivity.class);
-        open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, open,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        String body = isComplete
-                ? getString(R.string.notif_complete)
-                : getString(R.string.notif_progress, currentBead, totalBeads, currentRound, totalRounds);
-
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(body)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentIntent(pi)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .build();
-    }
-
-//    private void updateNotification() {
-//        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        if (nm != null) nm.notify(NOTIF_ID, buildNotification());
-//    }
 }
