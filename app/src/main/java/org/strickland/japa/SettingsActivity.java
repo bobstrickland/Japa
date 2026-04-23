@@ -35,6 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
     private NumberPicker pickerBeads;
     private NumberPicker pickerRounds;
     private Spinner      spinnerMantra;
+    private Spinner      spinnerText;
     private Slider       sliderMantraSpeed;
     private RadioGroup   radioFeedback;
     private MaterialButton btnSave;
@@ -73,11 +74,16 @@ public class SettingsActivity extends AppCompatActivity {
         pickerBeads   = findViewById(R.id.picker_beads);
         pickerRounds  = findViewById(R.id.picker_rounds);
         spinnerMantra      = findViewById(R.id.spinner_mantra);
+        spinnerText    = findViewById(R.id.spinner_text);
         sliderMantraSpeed  = findViewById(R.id.slider_mantra_speed);
         radioFeedback      = findViewById(R.id.radio_feedback);
         btnSave       = findViewById(R.id.btn_save);
         btnCancel     = findViewById(R.id.btn_cancel);
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, new String[] {"Roman", "Devanagari"});
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerText.setAdapter(adapter);
         loadMantraArrays();
         setupPickers();
         loadCurrentSettings();
@@ -149,6 +155,7 @@ public class SettingsActivity extends AppCompatActivity {
         pickerBeads.setValue( p.getInt(CounterService.PREF_TOTAL_BEADS,  108));
         pickerRounds.setValue(p.getInt(CounterService.PREF_TOTAL_ROUNDS,  16));
         spinnerMantra.setSelection(p.getInt(CounterService.PREF_MANTRA_INDEX, 0));
+        spinnerText.setSelection(p.getInt(CounterService.PREF_MANTRA_TEXT, 0));
         sliderMantraSpeed.setValue(p.getInt(CounterService.PREF_MANTRA_SPEED, 0));
 
         String feedback = p.getString(CounterService.PREF_FEEDBACK, CounterService.FEEDBACK_VIBRATION);
@@ -180,6 +187,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         int mantaIndex = spinnerMantra.getSelectedItemPosition();
+        int mantaTextIndex = spinnerText.getSelectedItemPosition();
 
         getSharedPreferences(CounterService.PREFS_NAME, MODE_PRIVATE)
                 .edit()
@@ -187,6 +195,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .putInt(CounterService.PREF_TOTAL_ROUNDS, rounds)
                 .putString(CounterService.PREF_FEEDBACK,  feedback)
                 .putInt(CounterService.PREF_MANTRA_INDEX, mantaIndex)
+                .putInt(CounterService.PREF_MANTRA_TEXT, mantaTextIndex)
                 .putInt(CounterService.PREF_MANTRA_SPEED, (int) sliderMantraSpeed.getValue())
                 .putBoolean(CounterService.PREF_SETTINGS_CHANGED, true)
                 .apply();
