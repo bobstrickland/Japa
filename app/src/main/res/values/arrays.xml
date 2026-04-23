@@ -6,60 +6,70 @@
         <item>harekrishna</item>
         <item>krishna</item>
         <item>Hare Krishna Hare Krishna\nKrishna Krishna Hare Hare\nHare Rama Hare Rama\nRama Rama Hare Hare</item>
+        <item>हरे कृष्ण हरे कृष्ण,\nकृष्ण कृष्ण हरे हरे ।\nहरे राम हरे राम,\nराम राम हरे हरे ।।</item>
     </string-array>
     <string-array name="om_namah_shivaya_mantra">
         <item>Om Namah Shivaya</item>
         <item>om_namaha_shivaya</item>
         <item>shiva</item>
         <item>Om Namah Shivaya</item>
+        <item>ॐ नमः शिवाय</item>
     </string-array>
     <string-array name="om_mani_padme_hum_mantra">
         <item>Om Mani Padme Hum</item>
         <item>om_mani_padme_hum</item>
         <item>buddha</item>
         <item>Om Mani Padme Hum</item>
+        <item>ॐ मणि पद्मे हूँ</item>
     </string-array>
     <string-array name="gayatri_mantra">
         <item>Gayatri</item>
         <item>gayatri</item>
         <item>gayatri</item>
         <item>Om bhūr bhuvaḥ svaḥ, tat savitur vareṇyaṃ, bhargo devasya dhīmahi, dhiyo yo naḥ pracodayāt.</item>
+        <item>ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं\nभर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्</item>
     </string-array>
     <string-array name="mahamrutyunjay">
         <item>Mahamrutyunjay</item>
         <item>mahamrityunjaya</item>
         <item>shiva</item>
         <item>Om Tryambakam yajaamahe sugandhim pushtivardhanam\nUrvaarukamiva bandhanaan-mrityormuksheeya maamritaat</item>
+        <item>ॐ त्र्य॑म्बकं यजामहे सु॒गन्धिं॑ पुष्टि॒वर्ध॑नम् । उ॒र्वा॒रु॒कमि॑व॒ बन्ध॑नान्मृ॒त्योर्मु॑क्षीय॒ मामृता॑त् ॥</item>
     </string-array>
     <string-array name="saraswati_mantra">
         <item>Saraswati Beej</item>
         <item>saraswati_beej</item>
         <item>saraswati</item>
         <item>Om Aim Saraswatyai Namah</item>
+        <item>ॐ ऎं सरस्वत्यै नमः</item>
     </string-array>
     <string-array name="ganesh_mantra">
         <item>Ganesha Mantra</item>
         <item>ganesha</item>
         <item>ganesha</item>
         <item>Om Gam Ganapataye Namah</item>
+        <item>ॐ गं गणपतये नमः</item>
     </string-array>
     <string-array name="vishnu_mantra">
         <item>Vishnu Mantra</item>
         <item>vishnu</item>
         <item>vishnu</item>
         <item>Om Namo Bhagavate Vasudevaya Namaha</item>
+        <item>ॐ नमो भगवते वासुदेवाय</item>
     </string-array>
     <string-array name="shanti_mantra">
         <item>Shanti</item>
         <item>shanti</item>
         <item>durga_shanti</item>
         <item>Om Shanti, Shanti, Shanti</item>
+        <item>ॐ शान्तिः शान्तिः शान्तिः</item>
     </string-array>
     <string-array name="shree_ram">
         <item>Rama Taraka</item>
         <item>shree_ram</item>
         <item>rama</item>
         <item>Shri Ram Jay Ram Jay Jay Ram</item>
+        <item>श्री राम जय राम जय जय राम</item>
     </string-array>
     <!-- title  -->
     <!-- mp3  -->
@@ -70,12 +80,14 @@
         <item>hanuman</item>
         <item>hanuman</item>
         <item>Om Shri Hanumate Namah</item>
+        <item>ऊँ श्री हनुमते नमः</item>
     </string-array>
     <string-array name="hanuman_beeja">
         <item>Hanuman Beeja</item>
         <item>hanuman_beeja</item>
         <item>hanuman</item>
-        <item>Om Aim Bhreem Hanumate Shree Ram Dootaaya Namaha</item>
+        <item>Om Aim Bhreem Hanumate\nShree Ram Dootaaya Namaha</item>
+        <item>ॐ ऐं भ्रीम हनुमते\nश्री राम दूताय नमः</item>
     </string-array>
     <array name="mantra_array">
         <item>@array/hare_krishna_mantra</item>

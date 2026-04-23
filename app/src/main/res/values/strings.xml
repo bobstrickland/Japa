@@ -18,6 +18,7 @@
     <string name="label_beads">Beads per round</string>
     <string name="label_rounds">Total rounds</string>
     <string name="label_mantra">Mantra</string>
+    <string name="label_mantra_text">Mantra Text</string>
     <string name="label_mantra_speed">Mantra speed</string>
     <string name="label_feedback">Feedback on each bead</string>
     <string name="feedback_vibration">Vibration</string>
