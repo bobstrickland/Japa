@@ -96,6 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         bindService(new Intent(this, CounterService.class), serviceConn, Context.BIND_AUTO_CREATE);
+        isBound = true;
     }
 
     @Override

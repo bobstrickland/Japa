@@ -39,7 +39,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-//import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -157,11 +156,6 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             e.printStackTrace();
         }
         checkWhatIsNew();
-
-
-
-
-
         appUpdateManager = AppUpdateManagerFactory.create(this);
         checkForUpdate();
     }
@@ -169,51 +163,19 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     @Override
     protected void onStart() {
         super.onStart();
+        if (counterService != null) {
+            counterService.startCounting();
+        }
         bindService(new Intent(this, CounterService.class),
                 serviceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public void onTaskRemoved(Intent rootIntent) {
-        exitApp();
-    }
-
-//    private void notify(String body) {
-//        int notificationId = (int) System.currentTimeMillis();
-//        int fuId = notificationId % 1000000;
-//        Intent open = new Intent(this, MainActivity.class);
-//        open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        PendingIntent pi = PendingIntent.getActivity(this, 0, open,
-//                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-//
-//        Notification notification =  new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setContentTitle(getString(R.string.app_name))
-//                .setContentText(fuId+"-"+body)
-//                .setSmallIcon(R.drawable.ic_notification)
-//                .setContentIntent(pi)
-//                .setOngoing(true)
-//                .setOnlyAlertOnce(true)
-//                .setPriority(NotificationCompat.PRIORITY_LOW)
-//                .build();
-//
-//        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        if (nm != null) nm.notify(notificationId, notification);
-//    }
-//
-//    final String GROUP_KEY_MESSAGES = "org.strickland.japa.MESSAGES";
-//
-//    private void createNotificationChannel() {
-//        NotificationChannel channel = new NotificationChannel(
-//                CHANNEL_ID, "Japa Counter", NotificationManager.IMPORTANCE_HIGH);
-//        channel.setDescription("Prayer bead counter running in background");
-//        channel.setShowBadge(true);
-//        channel.enableVibration(true);
-//        NotificationManager nm = getSystemService(NotificationManager.class);
-//        if (nm != null) nm.createNotificationChannel(channel);
-//    }
-
     @Override
     protected void onResume() {
         super.onResume();
+        if (counterService != null) {
+            counterService.startCounting();
+        }
         // If the user changed settings, reload them into the service
         if (isBound) {
             SharedPreferences p = getSharedPreferences(CounterService.PREFS_NAME, MODE_PRIVATE);
@@ -224,25 +186,20 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 Toast.makeText(this, R.string.settings_applied, Toast.LENGTH_SHORT).show();
             }
         }
-        appUpdateManager.registerListener(installStateListener);
-        // Prompt to complete if an update was already downloaded (e.g. app was backgrounded)
-        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
-            if (info.installStatus() == InstallStatus.DOWNLOADED) {
-                showUpdateReadySnackbar();
-            }
-        });
+//        appUpdateManager.registerListener(installStateListener);
+//        // Prompt to complete if an update was already downloaded (e.g. app was backgrounded)
+//        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
+//            if (info.installStatus() == InstallStatus.DOWNLOADED) {
+//                showUpdateReadySnackbar();
+//            }
+//        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        notify("onpause");
-//        exitApp();
-        appUpdateManager.unregisterListener(installStateListener);
-        if (isBound) {
-            counterService.setCallback(null);
-            unbindService(serviceConn);
-            isBound = false;
+        if (counterService != null) {
+            counterService.stopCounting();
         }
     }
 
@@ -250,13 +207,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     @Override
     protected void onStop() {
         super.onStop();
-//        notify("onStop");
-//        exitApp();
-        appUpdateManager.unregisterListener(installStateListener);
-        if (isBound) {
-            counterService.setCallback(null);
-            unbindService(serviceConn);
-            isBound = false;
+        if (counterService != null) {
+            counterService.stopCounting();
         }
     }
 
@@ -396,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
      * Save state, stop the foreground service (disconnects volume buttons), and finish.
      */
     private void exitApp() {
+        Toast.makeText(this, "exitApp", Toast.LENGTH_SHORT).show();
         instance = null;
         if (isBound) {
             counterService.saveState();
@@ -468,12 +421,14 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new AlertDialog.Builder(this)
-                .setTitle("What's New in v" + VERSION_NAME)
-                .setMessage(message)
-                .setPositiveButton("Awesome!", (dialog, which) -> dialog.dismiss())
-                .setCancelable(false)
-                .show();
+        if (message != null && message.trim().length() > 0) {
+            new AlertDialog.Builder(this)
+                    .setTitle("What's New in v" + VERSION_NAME)
+                    .setMessage(message)
+                    .setPositiveButton("Awesome!", (dialog, which) -> dialog.dismiss())
+                    .setCancelable(false)
+                    .show();
+        }
     }
 
 }

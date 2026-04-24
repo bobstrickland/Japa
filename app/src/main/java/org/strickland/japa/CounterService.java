@@ -133,12 +133,13 @@ public class CounterService extends Service {
             // Single-step change = deliberate button press.
             // Cooldown (300 ms) absorbs the burst of VOLUME_CHANGED_ACTION broadcasts
             // that Android fires when the screen turns off, preventing phantom counts.
-            if (newVol >= 0 && prevVol >= 0 && Math.abs(newVol - prevVol) == 1) {
+            if (newVol >= 0 && Math.abs(newVol - prevVol) == 1) { //  && prevVol >= 0
                 long now = System.currentTimeMillis();
                 if (now - lastBeadTimeMs < 300) return;
                 lastBeadTimeMs = now;
                 countBead();
-                resetVolumeToMidpoint(streamType, newVol);
+                resetVolumeToPreviousValue(streamType, prevVol);
+                //resetVolumeToMidpoint(streamType, newVol);
             }
         }
     };
@@ -262,6 +263,14 @@ public class CounterService extends Service {
         isComplete = false;
     }
 
+    public void stopCounting() {
+        isRunning = false;
+    }
+
+    public void startCounting() {
+        isRunning = true;
+    }
+
     public synchronized void saveState() {
         getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                 .edit()
@@ -321,14 +330,12 @@ public class CounterService extends Service {
         mediaSession.setActive(true);
     }
 
-    private void resetVolumeToMidpoint(int streamType, int currentVol) {
+    private void resetVolumeToPreviousValue(int streamType, int prevVol) {
         if (streamType < 0) return;
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         if (am == null) return;
-        int midpoint = am.getStreamMaxVolume(streamType) / 2;
-        if (currentVol == midpoint) return; // no change → no broadcast → don't arm the flag
         isResettingVolume = true;
-        am.setStreamVolume(streamType, midpoint, 0 /* silent — no UI */);
+        am.setStreamVolume(streamType, prevVol, 0 /* silent — no UI */);
     }
 
     private void registerVolumeReceiver() {
