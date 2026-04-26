@@ -26,7 +26,7 @@ import com.google.android.material.button.MaterialButton;
  *   - Total beads per round (default 108)
  *   - Total rounds         (default 16)
  *   - Feedback type        (vibration / sound / none)
- *
+ * <p>
  * On save, a PREF_SETTINGS_CHANGED flag is written so that MainActivity
  * knows to reload preferences and reset the counter when it resumes.
  */
@@ -43,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private String[] mantraNames;
     private String[] mantraAudio;
-    private String[] mantraImages;
+    //private String[] mantraImages;
 
     private CounterService counterService;
     private boolean        isBound = false;
@@ -121,14 +121,14 @@ public class SettingsActivity extends AppCompatActivity {
         int count = mantras.length();
         mantraNames  = new String[count];
         mantraAudio  = new String[count];
-        mantraImages = new String[count];
+        //mantraImages = new String[count];
         for (int i = 0; i < count; i++) {
             int subId = mantras.getResourceId(i, 0);
             if (subId != 0) {
                 String[] sub = getResources().getStringArray(subId);
                 mantraNames[i]  = sub.length > 0 ? sub[0] : "";
                 mantraAudio[i]  = sub.length > 1 ? sub[1] : "";
-                mantraImages[i] = sub.length > 2 ? sub[2] : "";
+                //mantraImages[i] = sub.length > 2 ? sub[2] : "";
             }
         }
         mantras.recycle();

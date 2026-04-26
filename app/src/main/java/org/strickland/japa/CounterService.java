@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.session.MediaSession;
@@ -20,8 +19,6 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
-import android.provider.Settings;
-import android.view.Display;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,13 +41,10 @@ import androidx.annotation.Nullable;
  */
 public class CounterService extends Service {
 
-    // ── Notification ─────────────────────────────────────────────────────────
-    static final String CHANNEL_ID   = "japa_counter_channel";
-    static final int    NOTIF_ID     = 1;
-
     // ── Wake-lock idle timeout ────────────────────────────────────────────────
     private static final long WAKE_IDLE_MS = 5 * 60 * 1000L; // 5 minutes
 
+    private ScreenReceiver screenReceiver = null;
     // ── SharedPreferences keys ────────────────────────────────────────────────
     static final String PREFS_NAME            = "JapaPrefs";
     static final String PREF_TOTAL_BEADS      = "totalBeads";
@@ -102,18 +96,21 @@ public class CounterService extends Service {
 
     /**
      * Detects volume button presses when the screen is off.
-     *
+     * <p>
      * The active MediaSession (STATE_PLAYING) causes Android to route physical
      * volume button presses to STREAM_MUSIC, which fires this broadcast. After each
      * bead the stream is reset to its midpoint so subsequent presses always have
      * headroom to generate a change — and therefore a broadcast.
-     *
+     * <p>
      * isResettingVolume prevents the broadcast fired by the midpoint reset from
      * being counted as a second bead press.
      */
     private final BroadcastReceiver volumeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
+
             if (!isRunning || isComplete) return;
             if (!"android.media.VOLUME_CHANGED_ACTION".equals(intent.getAction())) return;
 
@@ -232,7 +229,7 @@ public class CounterService extends Service {
         loadPreferences();
         int index = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_INDEX, 0);
         updateBeadSound(getMantraBeadSound(index));
-        reset();
+        //reset();
     }
 
     public boolean isRunning()      { return isRunning;    }
@@ -284,29 +281,16 @@ public class CounterService extends Service {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
     }
 
-    private boolean screenOffOrFocus() {
-        DisplayManager dm = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
-        for (Display display : dm.getDisplays()) {
-            if (display.getState() == Display.STATE_ON) { //            if (display.getState() != Display.STATE_OFF) {
-                boolean f = Settings.canDrawOverlays(this);
-                return f;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void acquireWakeLock() {
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JapaCounter:WakeLock");
-        wakeLock.acquire();
+        wakeLock.acquire(5*60*1000L /*5 minutes*/);
         scheduleWakeLockRelease();
     }
 
     /** Restart the 5-minute idle countdown, re-acquiring the lock if it lapsed. */
     private void resetWakeLockTimeout() {
-        if (wakeLock != null && !wakeLock.isHeld()) wakeLock.acquire();
+        if (wakeLock != null && !wakeLock.isHeld()) wakeLock.acquire(5*60*1000L /*5 minutes*/);
         scheduleWakeLockRelease();
     }
 
@@ -440,6 +424,9 @@ public class CounterService extends Service {
         if (callback != null) {
             callback.onCountUpdated(currentBead, currentRound, totalBeads, totalRounds, isComplete);
         }
+    }
+    public void setScreenReceiver(ScreenReceiver screenReceiver) {
+        this.screenReceiver = screenReceiver;
     }
 
 }

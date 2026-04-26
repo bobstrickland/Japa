@@ -8,9 +8,11 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 /**
  * Draws a circular prayer necklace of rough wooden beads.
- *
+ * <p>
  * Uncounted beads are a warm light-yellow (raw wood / sandalwood).
  * Counted beads are a deep red (stained wood / rudraksha).
  * Each bead uses a RadialGradient with a per-bead jittered highlight to give
@@ -108,7 +110,7 @@ public class BeadNecklaceView extends View {
     // ── Drawing ───────────────────────────────────────────────────────────────
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         if (getWidth() == 0 || getHeight() == 0) return;
         if (geometryDirty) rebuildGeometry();

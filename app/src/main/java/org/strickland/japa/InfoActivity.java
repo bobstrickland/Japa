@@ -16,16 +16,16 @@ import java.io.InputStreamReader;
 
 public class InfoActivity extends AppCompatActivity {
 
-    private TextView tvInfoContent;
-    private TextView appVersionName;
+//    private TextView tvInfoContent;
+//    private TextView appVersionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        tvInfoContent = findViewById(R.id.tv_info_content);
-        appVersionName = findViewById(R.id.appVersionName);
+        TextView tvInfoContent = findViewById(R.id.tv_info_content);
+        TextView appVersionName = findViewById(R.id.appVersionName);
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String versionName = pInfo.versionName;

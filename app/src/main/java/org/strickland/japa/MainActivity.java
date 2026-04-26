@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.TypedArray;
+import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -27,6 +29,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
+
+import android.os.PowerManager;
+import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -61,11 +67,11 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private String VERSION_NAME;
     private int VERSION_CODE;
     private AppUpdateManager appUpdateManager;
-    private final InstallStateUpdatedListener installStateListener = state -> {
-        if (state.installStatus() == InstallStatus.DOWNLOADED) {
-            showUpdateReadySnackbar();
-        }
-    };
+//    private final InstallStateUpdatedListener installStateListener = state -> {
+//        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+//            showUpdateReadySnackbar();
+//        }
+//    };
 
     private CounterService counterService;
     private boolean        isBound = false;
@@ -82,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private MaterialButton btnExit;
     private ImageButton    btnSettings;
     private ImageButton    btnInfo;
+    private ScreenReceiver screenReceiver;
+
 
     // ── Notification permission (Android 13+) ─────────────────────────────────
     private final ActivityResultLauncher<String> notifPermLauncher =
@@ -97,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             counterService = binder.getService();
             counterService.setCallback(MainActivity.this);
             isBound = true;
+            screenReceiver.setCounterService(counterService);
             refreshUI();
         }
 
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         public void onServiceDisconnected(ComponentName name) {
             isBound        = false;
             counterService = null;
+            screenReceiver.setCounterService(null);
         }
     };
 
@@ -113,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Keep screen on while the app is visible so the user can see progress
+        //TODO: do I need to keep this?
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
 
@@ -131,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         btnReset.setOnClickListener(v -> {
             if (isBound) {
                 counterService.reset();
-                Toast.makeText(this, R.string.reset_toast, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, R.string.reset_toast, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -147,6 +159,22 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         applyMantraBackground();
         requestNotificationPermissionIfNeeded();
         ensureServiceRunning();
+
+
+
+        // 1. Initialize the receiver
+        screenReceiver = new ScreenReceiver();
+
+        // 2. Create a filter for the screen actions
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+
+        // 3. Register the receiver
+        registerReceiver(screenReceiver, filter);
+
+
+
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -183,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 p.edit().putBoolean(CounterService.PREF_SETTINGS_CHANGED, false).apply();
                 counterService.reloadPreferences();
                 applyMantraBackground();
-                Toast.makeText(this, R.string.settings_applied, Toast.LENGTH_SHORT).show();
+// TODO:?                Toast.makeText(this, R.string.settings_applied, Toast.LENGTH_SHORT).show();
             }
         }
 //        appUpdateManager.registerListener(installStateListener);
@@ -196,22 +224,81 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     }
 
     @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        if (counterService != null) {
+            counterService.stopCounting();
+        }
+    }
+    @Override
     protected void onPause() {
         super.onPause();
+
+        if (screenReceiver != null) {
+            if (screenReceiver.isScreenOn()) {
+                Log.d("ScreenReceiver", "Screen is On and onPause");
+            } else {
+                Log.d("ScreenReceiver", "Screen is OFF and onPause");
+            }
+        }
+
+        try {
+            DisplayManager dm = (DisplayManager)getSystemService(DISPLAY_SERVICE);
+            int displayState = dm.getDisplay(0).getState();
+            String state = "";
+            switch (displayState) {
+                case Display.STATE_OFF:
+                    state="STATE_OFF";
+                    break;
+                case Display.STATE_ON:
+                    state="STATE_ON";
+                    break;
+                case Display.STATE_DOZE:
+                    state="STATE_DOZE";
+                    break;
+                case Display.STATE_DOZE_SUSPEND:
+                    state="STATE_DOZE_SUSPEND";
+                    break;
+                case Display.STATE_ON_SUSPEND:
+                    state="STATE_ON_SUSPEND";
+                    break;
+                case Display.STATE_UNKNOWN:
+                    state="STATE_UNKNOWN";
+                    break;
+                default:
+                    state="unknown";
+            }
+            // STATE_OFF, STATE_ON, STATE_DOZE, STATE_DOZE_SUSPEND, STATE_ON_SUSPEND, or STATE_UNKNOWN.
+            Log.d("MainActivity","Display state: "+state);
+        } catch (Exception e) {
+            // do nbothing
+        }
         if (counterService != null) {
+            screenReceiver.touch();
             counterService.stopCounting();
         }
     }
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (counterService != null) {
-            counterService.stopCounting();
-        }
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if (screenReceiver != null) {
+//
+//            if (screenReceiver.isScreenOn()) {
+//                Log.d("ScreenReceiver", "Screen is On and InStop");
+//                Toast.makeText(this, "onStop()  ON ", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Log.d("ScreenReceiver", "Screen is On and InStop");
+//                Toast.makeText(this, "onStop() OFF ", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//        if (counterService != null) {
+//            counterService.stopCounting();
+//        }
+//    }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -321,11 +408,13 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         buildRoundDots(currentRound, totalRounds);
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     private void checkForUpdate() {
 
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
             if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                //noinspection CatchMayIgnoreException
                 try {
                     //appUpdateManager.startUpdateFlowForResult(info, AppUpdateType.FLEXIBLE, this, UPDATE_REQUEST_CODE);
                     appUpdateManager.startUpdateFlowForResult(info, this, AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),UPDATE_REQUEST_CODE);
@@ -393,10 +482,6 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         }
     }
 
-
-
-
-
     private void checkWhatIsNew() {
         SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
         int lastVersionCode = prefs.getInt("last_version_code", -1);
@@ -421,14 +506,23 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (message != null && message.trim().length() > 0) {
+        //noinspection ConstantValue
+        if (message != null && !message.trim().isEmpty()) {
             new AlertDialog.Builder(this)
                     .setTitle("What's New in v" + VERSION_NAME)
                     .setMessage(message)
-                    .setPositiveButton("Awesome!", (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton("OK!", (dialog, which) -> dialog.dismiss())
                     .setCancelable(false)
                     .show();
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // IMPORTANT: Unregister to avoid memory leaks
+        if (screenReceiver != null) {
+            unregisterReceiver(screenReceiver);
+        }
+    }
 }
