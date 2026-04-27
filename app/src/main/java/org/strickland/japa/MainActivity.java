@@ -44,7 +44,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 
 import com.google.android.material.button.MaterialButton;
@@ -58,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private String VERSION_NAME;
     private int VERSION_CODE;
     private AppUpdateManager appUpdateManager;
+    private final InstallStateUpdatedListener installStateListener = state -> {
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            showUpdateReadySnackbar();
+        }
+    };
 
     private CounterService counterService;
     private boolean        isBound = false;
@@ -235,6 +242,13 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 applyMantraBackground();
             }
         }
+        appUpdateManager.registerListener(installStateListener);
+        // Prompt to complete if an update was already downloaded (e.g. app was backgrounded)
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
+            if (info.installStatus() == InstallStatus.DOWNLOADED) {
+                showUpdateReadySnackbar();
+            }
+        });
     }
 
     @Override
@@ -255,6 +269,11 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        appUpdateManager.unregisterListener(installStateListener);
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
