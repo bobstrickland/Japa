@@ -2,6 +2,9 @@ package org.strickland.japa;
 
 import static android.os.SystemClock.sleep;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,6 +34,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 /**
  * Foreground service that:
@@ -149,6 +153,7 @@ public class CounterService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        startMyOwnForeground();
         loadPreferences();
         acquireWakeLock();
         initMediaSession();
@@ -157,6 +162,26 @@ public class CounterService extends Service {
         registerVolumeReceiver();
     }
 
+
+    private static final int NOTIFICATION_ID = 1;
+    private static final String CHANNEL_ID = "MyChannelId";
+    private void startMyOwnForeground() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel chan = new NotificationChannel(CHANNEL_ID, "Service Channel", NotificationManager.IMPORTANCE_NONE);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.createNotificationChannel(chan);
+
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
+            Notification notification = notificationBuilder.setOngoing(true)
+                    .setContentTitle("App is running in background")
+                    .setPriority(NotificationManager.IMPORTANCE_MIN)
+                    .setCategory(Notification.CATEGORY_SERVICE)
+                    .build();
+
+            // This fulfills the promise to the OS
+            startForeground(NOTIFICATION_ID, notification);
+        }
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;

@@ -104,4 +104,48 @@
         <item>@array/hanuman_beeja</item>
     </array>
 
+    <string-array name="om_saha_vavatu_prayer">
+        <item>Om Sahana Vavatu</item>
+        <item>saha_vavatu</item>
+        <item>durga_shanti</item>
+        <item>Om saha naavavatu,\n
+saha nau bhunaktu,\n
+saha viiryam karavaavahai,\n
+tejasvinaa vadhiitam astu maa vidvissaavahai,\n
+aum shaanti shaanti shaanti.</item>
+        <item>ॐ सह नाववतु ।\n
+सह नौ भुनक्तु ।\n
+सह वीर्यं करवावहै ।\n
+तेजस्वि नावधीतमस्तु मा विद्विषावहै ।\n
+ॐ शान्तिः शान्तिः शान्तिः ॥</item>
+    </string-array>
+    <string-array name="before_studies_prayer">
+        <item>Before Studies</item>
+        <item>before_studies</item>
+        <item>saraswati</item>
+        <item>sarasvati namas-tubhyam varade kaama-ruupini,\n
+vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
+        <item></item>
+    </string-array>
+
+    <string-array name="upon_waking_prayer">
+        <item>Karaagre Vasathe</item>
+        <item>karaagre_vasathe</item>
+        <item>lakshmi_saraswati_vishnu</item>
+        <item>karāgre vasate lakṣmiḥ karamadhye sarasvati\n
+    karamūle tu govindaḥ prabhāte karadarśanam</item>
+        <item></item>
+    </string-array>
+
+
+
+
+    <array name="prayer_array">
+        <item>@array/upon_waking_prayer</item>
+        <item>@array/om_saha_vavatu_prayer</item>
+        <item>@array/before_studies_prayer</item>
+    </array>
+
+
+
 </resources>

@@ -24,7 +24,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -73,8 +75,9 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private MaterialButton btnExit;
     private ImageButton    btnSettings;
     private ImageButton    btnInfo;
-    private ScreenReceiver screenReceiver;
-    private boolean autoEnabled = true;
+    private ScreenReceiver  screenReceiver;
+    private boolean         autoEnabled = true;
+    private GestureDetector swipeDetector;
 
     // ── Notification permission (Android 13+) ─────────────────────────────────
     private final ActivityResultLauncher<String> notifPermLauncher =
@@ -159,6 +162,29 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 startActivity(new Intent(this, InfoActivity.class)));
 
         instance = new WeakReference<>(this);
+
+        swipeDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            private static final float SWIPE_THRESHOLD     = 100f;
+            private static final float SWIPE_VEL_THRESHOLD = 100f;
+
+            @Override
+            public boolean onDown(MotionEvent e) { return true; }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
+                if (e1 == null || e2 == null) return false;
+                float dX = e2.getX() - e1.getX();
+                float dY = e2.getY() - e1.getY();
+                if (Math.abs(dX) > Math.abs(dY)
+                        && Math.abs(dX) > SWIPE_THRESHOLD
+                        && Math.abs(vX) > SWIPE_VEL_THRESHOLD) {
+                    startActivity(new Intent(MainActivity.this, PrayerActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
+
         applyMantraBackground();
         requestNotificationPermissionIfNeeded();
         ensureServiceRunning();
@@ -236,6 +262,12 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         if (requestCode == UPDATE_REQUEST_CODE && resultCode != RESULT_OK) {
             // Update was cancelled or failed — silently ignore
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        swipeDetector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
     /**

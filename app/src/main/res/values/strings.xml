@@ -34,6 +34,10 @@
     <string name="cancel">Cancel</string>
     <string name="settings_saved">Settings saved</string>
 
+    <!-- Prayer screen -->
+    <string name="prayer_title">Prayer</string>
+    <string name="pray">Pray</string>
+
     <!-- Notification -->
     <string name="notif_progress">Bead %d/%d · Round %d/%d</string>
     <string name="notif_complete">All rounds complete!</string>
