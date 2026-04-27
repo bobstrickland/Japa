@@ -136,14 +136,32 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
     karamūle tu govindaḥ prabhāte karadarśanam</item>
         <item></item>
     </string-array>
-
-
+    <string-array name="sri_ganesah_prayer">
+        <item>Sri Ganesah</item>
+        <item>sri_ganesah</item>
+        <item>ganesha</item>
+        <item>ekadantam mahaakaayam lambodara gajaananam,\n
+        vighna-naasa-karam devam herambam pranamaamyaham
+        </item>
+        <item></item>
+    </string-array>
+    <string-array name="sri_hanuman_prayer">
+        <item>Sri Hanuman</item>
+        <item>sri_hanuman</item>
+        <item>hanuman</item>
+        <item>manojavam maaruta-tulya-vegam jitendriyam buhhdi-mataam varistham,
+    vaatatmajam vaanara-yuutha mukhyam sri-raama-duutam sirasaa namaamim
+        </item>
+        <item></item>
+    </string-array>
 
 
     <array name="prayer_array">
         <item>@array/upon_waking_prayer</item>
         <item>@array/om_saha_vavatu_prayer</item>
         <item>@array/before_studies_prayer</item>
+        <item>@array/sri_ganesah_prayer</item>
+        <item>@array/sri_hanuman_prayer</item>
     </array>
 
 

@@ -1,6 +1,8 @@
+Adding prayers screen (swipe left or right)
+
+0.0.19
 Adding auto-chanting feature
 Preventing audio mantras from stepping over each other
-
 0.0.17
 Mantra text can be set to either Roman or Devanagari
 Mantra audio updated
