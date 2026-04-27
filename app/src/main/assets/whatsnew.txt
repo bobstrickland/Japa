@@ -1,3 +1,7 @@
+Adding auto-chanting feature
+Preventing audio mantras from stepping over each other
+
+0.0.17
 Mantra text can be set to either Roman or Devanagari
 Mantra audio updated
 Misc other minor fixes

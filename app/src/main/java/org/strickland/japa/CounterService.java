@@ -1,5 +1,7 @@
 package org.strickland.japa;
 
+import static android.os.SystemClock.sleep;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
@@ -19,10 +22,13 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.annotation.Nullable;
 
@@ -43,6 +49,7 @@ public class CounterService extends Service {
 
     // ── Wake-lock idle timeout ────────────────────────────────────────────────
     private static final long WAKE_IDLE_MS = 5 * 60 * 1000L; // 5 minutes
+    private final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     private ScreenReceiver screenReceiver = null;
     // ── SharedPreferences keys ────────────────────────────────────────────────
@@ -71,6 +78,7 @@ public class CounterService extends Service {
     private int     totalRounds  = 16;
     private boolean isComplete   = false;
     private boolean isRunning    = true;
+    private boolean autoCounting = false;
 
     // ── Binder ────────────────────────────────────────────────────────────────
     private final IBinder binder = new LocalBinder();
@@ -93,6 +101,8 @@ public class CounterService extends Service {
     private SoundPool             soundPool;
     private int                   beadSoundId  = -1;
     private int                   roundSoundId = -1;
+    private long beadSoundDuration = -1;
+    private long roundSoundDuration = -1;
 
     /**
      * Detects volume button presses when the screen is off.
@@ -109,14 +119,8 @@ public class CounterService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-
-
-            if (!isRunning || isComplete) return;
+            if (!isRunning || isComplete || autoCounting) return;
             if (!"android.media.VOLUME_CHANGED_ACTION".equals(intent.getAction())) return;
-
-//            if (!screenOffOrFocus()) { // screenOffOrFocus  appOnTop
-//                return;
-//            }
             // Skip the broadcast triggered by our own midpoint reset
             if (isResettingVolume) {
                 isResettingVolume = false;
@@ -136,7 +140,6 @@ public class CounterService extends Service {
                 lastBeadTimeMs = now;
                 countBead();
                 resetVolumeToPreviousValue(streamType, prevVol);
-                //resetVolumeToMidpoint(streamType, newVol);
             }
         }
     };
@@ -183,6 +186,32 @@ public class CounterService extends Service {
 
     public void setCallback(CounterCallback cb) {
         this.callback = cb;
+    }
+
+    public boolean isAutoCounting() {
+        return autoCounting;
+    }
+
+    public void startStopAutoCounting() {
+        if (autoCounting) {
+            stopAutoCounting();
+        } else {
+            startAutoCounting();
+        }
+    }
+
+    public void stopAutoCounting() {
+        autoCounting = false;
+    }
+
+    public void startAutoCounting() {
+        autoCounting = true;
+        executorService.execute(() -> {
+            while (autoCounting) {
+                countBead();
+                sleep(300);
+            }
+        });
     }
 
     /**
@@ -368,10 +397,20 @@ public class CounterService extends Service {
         if (beadSound != null) {
             int beadRes = getResources().getIdentifier(beadSound, "raw", getPackageName());
             if (beadRes != 0) beadSoundId = soundPool.load(this, beadRes, 1);
+            if (beadSoundId > -1) {
+                beadSoundDuration = getSoundDuration(beadRes);
+            } else {
+                beadSoundDuration = -1;
+            }
         }
         if (roundSound != null) {
             int roundRes = getResources().getIdentifier(roundSound, "raw", getPackageName());
             if (roundRes != 0) roundSoundId = soundPool.load(this, roundRes, 1);
+            if (roundSoundId > -1) {
+                roundSoundDuration = getSoundDuration(roundRes);
+            } else {
+                roundSoundDuration = -1;
+            }
         }
     }
     void updateBeadSound(String beadSound) {
@@ -415,9 +454,21 @@ public class CounterService extends Service {
         float rate = 0.5f + (speedPref / 100.0f);
         if (roundComplete && roundSoundId != -1) {
             soundPool.play(roundSoundId, 1f, 1f, 0, 0, rate);
+            if (roundSoundDuration > 0) {
+                sleep(roundSoundDuration);
+            }
         } else if (beadSoundId != -1) {
             soundPool.play(beadSoundId, 1f, 1f, 0, 0, rate);
+            if (beadSoundDuration > 0) {
+                sleep(beadSoundDuration);
+            }
         }
+    }
+
+    private long getSoundDuration(int rawId){
+        MediaPlayer player = MediaPlayer.create(this, rawId);
+        int duration = player.getDuration();
+        return duration;
     }
 
     private void notifyCallback() {

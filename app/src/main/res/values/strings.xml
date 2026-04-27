@@ -9,10 +9,15 @@
     <string name="round_label">Round %d / %d</string>
     <string name="complete">✓ Complete</string>
     <string name="reset">Reset</string>
+    <string name="auto_start">Start</string>
+    <string name="auto_stop">Stop</string>
     <string name="exit">Exit</string>
     <string name="hint_volume">Press either volume button to count</string>
     <string name="reset_toast">Counter reset</string>
     <string name="settings_applied">Settings applied — counter reset</string>
+    <string name="auto_enabled">Starting Mantras</string>
+    <string name="auto_stopping">Stopped Mantras</string>
+    <string name="auto_disabled">Auto Mantras require Sound Feedback</string>
 
     <!-- Settings screen -->
     <string name="label_beads">Beads per round</string>
@@ -22,6 +27,7 @@
     <string name="label_mantra_speed">Mantra speed</string>
     <string name="label_feedback">Feedback on each bead</string>
     <string name="feedback_vibration">Vibration</string>
+    <string name="feedback_auto">Auto</string>
     <string name="feedback_sound">Sound</string>
     <string name="feedback_none">None</string>
     <string name="save">Save</string>

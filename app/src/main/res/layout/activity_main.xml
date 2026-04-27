@@ -188,8 +188,26 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_exit"
+        app:layout_constraintEnd_toStartOf="@id/btn_auto"
         app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="@color/accent_gold"
+        app:strokeWidth="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_auto"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="64dp"
+        android:text="@string/auto_start"
+        android:textColor="@color/accent_gold"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_exit"
+        app:layout_constraintStart_toEndOf="@id/btn_reset"
         app:strokeColor="@color/accent_gold"
         app:strokeWidth="2dp" />
 
@@ -207,7 +225,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_reset"
+        app:layout_constraintStart_toEndOf="@id/btn_auto"
         app:strokeColor="@color/accent_gold"
         app:strokeWidth="2dp" />
 

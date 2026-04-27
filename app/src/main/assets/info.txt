@@ -1,7 +1,16 @@
 Yeah, I know, there are a LOT of other similar apps out there – but I think I do a few things the others don’t (work with the screen turned off, include audio chanting)
 
-When you're finished with the app and want to go back to using your volume buttons regularly, use the Exit button on the main screen.  Sometimes when if you switch to another app, this one stays running and counting.  I'm working on this, should have something figured out soon.
+To chant one round at a time, use either volume button.
+To begin auto-chanting press the Start button.  To stop the auto-chanting press the Stop button.
+To reset all counters (beads and rounds) press the Reset button.
+To exit the app press the Exit button
 
+The setting screen is accessed via the settings "gear" icon in the upper right corner of the screen.
+The info screen is accessed by the "i" icon in the upper left corner of the screen (but it looks like you already know this since you're on this screen)
+
+When you're finished with the app and want to go back to using your volume buttons regularly, use the Exit button on the main screen.
+
+Currently the auto-chanting function is only available if the Feedback is set to "Sound".  In thinking about this, I don't think it makes sense to auto-increment without the sound feedback.  If you think differently, please contact me and let me know how it makes sense and I'll make the change.
 If you have ideas of things to add/change/etc... let me know.  I'm having a fun time playing around with this and making changes.
 
 If you can think of a better name, ideas for better images, etc... I'm all ears for that as well.

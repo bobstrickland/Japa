@@ -1,12 +1,7 @@
 package org.strickland.japa;
 
-//import static org.strickland.japa.CounterService.CHANNEL_ID;
-
 import android.Manifest;
-//import android.app.Notification;
-//import android.app.NotificationChannel;
-//import android.app.NotificationManager;
-//import android.app.PendingIntent;
+
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,7 +14,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.TypedArray;
-import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -30,9 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
-import android.os.PowerManager;
-import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -51,9 +42,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.appupdate.AppUpdateOptions;
-import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 
 import com.google.android.material.button.MaterialButton;
@@ -67,11 +56,6 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private String VERSION_NAME;
     private int VERSION_CODE;
     private AppUpdateManager appUpdateManager;
-//    private final InstallStateUpdatedListener installStateListener = state -> {
-//        if (state.installStatus() == InstallStatus.DOWNLOADED) {
-//            showUpdateReadySnackbar();
-//        }
-//    };
 
     private CounterService counterService;
     private boolean        isBound = false;
@@ -85,11 +69,12 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private TextView mantraText;
     private LinearLayout roundDotsLayout;
     private MaterialButton btnReset;
+    private MaterialButton btnAuto;
     private MaterialButton btnExit;
     private ImageButton    btnSettings;
     private ImageButton    btnInfo;
     private ScreenReceiver screenReceiver;
-
+    private boolean autoEnabled = true;
 
     // ── Notification permission (Android 13+) ─────────────────────────────────
     private final ActivityResultLauncher<String> notifPermLauncher =
@@ -136,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         mantraText = findViewById(R.id.mantraText);
         roundDotsLayout= findViewById(R.id.round_dots);
         btnReset       = findViewById(R.id.btn_reset);
+        btnAuto        = findViewById(R.id.btn_auto);
         btnExit        = findViewById(R.id.btn_exit);
         btnSettings    = findViewById(R.id.btn_settings);
         btnInfo        = findViewById(R.id.btn_info);
@@ -143,7 +129,24 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         btnReset.setOnClickListener(v -> {
             if (isBound) {
                 counterService.reset();
-                //Toast.makeText(this, R.string.reset_toast, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.reset_toast, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnAuto.setOnClickListener(v -> {
+            if (isBound) {
+                if (autoEnabled) {
+                    if (counterService.isAutoCounting()) {
+                        Toast.makeText(this, R.string.auto_stopping, Toast.LENGTH_SHORT).show();
+                        btnAuto.setText(R.string.auto_start);
+                    } else {
+                        Toast.makeText(this, R.string.auto_enabled, Toast.LENGTH_SHORT).show();
+                        btnAuto.setText(R.string.auto_stop);
+                    }
+                    counterService.startStopAutoCounting();
+                } else {
+                    Toast.makeText(this, R.string.auto_disabled, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -160,21 +163,14 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         requestNotificationPermissionIfNeeded();
         ensureServiceRunning();
 
-
-
         // 1. Initialize the receiver
         screenReceiver = new ScreenReceiver();
-
         // 2. Create a filter for the screen actions
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
-
         // 3. Register the receiver
         registerReceiver(screenReceiver, filter);
-
-
-
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -211,16 +207,8 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 p.edit().putBoolean(CounterService.PREF_SETTINGS_CHANGED, false).apply();
                 counterService.reloadPreferences();
                 applyMantraBackground();
-// TODO:?                Toast.makeText(this, R.string.settings_applied, Toast.LENGTH_SHORT).show();
             }
         }
-//        appUpdateManager.registerListener(installStateListener);
-//        // Prompt to complete if an update was already downloaded (e.g. app was backgrounded)
-//        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
-//            if (info.installStatus() == InstallStatus.DOWNLOADED) {
-//                showUpdateReadySnackbar();
-//            }
-//        });
     }
 
     @Override
@@ -233,70 +221,13 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (screenReceiver != null) {
-            if (screenReceiver.isScreenOn()) {
-                Log.d("ScreenReceiver", "Screen is On and onPause");
-            } else {
-                Log.d("ScreenReceiver", "Screen is OFF and onPause");
-            }
-        }
-
-        try {
-            DisplayManager dm = (DisplayManager)getSystemService(DISPLAY_SERVICE);
-            int displayState = dm.getDisplay(0).getState();
-            String state = "";
-            switch (displayState) {
-                case Display.STATE_OFF:
-                    state="STATE_OFF";
-                    break;
-                case Display.STATE_ON:
-                    state="STATE_ON";
-                    break;
-                case Display.STATE_DOZE:
-                    state="STATE_DOZE";
-                    break;
-                case Display.STATE_DOZE_SUSPEND:
-                    state="STATE_DOZE_SUSPEND";
-                    break;
-                case Display.STATE_ON_SUSPEND:
-                    state="STATE_ON_SUSPEND";
-                    break;
-                case Display.STATE_UNKNOWN:
-                    state="STATE_UNKNOWN";
-                    break;
-                default:
-                    state="unknown";
-            }
-            // STATE_OFF, STATE_ON, STATE_DOZE, STATE_DOZE_SUSPEND, STATE_ON_SUSPEND, or STATE_UNKNOWN.
-            Log.d("MainActivity","Display state: "+state);
-        } catch (Exception e) {
-            // do nbothing
-        }
         if (counterService != null) {
-            screenReceiver.touch();
+            if (screenReceiver != null) {
+                screenReceiver.touch();
+            }
             counterService.stopCounting();
         }
     }
-
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (screenReceiver != null) {
-//
-//            if (screenReceiver.isScreenOn()) {
-//                Log.d("ScreenReceiver", "Screen is On and InStop");
-//                Toast.makeText(this, "onStop()  ON ", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Log.d("ScreenReceiver", "Screen is On and InStop");
-//                Toast.makeText(this, "onStop() OFF ", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//        if (counterService != null) {
-//            counterService.stopCounting();
-//        }
-//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -316,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     public boolean dispatchKeyEvent(KeyEvent event) {
         int code = event.getKeyCode();
         if (code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN && isBound && counterService.isRunning()) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && isBound && counterService.isRunning() && !counterService.isAutoCounting()) {
                 counterService.countBead();
                 return true; // consume — volume unchanged
             }
@@ -361,6 +292,15 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             }
         }
         mantras.recycle();
+
+        String feedback = p.getString(CounterService.PREF_FEEDBACK, CounterService.FEEDBACK_VIBRATION);
+        if (CounterService.FEEDBACK_SOUND.equals(feedback)) {
+            autoEnabled = true;
+            btnAuto.setAlpha(1f);
+        } else {
+            autoEnabled = false;
+            btnAuto.setAlpha(.3f);
+        }
     }
 
     private void ensureServiceRunning() {
@@ -396,21 +336,17 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                           int totalBeads, int totalRounds, boolean isComplete) {
         // Circular bead necklace
         progressBead.setBeads(totalBeads, currentBead);
-
         // Central counter text
         tvBeadCurrent.setText(String.valueOf(currentBead));
         tvBeadOf.setText(getString(R.string.of_total, totalBeads));
-
         // Round text
         tvRound.setText(getString(R.string.round_label, currentRound, totalRounds));
-
         // Round progress dots (shown when ≤ 24 rounds)
         buildRoundDots(currentRound, totalRounds);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     private void checkForUpdate() {
-
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
             if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
