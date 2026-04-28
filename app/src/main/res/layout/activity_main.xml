@@ -83,9 +83,9 @@
 
     <FrameLayout
         android:id="@+id/frame_counter"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="75dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="35dp"
         app:layout_constraintBottom_toTopOf="@id/tv_round"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

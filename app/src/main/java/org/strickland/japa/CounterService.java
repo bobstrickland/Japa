@@ -25,7 +25,6 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -233,9 +232,14 @@ public class CounterService extends Service {
         autoCounting = true;
         executorService.execute(() -> {
             while (autoCounting) {
-                countBead();
-                sleep(300);
+                boolean roundComplete = countBead();
+                if (roundComplete) {
+                    stopAutoCounting();
+                    break;
+                }
+                sleep(500);
             }
+            notifyCallback();
         });
     }
 
@@ -243,11 +247,13 @@ public class CounterService extends Service {
      * Advance the bead count by one. Thread-safe (called from UI thread via Activity
      * or from the main-thread BroadcastReceiver).
      */
-    public synchronized void countBead() {
-        if (!isRunning || isComplete) return;
+    public synchronized boolean countBead() {
+        if (!isRunning ) return false;
+        if (isComplete) return true;
 
         resetWakeLockTimeout();
         currentBead++;
+        notifyCallback();
 
         boolean roundComplete = (currentBead >= totalBeads);
         deliverFeedback(roundComplete);
@@ -263,6 +269,7 @@ public class CounterService extends Service {
 
         saveState();
         notifyCallback();
+        return roundComplete;
     }
 
     /** Reset to the beginning of round 1. */
@@ -291,6 +298,8 @@ public class CounterService extends Service {
     public int     getCurrentRound(){ return currentRound; }
     public int     getTotalBeads()  { return totalBeads;   }
     public int     getTotalRounds() { return totalRounds;  }
+    public void    setTotalBeads(int totalBeads)  { this.totalBeads =  totalBeads;   }
+    public void    setTotalRounds(int totalRounds) { this.totalRounds =  totalRounds;  }
     public boolean isComplete()     { return isComplete;   }
 
     // ── Private helpers ───────────────────────────────────────────────────────
@@ -473,7 +482,7 @@ public class CounterService extends Service {
         }
     }
 
-    private void playSound(boolean roundComplete) {
+    private synchronized void playSound(boolean roundComplete) {
         if (soundPool == null) return;
         int speedPref = 50+getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_SPEED, 50);
         float rate = 0.5f + (speedPref / 100.0f);
@@ -487,6 +496,9 @@ public class CounterService extends Service {
             if (beadSoundDuration > 0) {
                 sleep(beadSoundDuration);
             }
+        }
+        if (roundComplete) {
+            vibrateFor(roundComplete);
         }
     }
 

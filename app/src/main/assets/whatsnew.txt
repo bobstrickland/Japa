@@ -1,5 +1,9 @@
-Adding prayers screen (swipe left or right)
+Stop auto-chanting after round is complete
+Eliminate pause between auto-chants
+Stop auto-chanting on save
 
+0.1.23
+Adding prayers screen (swipe left or right)
 0.0.19
 Adding auto-chanting feature
 Preventing audio mantras from stepping over each other

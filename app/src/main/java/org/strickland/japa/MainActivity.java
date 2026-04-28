@@ -316,12 +316,31 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                                int totalBeads, int totalRounds, boolean isComplete) {
         // This may be called from a background thread via the volume broadcast receiver
         runOnUiThread(() -> updateUI(currentBead, currentRound, totalBeads, totalRounds, isComplete));
+        if (counterService != null) {
+            if (counterService.isAutoCounting()) {
+                btnAuto.setText(R.string.auto_stop);
+            } else {
+                btnAuto.setText(R.string.auto_start);
+            }
+        }
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
 
     void applyMantraBackground() {
         SharedPreferences p = getSharedPreferences(CounterService.PREFS_NAME, MODE_PRIVATE);
+         /*
+
+        pickerBeads.setValue( p.getInt(CounterService.PREF_TOTAL_BEADS,  108));
+        pickerRounds.setValue(p.getInt(CounterService.PREF_TOTAL_ROUNDS,  16));
+          */
+        if (counterService != null)  {
+            counterService.setTotalBeads(p.getInt(CounterService.PREF_TOTAL_BEADS,  108));
+            counterService.setTotalRounds(p.getInt(CounterService.PREF_TOTAL_ROUNDS,  16));
+        }
+        refreshUI();
+
+
         int index = p.getInt(CounterService.PREF_MANTRA_INDEX, 0);
         TypedArray mantras = getResources().obtainTypedArray(R.array.mantra_array);
         if (index >= 0 && index < mantras.length()) {
@@ -343,7 +362,9 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             }
         }
         mantras.recycle();
-
+        if (counterService != null) {
+            counterService.stopAutoCounting();
+        }
         String feedback = p.getString(CounterService.PREF_FEEDBACK, CounterService.FEEDBACK_VIBRATION);
         if (CounterService.FEEDBACK_SOUND.equals(feedback)) {
             autoEnabled = true;
@@ -352,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             autoEnabled = false;
             btnAuto.setAlpha(.3f);
         }
+        btnAuto.setText(R.string.auto_start);
     }
 
     private void ensureServiceRunning() {
