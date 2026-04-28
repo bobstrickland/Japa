@@ -8,6 +8,8 @@ To exit the app press the Exit button
 The setting screen is accessed via the settings "gear" icon in the upper right corner of the screen.
 The info screen is accessed by the "i" icon in the upper left corner of the screen (but it looks like you already know this since you're on this screen)
 
+The prayers screen can be accessed by swiping (left or right) from the main screen.
+
 When you're finished with the app and want to go back to using your volume buttons regularly, use the Exit button on the main screen.
 
 Currently the auto-chanting function is only available if the Feedback is set to "Sound".  In thinking about this, I don't think it makes sense to auto-increment without the sound feedback.  If you think differently, please contact me and let me know how it makes sense and I'll make the change.

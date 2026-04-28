@@ -154,7 +154,96 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
         </item>
         <item></item>
     </string-array>
+    <string-array name="maha_mrtyunjaya_prayer">
+        <item>Maha Mrtyunjaya</item>
+        <item>mahamrityunjaya</item>
+        <item>shiva</item>
+        <item>Om Tryambakam yajaamahe\nsugandhim pushtivardhanam\nUrvaa-ruka-miva bandhanaan\nmrityor-muksheeya maamritaat</item>
+        <item>ॐ त्र्य॑म्बकं यजामहे सु॒गन्धिं॑ पुष्टि॒वर्ध॑नम् । उ॒र्वा॒रु॒कमि॑व॒ बन्ध॑नान्मृ॒त्योर्मु॑क्षीय॒ मामृता॑त् ॥</item>
+    </string-array>
 
+
+    <string-array name="bhojanaat_praak_prayer">
+        <item>Bhojanaat Praak</item>
+        <item></item>
+        <item>aum</item>
+        <item>
+            (Gita verses chanted before taking food)\n\n
+            yadaaditya-gatam tejah jagad-bhaasayate-khilam\n
+            yac-candramadi yac-caagnau tat-tejo viddhi maamakam (15-12)\n\n
+            gaamaavisya ca bhuutaani dhaarayaamyaham-ojasaa\n
+            pusnaami causadhiih sarvaah somo bhuutvaa rasaatmakah (15-13)\n\n
+            aham vaisvaanaro bhuutvaa praaninaam deham-aasritah\n
+            praanaapaana-samaayuktak pacaamyannam catur-vidham (15-14)\n\n
+            sarva dharmaan parityajya maamekam saranam vraja\n
+            aham tvaa sarva-paapebhyo moksayisyaami maa sucah (18-66)\n\n
+            brahmaarpanam brahma havih\n
+            brahmaagnau brahmanaa hutam\n
+            brahmaiva-tena gantavyam\n
+            brahma-karma-samaadhinaa (4-24)
+        </item>
+        <item></item>
+    </string-array>
+    <string-array name="sayana_samaye_prayer">
+        <item>Sayana-samaye</item>
+        <item></item>
+        <item>aum</item>
+        <item>
+            (Night prayer before sleeping for forgiveness)\n\n
+            kara-carana-krtam vaak-kaayajam karmajam vaa\n
+            sravana-nayanojam vaa maanasam vaaparaadham\n
+            vihita-mavihitam vaa sarva-metat ksamasva\n
+            jaya jaya karunaabdhe srii-mahaadeva sambho
+        </item>
+        <item></item>
+    </string-array>
+    <string-array name="sivadhyanam_prayer">
+        <item>Sivadhyanam</item>
+        <item></item>
+        <item>shiva</item>
+        <item>
+            namaste astu bhagavan visvesvaraaya maha-devaaya\n
+            tryambakaaya tripuraantakaaya trikaalaagni-kaalaaya\n
+            kaalaagni-rudraaya niila-kanthaaya mrtyunjayaaya\n
+            sarvesvaraaya sadaasivaaya sriiman mahaadevaaya namah
+        </item>
+        <item></item>
+    </string-array>
+    <string-array name="c_prayer">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+    <string-array name="d_prayer">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+    <string-array name="e_prayer">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+    <string-array name="f_prayer">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+    <string-array name="g_prayer">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
 
     <array name="prayer_array">
         <item>@array/upon_waking_prayer</item>
@@ -162,6 +251,10 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
         <item>@array/before_studies_prayer</item>
         <item>@array/sri_ganesah_prayer</item>
         <item>@array/sri_hanuman_prayer</item>
+        <item>@array/maha_mrtyunjaya_prayer</item>
+        <item>@array/bhojanaat_praak_prayer</item>
+        <item>@array/sayana_samaye_prayer</item>
+        <item>@array/sivadhyanam_prayer</item>
     </array>
 
 

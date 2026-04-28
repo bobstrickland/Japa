@@ -32,6 +32,7 @@ public class PrayerActivity extends AppCompatActivity {
     private String[] prayerAudio;
     private String[] prayerImages;
     private String[] prayerTexts;
+    private String[] prayerDevTexts;
 
     private String      activeAudio;
     private MediaPlayer mediaPlayer;
@@ -107,6 +108,8 @@ public class PrayerActivity extends AppCompatActivity {
         prayerAudio  = new String[count];
         prayerImages = new String[count];
         prayerTexts  = new String[count];
+        prayerDevTexts  = new String[count];
+
         for (int i = 0; i < count; i++) {
             int subId = prayers.getResourceId(i, 0);
             if (subId != 0) {
@@ -115,6 +118,7 @@ public class PrayerActivity extends AppCompatActivity {
                 prayerAudio[i]  = sub.length > 1 ? sub[1] : "";
                 prayerImages[i] = sub.length > 2 ? sub[2] : "";
                 prayerTexts[i]  = sub.length > 3 ? sub[3] : "";
+                prayerDevTexts[i]  = sub.length > 4 ? sub[4] : "";
             }
         }
         prayers.recycle();
@@ -130,9 +134,23 @@ public class PrayerActivity extends AppCompatActivity {
 
         int resId = getResources().getIdentifier(prayerImages[position], "drawable", getPackageName());
         if (resId != 0) bgImage.setImageResource(resId);
+        SharedPreferences p = getSharedPreferences(CounterService.PREFS_NAME, MODE_PRIVATE);
+        int textIndex = p.getInt(CounterService.PREF_MANTRA_TEXT, 0);
 
-        tvPrayerText.setText(prayerTexts[position]);
+        if (textIndex == 1 && prayerDevTexts[position] != null && !prayerDevTexts[position].isBlank()) {
+            tvPrayerText.setText(prayerDevTexts[position]);
+        } else {
+            tvPrayerText.setText(prayerTexts[position]);
+        }
+
         activeAudio = prayerAudio[position];
+        if (activeAudio == null || activeAudio.trim().length()==0) {
+            btnPray.setEnabled(false);
+            btnPray.setAlpha(.3f);
+        } else {
+            btnPray.setEnabled(true);
+            btnPray.setAlpha(1f);
+        }
     }
 
     private void playPrayer() {
