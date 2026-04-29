@@ -505,6 +505,12 @@ public class CounterService extends Service {
     private long getSoundDuration(int rawId){
         MediaPlayer player = MediaPlayer.create(this, rawId);
         int duration = player.getDuration();
+        int speedPref = 50+getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_SPEED, 50);
+        if (speedPref != 50) {
+            float rate = 0.5f + (speedPref / 100.0f);
+            float dur = new Integer(duration).floatValue() / rate;
+            duration = new Float(dur).intValue();
+        }
         return duration;
     }
 

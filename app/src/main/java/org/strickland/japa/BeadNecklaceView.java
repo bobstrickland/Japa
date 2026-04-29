@@ -87,9 +87,14 @@ public class BeadNecklaceView extends View {
         // Necklace ring takes up most of the view, leaving room for inset text
         necklaceRadius = Math.min(getWidth(), getHeight()) / 2f * 0.86f;
 
+        if (this.totalBeads < 20){
+            necklaceRadius = necklaceRadius * 0.75f;
+        }
+
         // Fit beads tightly around the circumference (80 % fill, 20 % gap = cord)
         float circumference = 2f * (float) Math.PI * necklaceRadius;
-        beadRadius = circumference / totalBeads * 0.80f / 2f;
+        int totalBeadsForRadiusCalculation = totalBeads < 6?6:totalBeads;
+        beadRadius = circumference / totalBeadsForRadiusCalculation * 0.80f / 2f;
 
         // Pre-compute bead centre positions (starting at the top, going clockwise)
         float startAngle = -(float) Math.PI / 2f;

@@ -1,7 +1,10 @@
+Fixing auto-chant features when mantra speed is changed
+Fixing Bead size issues for small numbers of beads
+
+0.1.24
 Stop auto-chanting after round is complete
 Eliminate pause between auto-chants
 Stop auto-chanting on save
-
 0.1.23
 Adding prayers screen (swipe left or right)
 0.0.19
