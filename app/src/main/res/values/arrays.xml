@@ -89,6 +89,20 @@
         <item>Om Aim Bhreem Hanumate\nShree Ram Dootaaya Namaha</item>
         <item>ॐ ऐं भ्रीम हनुमते\nश्री राम दूताय नमः</item>
     </string-array>
+    <string-array name="kali_moola_mantra">
+        <item>Dakshina Kali Moola</item>
+        <item>kali_moola</item>
+        <item>kali</item>
+        <item>Om Krīṁ Krīṁ Krīṁ Hūṁ Hūṁ\nHrīṁ Hrīṁ Dakṣiṇe Kālike\nKrīṁ Krīṁ Krīṁ Hūṁ Hūṁ\nHrīṁ Hrīṁ Svāhā.</item>
+        <item>ॐ क्रीं क्रीं क्रीं हूँ हूँ ह्रीं ह्रीं\nदक्षिणे कालिके\nक्रीं क्रीं क्रीं हूँ हूँ\nह्रीं ह्रीं स्वाहा ॥</item>
+    </string-array>
+    <string-array name="kali_simple_mantra">
+        <item>Dakshina Kali</item>
+        <item>kali_simple</item>
+        <item>kali</item>
+        <item>Om Dakshina Kalikayai Namah</item>
+        <item>ॐ दक्षिणकालिकायै नमः</item>
+    </string-array>
     <array name="mantra_array">
         <item>@array/hare_krishna_mantra</item>
         <item>@array/om_namah_shivaya_mantra</item>
@@ -102,6 +116,8 @@
         <item>@array/shree_ram</item>
         <item>@array/hanuman_moola</item>
         <item>@array/hanuman_beeja</item>
+        <item>@array/kali_moola_mantra</item>
+        <item>@array/kali_simple_mantra</item>
     </array>
 
     <string-array name="om_saha_vavatu_prayer">
