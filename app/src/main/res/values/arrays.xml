@@ -457,11 +457,14 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
             राम लखन सीता सहित, हृदय बसहु सुर भूप।।
         </item>
     </string-array>
-    <string-array name="d_prayer">
+    <string-array name="krishna_prayer">
+        <item>Sri Krsna</item>
         <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
+        <item>krishna</item>
+        <item>
+            mukam karoti vacalam pangum langhayate girim
+            yat krpa tam-aham vande paramananda madhavam
+        </item>
         <item></item>
     </string-array>
     <string-array name="e_prayer">
@@ -497,6 +500,7 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
         <item>@array/sayana_samaye_prayer</item>
         <item>@array/sivadhyanam_prayer</item>
         <item>@array/hanuman_chalisa_prayer</item>
+        <item>@array/krishna_prayer</item>
     </array>
 
 
