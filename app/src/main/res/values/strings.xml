@@ -25,7 +25,8 @@
     <string name="label_mantra">Mantra</string>
     <string name="label_mantra_text">Mantra Text</string>
     <string name="label_mantra_speed">Mantra speed</string>
-    <string name="label_feedback">Feedback on each bead</string>
+    <string name="label_feedback">Feedback per bead</string>
+    <string name="label_feedback_round">Feedback per round</string>
     <string name="feedback_vibration">Vibration</string>
     <string name="feedback_auto">Auto</string>
     <string name="feedback_sound">Sound</string>

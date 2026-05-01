@@ -38,6 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner      spinnerText;
     private Slider       sliderMantraSpeed;
     private RadioGroup   radioFeedback;
+    private RadioGroup   radioFeedbackRound;
     private MaterialButton btnSave;
     private MaterialButton btnCancel;
 
@@ -71,14 +72,15 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        pickerBeads   = findViewById(R.id.picker_beads);
-        pickerRounds  = findViewById(R.id.picker_rounds);
+        pickerBeads        = findViewById(R.id.picker_beads);
+        pickerRounds       = findViewById(R.id.picker_rounds);
         spinnerMantra      = findViewById(R.id.spinner_mantra);
-        spinnerText    = findViewById(R.id.spinner_text);
+        spinnerText        = findViewById(R.id.spinner_text);
         sliderMantraSpeed  = findViewById(R.id.slider_mantra_speed);
         radioFeedback      = findViewById(R.id.radio_feedback);
-        btnSave       = findViewById(R.id.btn_save);
-        btnCancel     = findViewById(R.id.btn_cancel);
+        radioFeedbackRound = findViewById(R.id.radio_feedback_round);
+        btnSave            = findViewById(R.id.btn_save);
+        btnCancel          = findViewById(R.id.btn_cancel);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, new String[] {"Roman", "Devanagari"});
@@ -171,6 +173,18 @@ public class SettingsActivity extends AppCompatActivity {
                 radioFeedback.check(R.id.radio_vibration);
                 break;
         }
+        feedback = p.getString(CounterService.PREF_FEEDBACK_ROUND, CounterService.FEEDBACK_VIBRATION);
+        switch (feedback) {
+            case CounterService.FEEDBACK_SOUND:
+                radioFeedbackRound.check(R.id.radio_sound_round);
+                break;
+            case CounterService.FEEDBACK_NONE:
+                radioFeedbackRound.check(R.id.radio_none_round);
+                break;
+            default:
+                radioFeedbackRound.check(R.id.radio_vibration_round);
+                break;
+        }
     }
 
     private void saveSettings() {
@@ -186,6 +200,15 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             feedback = CounterService.FEEDBACK_VIBRATION;
         }
+        String feedbackRound;
+        checked = radioFeedbackRound.getCheckedRadioButtonId();
+        if (checked == R.id.radio_sound_round) {
+            feedbackRound = CounterService.FEEDBACK_SOUND;
+        } else if (checked == R.id.radio_none_round) {
+            feedbackRound = CounterService.FEEDBACK_NONE;
+        } else {
+            feedbackRound = CounterService.FEEDBACK_VIBRATION;
+        }
 
         int mantaIndex = spinnerMantra.getSelectedItemPosition();
         int mantaTextIndex = spinnerText.getSelectedItemPosition();
@@ -195,6 +218,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .putInt(CounterService.PREF_TOTAL_BEADS,  beads)
                 .putInt(CounterService.PREF_TOTAL_ROUNDS, rounds)
                 .putString(CounterService.PREF_FEEDBACK,  feedback)
+                .putString(CounterService.PREF_FEEDBACK_ROUND,  feedbackRound)
                 .putInt(CounterService.PREF_MANTRA_INDEX, mantaIndex)
                 .putInt(CounterService.PREF_MANTRA_TEXT, mantaTextIndex)
                 .putInt(CounterService.PREF_MANTRA_SPEED, (int) sliderMantraSpeed.getValue())

@@ -221,46 +221,100 @@
                 android:layout_marginVertical="10dp"
                 android:background="@color/track_dim" />
 
-            <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/label_feedback"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp" />
+                android:orientation="vertical"
+                android:paddingRight="10dp">
 
-            <RadioGroup
-                android:id="@+id/radio_feedback"
-                android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/label_feedback"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_vibration"
+                        style="@style/RadioStyle"
+                        android:checked="true"
+                        android:text="@string/feedback_vibration"/>
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_sound"
+                        style="@style/RadioStyle"
+                        android:text="@string/feedback_sound" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_none"
+                        style="@style/RadioStyle"
+                        android:text="@string/feedback_none" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="3dp"
+                android:background="@color/track_dim" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingLeft="10dp">
 
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/radio_vibration"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/label_feedback_round"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_feedback_round"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:checked="true"
-                    android:text="@string/feedback_vibration"
-                    android:textColor="@color/text_primary" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/radio_sound"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:text="@string/feedback_sound"
-                    android:textColor="@color/text_primary" />
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_vibration_round"
+                        style="@style/RadioStyle"
+                        android:checked="true"
+                        android:text="@string/feedback_vibration"/>
 
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/radio_none"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:text="@string/feedback_none"
-                    android:textColor="@color/text_primary" />
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_sound_round"
+                        style="@style/RadioStyle"
+                        android:text="@string/feedback_sound" />
 
-            </RadioGroup>
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_none_round"
+                        style="@style/RadioStyle"
+                        android:text="@string/feedback_none"/>
 
-            <!-- Sound file note -->
+                </RadioGroup>
+            </LinearLayout>
 
+
+
+
+        </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

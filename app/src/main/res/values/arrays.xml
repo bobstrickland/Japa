@@ -124,23 +124,14 @@
         <item>Om Sahana Vavatu</item>
         <item>saha_vavatu</item>
         <item>durga_shanti</item>
-        <item>Om saha naavavatu,\n
-saha nau bhunaktu,\n
-saha viiryam karavaavahai,\n
-tejasvinaa vadhiitam astu maa vidvissaavahai,\n
-aum shaanti shaanti shaanti.</item>
-        <item>ॐ सह नाववतु ।\n
-सह नौ भुनक्तु ।\n
-सह वीर्यं करवावहै ।\n
-तेजस्वि नावधीतमस्तु मा विद्विषावहै ।\n
-ॐ शान्तिः शान्तिः शान्तिः ॥</item>
+        <item>Om saha naavavatu,\nsaha nau bhunaktu,\nsaha viiryam karavaavahai,\ntejasvinaa vadhiitam astu maa vidvissaavahai,\naum shaanti shaanti shaanti.</item>
+        <item>ॐ सह नाववतु ।\nसह नौ भुनक्तु ।\nसह वीर्यं करवावहै ।\nतेजस्वि नावधीतमस्तु मा विद्विषावहै ।\nॐ शान्तिः शान्तिः शान्तिः ॥</item>
     </string-array>
     <string-array name="before_studies_prayer">
         <item>Before Studies</item>
         <item>before_studies</item>
         <item>saraswati</item>
-        <item>sarasvati namas-tubhyam varade kaama-ruupini,\n
-vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
+        <item>sarasvati namas-tubhyam varade kaama-ruupini,\nvidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
         <item></item>
     </string-array>
 
@@ -185,18 +176,11 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
         <item>aum</item>
         <item>
             (Gita verses chanted before taking food)\n\n
-            yadaaditya-gatam tejah jagad-bhaasayate-khilam\n
-            yac-candramadi yac-caagnau tat-tejo viddhi maamakam (15-12)\n\n
-            gaamaavisya ca bhuutaani dhaarayaamyaham-ojasaa\n
-            pusnaami causadhiih sarvaah somo bhuutvaa rasaatmakah (15-13)\n\n
-            aham vaisvaanaro bhuutvaa praaninaam deham-aasritah\n
-            praanaapaana-samaayuktak pacaamyannam catur-vidham (15-14)\n\n
-            sarva dharmaan parityajya maamekam saranam vraja\n
-            aham tvaa sarva-paapebhyo moksayisyaami maa sucah (18-66)\n\n
-            brahmaarpanam brahma havih\n
-            brahmaagnau brahmanaa hutam\n
-            brahmaiva-tena gantavyam\n
-            brahma-karma-samaadhinaa (4-24)
+            yadaaditya-gatam tejah jagad-bhaasayate-khilam\n yac-candramadi yac-caagnau tat-tejo viddhi maamakam (15-12)\n\n
+            gaamaavisya ca bhuutaani dhaarayaamyaham-ojasaa\n pusnaami causadhiih sarvaah somo bhuutvaa rasaatmakah (15-13)\n\n
+            aham vaisvaanaro bhuutvaa praaninaam deham-aasritah\n praanaapaana-samaayuktak pacaamyannam catur-vidham (15-14)\n\n
+            sarva dharmaan parityajya maamekam saranam vraja\n aham tvaa sarva-paapebhyo moksayisyaami maa sucah (18-66)\n\n
+            brahmaarpanam brahma havih\n brahmaagnau brahmanaa hutam\n brahmaiva-tena gantavyam\n brahma-karma-samaadhinaa (4-24)
         </item>
         <item></item>
     </string-array>
@@ -206,10 +190,8 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
         <item>aum</item>
         <item>
             (Night prayer before sleeping for forgiveness)\n\n
-            kara-carana-krtam vaak-kaayajam karmajam vaa\n
-            sravana-nayanojam vaa maanasam vaaparaadham\n
-            vihita-mavihitam vaa sarva-metat ksamasva\n
-            jaya jaya karunaabdhe srii-mahaadeva sambho
+            kara-carana-krtam vaak-kaayajam karmajam vaa\n sravana-nayanojam vaa maanasam vaaparaadham\n
+            vihita-mavihitam vaa sarva-metat ksamasva\n jaya jaya karunaabdhe srii-mahaadeva sambho
         </item>
         <item></item>
     </string-array>
@@ -231,230 +213,77 @@ vidyaarambham karisyaami siddhir-bhavatu me sadaa.</item>
         <item>hanuman</item>
         <item>
             Doha\n\n
-            Shri guru charan saroj raj neej manu mukur sudhari ।\n
-            Baranu raghubar bimal jasu jo dayaku phal chari ॥\n
-            Buddhi heen tanu janike sumero pavan kumar ।\n
-            Bal buddhi bidya deu mohi harau kales bikar ॥\n\n
+            Shri guru charan saroj raj neej manu mukur sudhari ।\n Baranu raghubar bimal jasu jo dayaku phal chari ॥\n
+            Buddhi heen tanu janike sumero pavan kumar ।\n Bal buddhi bidya deu mohi harau kales bikar ॥\n\n
             Chaupayee\n\n
-            Jai Hanuman gyan gun sagar ।\n
-            Jai kapis tihu lok ujagar ॥\n
-            Ram doot atulit bal dhama ।\n
-            Anjaani-putra pavan sut nama ॥\n\n
-            Mahabir bikram Bajrangi ।\n
-            Kumati nivar sumati ke sangi ॥\n
-            Kanchan baran biraj subesa ।\n
-            Kanan kundal kunchit kesa ॥\n\n
-            Hath bajra aur dhvaja biraje ।\n
-            Kaandhe munj janeu saje ॥\n
-            Sankar suvan Kesari nandan ।\n
-            Tej pratap maha jag bandan ॥\n\n
-            Bidyavaan guni ati chatur ।\n
-            Ram kaj karibe ko aatur ॥\n
-            Prabhu charitra sunibe-ko rasiya ।\n
-            Ram Lakhan Sita maan basiya ॥\n\n
-            Sukshma roop dhari Siyahi dikhava ।\n
-            Bikat roop dhari Lank jarava ॥\n
-            Bhim roop dhari asur sahare ।\n
-            Ramachandra ke kaj savare ॥\n\n
-            Laye sanjivan Lakhan jiyaye ।\n
-            Shri Raghuvir harashi ur laye ॥\n
-            Raghupati kinhi bahut badhaee ।\n
-            Tum mam priye Bharat-hi-sam bhai ॥\n\n
-            Sahas badan tumharo jas gaave ।\n
-            Asa-kahi Shripati kantha lagave ॥\n
-            Sankadik brahmadi munisa ।\n
-            Narad-sarad sahit ahisa ॥\n\n
-            Jum Kuber digpaal jaha teh ।\n
-            Kabi Kovid kahi sake kahan teh ॥\n
-            Tum upkar Sugreevahi keenha ।\n
-            Ram milaye rajpad deenha ॥\n\n
-            Tumharo mantra Vibhishan maana ।\n
-            Lankeshvar bhaye sab jag jana ॥\n
-            Yug sahastra jojan par bhanu ।\n
-            Leelyo tahi madhur phaal janu ॥\n\n
-            Prabhu mudrika meli mukh mahi ।\n
-            Jaladi langhi gaye achraj nahi ॥\n
-            Durgaam kaj jagat ke jete ।\n
-            Sugam anugraha tumhre tete ॥\n\n
-            Ram duwaare tum rakhvare ।\n
-            Hoat na adyna binu paisare ॥\n
-            Sab sukh lahe tumhari sarna ।\n
-            Tum rakshak kahu ko darna ॥\n\n
-            Aapan tej samharo aape ।\n
-            Teenho lok hank teh kanpe ॥\n
-            Bhoot pisaach nikat nahin aave ।\n
-            Mahabir jab naam sunave ॥\n\n
-            Nase rog hare sab peera ।\n
-            Japat nirantar Hanumant beera ॥\n
-            Sankat se Hanuman chudave ।\n
-            Man karam bachan dyan jo lave ॥\n\n
-            Sab par Ram tapasvee raja ।\n
-            Teen ke kaj sakal tum saja ॥\n
-            Aur manorath jo koi lave ।\n
-            Sohi amit jeevan phal pave ॥\n\n
-            Charo yug partap tumhara ।\n
-            Hai parasiddha jagat ujiyara ॥\n
-            Sadhu sant ke tum rakhware ।\n
-            Asur nikanandan Ram dulare ॥\n\n
-            Ashta-sidhi nav nidhi ke daata ।\n
-            Asabar deen Janki mata ॥\n
-            Ram rasayan tumhare pasa ।\n
-            Sada raho Raghupati ke dasa ॥\n\n
-            Tumhare bhajan Ram ko paave ।\n
-            Janam-janam ke dukh bisrave ॥\n
-            Anth-kaal Raghubar pur jaee ।\n
-            Jaha janma Hari-bhakht kahaee ॥\n\n
-            Aur devta chitta na dharaee ।\n
-            Hanumanth se he sarba sukh karaee ॥\n
-            Sankat kate-mite sab peera ।\n
-            Jo sumire Hanumat balbeera ॥\n\n
-            Jai Jai Jai Hanuman gosaee ।\n
-            Krupa karahu gurudev ki naee ॥\n
-            Jo sath baar paath kar koi ।\n
-            Chuthee bandhi maha sukh hoee ॥\n\n
-            Jo yaha padhe Hanuman Chalisa ।\n
-            Hoye Siddhi Sakhi Gaurisa ॥\n
-            Tulsidas sada Hari chera ।\n
-            Keeje nath hridaye maha dera॥\n\n
+            Jai Hanuman gyan gun sagar ।\n Jai kapis tihu lok ujagar ॥\n Ram doot atulit bal dhama ।\n Anjaani-putra pavan sut nama ॥\n\n
+            Mahabir bikram Bajrangi ।\n Kumati nivar sumati ke sangi ॥\n Kanchan baran biraj subesa ।\n Kanan kundal kunchit kesa ॥\n\n
+            Hath bajra aur dhvaja biraje ।\n Kaandhe munj janeu saje ॥\n Sankar suvan Kesari nandan ।\n Tej pratap maha jag bandan ॥\n\n
+            Bidyavaan guni ati chatur ।\n Ram kaj karibe ko aatur ॥\n Prabhu charitra sunibe-ko rasiya ।\n Ram Lakhan Sita maan basiya ॥\n\n
+            Sukshma roop dhari Siyahi dikhava ।\n Bikat roop dhari Lank jarava ॥\n Bhim roop dhari asur sahare ।\n Ramachandra ke kaj savare ॥\n\n Laye sanjivan Lakhan jiyaye ।\n Shri Raghuvir harashi ur laye ॥\n Raghupati kinhi bahut badhaee ।\n Tum mam priye Bharat-hi-sam bhai ॥\n\n Sahas badan tumharo jas gaave ।\n Asa-kahi Shripati kantha lagave ॥\n Sankadik brahmadi munisa ।\n Narad-sarad sahit ahisa ॥\n\n
+            Jum Kuber digpaal jaha teh ।\n Kabi Kovid kahi sake kahan teh ॥\n Tum upkar Sugreevahi keenha ।\n Ram milaye rajpad deenha ॥\n\n
+            Tumharo mantra Vibhishan maana ।\n Lankeshvar bhaye sab jag jana ॥\n Yug sahastra jojan par bhanu ।\n Leelyo tahi madhur phaal janu ॥\n\n
+            Prabhu mudrika meli mukh mahi ।\n Jaladi langhi gaye achraj nahi ॥\n Durgaam kaj jagat ke jete ।\n Sugam anugraha tumhre tete ॥\n\n
+            Ram duwaare tum rakhvare ।\n Hoat na adyna binu paisare ॥\n Sab sukh lahe tumhari sarna ।\n Tum rakshak kahu ko darna ॥\n\n
+            Aapan tej samharo aape ।\n Teenho lok hank teh kanpe ॥\n Bhoot pisaach nikat nahin aave ।\n Mahabir jab naam sunave ॥\n\n
+            Nase rog hare sab peera ।\n Japat nirantar Hanumant beera ॥\n Sankat se Hanuman chudave ।\n Man karam bachan dyan jo lave ॥\n\n
+            Sab par Ram tapasvee raja ।\n Teen ke kaj sakal tum saja ॥\n Aur manorath jo koi lave ।\n Sohi amit jeevan phal pave ॥\n\n
+            Charo yug partap tumhara ।\n Hai parasiddha jagat ujiyara ॥\n Sadhu sant ke tum rakhware ।\n Asur nikanandan Ram dulare ॥\n\n
+            Ashta-sidhi nav nidhi ke daata ।\n Asabar deen Janki mata ॥\n Ram rasayan tumhare pasa ।\n Sada raho Raghupati ke dasa ॥\n\n
+            Tumhare bhajan Ram ko paave ।\n Janam-janam ke dukh bisrave ॥\n Anth-kaal Raghubar pur jaee ।\n Jaha janma Hari-bhakht kahaee ॥\n\n
+            Aur devta chitta na dharaee ।\n Hanumanth se he sarba sukh karaee ॥\n Sankat kate-mite sab peera ।\n Jo sumire Hanumat balbeera ॥\n\n
+            Jai Jai Jai Hanuman gosaee ।\n Krupa karahu gurudev ki naee ॥\n Jo sath baar paath kar koi ।\n Chuthee bandhi maha sukh hoee ॥\n\n
+            Jo yaha padhe Hanuman Chalisa ।\n Hoye Siddhi Sakhi Gaurisa ॥\n Tulsidas sada Hari chera ।\n Keeje nath hridaye maha dera॥\n\n
             Doha\n\n
-            Pavan tanay sankat harana mangal murti roop ।\n
-            Ram Lakhan Sita sahit hriday basau sur bhuup ॥\n\n
+            Pavan tanay sankat harana mangal murti roop ।\n Ram Lakhan Sita sahit hriday basau sur bhuup ॥\n\n
             Jai-Ghosh\n\n
-            Bol Bajarangabali ki jai ।\n
-            Pavan putra Hanuman ki jai ॥
+            Bol Bajarangabali ki jai ।\n Pavan putra Hanuman ki jai ॥
         </item>
         <item>
-            श्रीगुरु चरन सरोज रज, निज मनु मुकुरु सुधारि।\n
-            बरनऊं रघुबर बिमल जसु, जो दायकु फल चारि।।\n
-            बुद्धिहीन तनु जानिके, सुमिरौं पवन-कुमार।\n
-            बल बुद्धि बिद्या देहु मोहिं, हरहु कलेस बिकार।।\n\n
-
+            श्रीगुरु चरन सरोज रज, निज मनु मुकुरु सुधारि।\n बरनऊं रघुबर बिमल जसु, जो दायकु फल चारि।।\n बुद्धिहीन तनु जानिके, सुमिरौं पवन-कुमार।\n बल बुद्धि बिद्या देहु मोहिं, हरहु कलेस बिकार।।\n\n
             ।। चौपाई ।।\n\n
-
-            जय हनुमान ज्ञान गुन सागर।\n
-            जय कपीस तिहुं लोक उजागर। 1।\n\n
-
-            रामदूत अतुलित बल धामा।\n
-            अंजनि-पुत्र पवनसुत नामा। 2।\n\n
-
-            महाबीर बिक्रम बजरंगी।\n
-            कुमति निवार सुमति के संगी। 3।\n\n
-
-            कंचन बरन बिराज सुबेसा।\n
-            कानन कुंडल कुंचित केसा। 4।\n\n
-
-            हाथ बज्र औ ध्वजा बिराजै।\n
-            कांधे मूंज जनेऊ साजै।5।\n\n
-
-            संकर सुवन केसरीनंदन।\n
-            तेज प्रताप महा जग बन्दन।6।\n\n
-
-            विद्यावान गुनी अति चातुर।\n
-            राम काज करिबे को आतुर।7।\n\n
-
-            प्रभु चरित्र सुनिबे को रसिया।\n
-            राम लखन सीता मन बसिया।8।\n\n
-
-            सूक्ष्म रूप धरि सियहिं दिखावा।\n
-            बिकट रूप धरि लंक जरावा।9।\n\n
-
-            भीम रूप धरि असुर संहारे।\n
-            रामचंद्र के काज संवारे।10।\n\n
-
-            लाय सजीवन लखन जियाये।\n
-            श्रीरघुबीर हरषि उर लाये।11।\n\n
-
-            रघुपति कीन्ही बहुत बड़ाई।\n
-            तुम मम प्रिय भरतहि सम भाई।12।\n\n
-
-            सहस बदन तुम्हरो जस गावैं।\n
-            अस कहि श्रीपति कंठ लगावैं।13।\n\n
-
-            सनकादिक ब्रह्मादि मुनीसा।\n
-            नारद सारद सहित अहीसा।14।\n\n
-
-            जम कुबेर दिगपाल जहां ते।\n
-            कबि कोबिद कहि सके कहां ते।15।\n\n
-
-            तुम उपकार सुग्रीवहिं कीन्हा।\n
-            राम मिलाय राज पद दीन्हा।16।\n\n
-
-            तुम्हरो मंत्र बिभीषन माना।\n
-            लंकेस्वर भए सब जग जाना।17।\n\n
-
-            जुग सहस्र जोजन पर भानू।\n
-            लील्यो ताहि मधुर फल जानू।18।\n\n
-
-            प्रभु मुद्रिका मेलि मुख माहीं।\n
-            जलधि लांघि गये अचरज नाहीं।19।\n\n
-
-            दुर्गम काज जगत के जेते।\n
-            सुगम अनुग्रह तुम्हरे तेते।20।\n\n
-
-            राम दुआरे तुम रखवारे।\n
-            होत न आज्ञा बिनु पैसारे।21।\n\n
-
-            सब सुख लहै तुम्हारी सरना।\n
-            तुम रक्षक काहू को डर ना।22।\n\n
-
-            आपन तेज सम्हारो आपै।\n
-            तीनों लोक हांक तें कांपै।23।\n\n
-
-            भूत पिसाच निकट नहिं आवै।\n
-            महाबीर जब नाम सुनावै।24।\n\n
-
-            नासै रोग हरै सब पीरा।\n
-            जपत निरंतर हनुमत बीरा।25।\n\n
-
-            संकट तें हनुमान छुड़ावै।\n
-            मन क्रम बचन ध्यान जो लावै।26।\n\n
-
-            सब पर राम तपस्वी राजा।\n
-            तिन के काज सकल तुम साजा।27।\n\n
-
-            और मनोरथ जो कोई लावै।\n
-            सोइ अमित जीवन फल पावै।28।\n\n
-
-            चारों जुग परताप तुम्हारा।\n
-            है परसिद्ध जगत उजियारा।29।\n\n
-
-            साधु-संत के तुम रखवारे।\n
-            असुर निकंदन राम दुलारे।30।\n\n
-
-            अष्ट सिद्धि नौ निधि के दाता।\n
-            अस बर दीन जानकी माता।31।\n\n
-
-            राम रसायन तुम्हरे पासा।\n
-            सदा रहो रघुपति के दासा।32।\n\n
-
-            तुम्हरे भजन राम को पावै।\n
-            जनम-जनम के दुख बिसरावै।33।\n\n
-
-            अन्तकाल रघुबर पुर जाई।\n
-            जहां जन्म हरि-भक्त कहाई।34।\n\n
-
-            और देवता चित्त न धरई।\n
-            हनुमत सेइ सर्ब सुख करई।35।\n\n
-
-            संकट कटै मिटै सब पीरा।\n
-            जो सुमिरै हनुमत बलबीरा।36।\n\n
-
-            जै जै जै हनुमान गोसाईं।\n
-            कृपा करहु गुरुदेव की नाईं।37।\n\n
-
-            जो सत बार पाठ कर कोई।\n
-            छूटहि बंदि महा सुख होई।38।\n\n
-
-            जो यह पढ़ै हनुमान चालीसा।\n
-            होय सिद्धि साखी गौरीसा।39।\n\n
-
-            तुलसीदास सदा हरि चेरा।\n
-            कीजै नाथ हृदय मंह डेरा।40।\n\n
-
+            जय हनुमान ज्ञान गुन सागर।\n जय कपीस तिहुं लोक उजागर। 1।\n\n
+            रामदूत अतुलित बल धामा।\n अंजनि-पुत्र पवनसुत नामा। 2।\n\n
+            महाबीर बिक्रम बजरंगी।\n कुमति निवार सुमति के संगी। 3।\n\n
+            कंचन बरन बिराज सुबेसा।\n कानन कुंडल कुंचित केसा। 4।\n\n
+            हाथ बज्र औ ध्वजा बिराजै।\n कांधे मूंज जनेऊ साजै।5।\n\n
+            संकर सुवन केसरीनंदन।\n तेज प्रताप महा जग बन्दन।6।\n\n
+            विद्यावान गुनी अति चातुर।\n राम काज करिबे को आतुर।7।\n\n
+            प्रभु चरित्र सुनिबे को रसिया।\n राम लखन सीता मन बसिया।8।\n\n
+            सूक्ष्म रूप धरि सियहिं दिखावा।\n बिकट रूप धरि लंक जरावा।9।\n\n
+            भीम रूप धरि असुर संहारे।\n रामचंद्र के काज संवारे।10।\n\n
+            लाय सजीवन लखन जियाये।\n श्रीरघुबीर हरषि उर लाये।11।\n\n
+            रघुपति कीन्ही बहुत बड़ाई।\n तुम मम प्रिय भरतहि सम भाई।12।\n\n
+            सहस बदन तुम्हरो जस गावैं।\n अस कहि श्रीपति कंठ लगावैं।13।\n\n
+            सनकादिक ब्रह्मादि मुनीसा।\n नारद सारद सहित अहीसा।14।\n\n
+            जम कुबेर दिगपाल जहां ते।\n कबि कोबिद कहि सके कहां ते।15।\n\n
+            तुम उपकार सुग्रीवहिं कीन्हा।\n राम मिलाय राज पद दीन्हा।16।\n\n
+            तुम्हरो मंत्र बिभीषन माना।\n लंकेस्वर भए सब जग जाना।17।\n\n
+            जुग सहस्र जोजन पर भानू।\n लील्यो ताहि मधुर फल जानू।18।\n\n
+            प्रभु मुद्रिका मेलि मुख माहीं।\n जलधि लांघि गये अचरज नाहीं।19।\n\n
+            दुर्गम काज जगत के जेते।\n सुगम अनुग्रह तुम्हरे तेते।20।\n\n
+            राम दुआरे तुम रखवारे।\n होत न आज्ञा बिनु पैसारे।21।\n\n
+            सब सुख लहै तुम्हारी सरना।\n तुम रक्षक काहू को डर ना।22।\n\n
+            आपन तेज सम्हारो आपै।\n तीनों लोक हांक तें कांपै।23।\n\n
+            भूत पिसाच निकट नहिं आवै।\n महाबीर जब नाम सुनावै।24।\n\n
+            नासै रोग हरै सब पीरा।\n जपत निरंतर हनुमत बीरा।25।\n\n
+            संकट तें हनुमान छुड़ावै।\n मन क्रम बचन ध्यान जो लावै।26।\n\n
+            सब पर राम तपस्वी राजा।\n तिन के काज सकल तुम साजा।27।\n\n
+            और मनोरथ जो कोई लावै।\n सोइ अमित जीवन फल पावै।28।\n\n
+            चारों जुग परताप तुम्हारा।\n है परसिद्ध जगत उजियारा।29।\n\n
+            साधु-संत के तुम रखवारे।\n असुर निकंदन राम दुलारे।30।\n\n
+            अष्ट सिद्धि नौ निधि के दाता।\n अस बर दीन जानकी माता।31।\n\n
+            राम रसायन तुम्हरे पासा।\n सदा रहो रघुपति के दासा।32।\n\n
+            तुम्हरे भजन राम को पावै।\n जनम-जनम के दुख बिसरावै।33।\n\n
+            अन्तकाल रघुबर पुर जाई।\n जहां जन्म हरि-भक्त कहाई।34।\n\n
+            और देवता चित्त न धरई।\n हनुमत सेइ सर्ब सुख करई।35।\n\n
+            संकट कटै मिटै सब पीरा।\n जो सुमिरै हनुमत बलबीरा।36।\n\n
+            जै जै जै हनुमान गोसाईं।\n कृपा करहु गुरुदेव की नाईं।37।\n\n
+            जो सत बार पाठ कर कोई।\n छूटहि बंदि महा सुख होई।38।\n\n
+            जो यह पढ़ै हनुमान चालीसा।\n होय सिद्धि साखी गौरीसा।39।\n\n
+            तुलसीदास सदा हरि चेरा।\n कीजै नाथ हृदय मंह डेरा।40।\n\n
             ।। दोहा ।।\n\n
-
-            पवन तनय संकट हरन, मंगल मूरति रूप।\n
-            राम लखन सीता सहित, हृदय बसहु सुर भूप।।
+            पवन तनय संकट हरन, मंगल मूरति रूप।\n राम लखन सीता सहित, हृदय बसहु सुर भूप।।
         </item>
     </string-array>
     <string-array name="krishna_prayer">

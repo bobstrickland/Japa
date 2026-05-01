@@ -25,6 +25,7 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.provider.Settings;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,6 +61,7 @@ public class CounterService extends Service {
     static final String PREF_TOTAL_BEADS      = "totalBeads";
     static final String PREF_TOTAL_ROUNDS     = "totalRounds";
     static final String PREF_FEEDBACK         = "feedback";
+    static final String PREF_FEEDBACK_ROUND   = "feedback_round";
     static final String PREF_SETTINGS_CHANGED = "settingsChanged";
     static final String PREF_CURRENT_BEAD     = "currentBead";
     static final String PREF_CURRENT_ROUND    = "currentRound";
@@ -455,9 +457,16 @@ public class CounterService extends Service {
         String type = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                 .getString(PREF_FEEDBACK, FEEDBACK_VIBRATION);
         switch (type) {
-            case FEEDBACK_VIBRATION: vibrateFor(roundComplete); break;
-            case FEEDBACK_SOUND:     playSound(roundComplete);  break;
-            default: break;
+            case FEEDBACK_VIBRATION: vibrateFor(false); break;
+            case FEEDBACK_SOUND:     playBeadSound();
+        }
+        if (roundComplete) {
+            type = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                    .getString(PREF_FEEDBACK_ROUND, FEEDBACK_VIBRATION);
+            switch (type) {
+                case FEEDBACK_VIBRATION: vibrateFor(roundComplete); break;
+                case FEEDBACK_SOUND:     playRoundSound();
+            }
         }
     }
 
@@ -482,23 +491,20 @@ public class CounterService extends Service {
         }
     }
 
-    private synchronized void playSound(boolean roundComplete) {
+    private void playRoundSound() {
+        MediaPlayer player = MediaPlayer.create(this, Settings.System.DEFAULT_NOTIFICATION_URI);
+        player.start();
+    }
+
+    private synchronized void playBeadSound() {
         if (soundPool == null) return;
         int speedPref = 50+getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_SPEED, 50);
         float rate = 0.5f + (speedPref / 100.0f);
-        if (roundComplete && roundSoundId != -1) {
-            soundPool.play(roundSoundId, 1f, 1f, 0, 0, rate);
-            if (roundSoundDuration > 0) {
-                sleep(roundSoundDuration);
-            }
-        } else if (beadSoundId != -1) {
+        if (beadSoundId != -1) {
             soundPool.play(beadSoundId, 1f, 1f, 0, 0, rate);
             if (beadSoundDuration > 0) {
                 sleep(beadSoundDuration);
             }
-        }
-        if (roundComplete) {
-            vibrateFor(roundComplete);
         }
     }
 

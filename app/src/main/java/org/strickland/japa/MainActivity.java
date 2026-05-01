@@ -415,7 +415,11 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         // Round text
         tvRound.setText(getString(R.string.round_label, currentRound, totalRounds));
         // Round progress dots (shown when ≤ 24 rounds)
-        buildRoundDots(currentRound, totalRounds);
+        boolean allComplete = false;
+        if (currentBead == totalBeads && currentRound==totalRounds) {
+            allComplete = true;
+        }
+        buildRoundDots(currentRound, totalRounds, allComplete);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -467,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
      * Dynamically build a row of filled/empty circle indicators for the round count.
      * For more than 24 rounds the dots layout is hidden to avoid overflow.
      */
-    private void buildRoundDots(int currentRound, int totalRounds) {
+    private void buildRoundDots(int currentRound, int totalRounds, boolean complete) {
         roundDotsLayout.removeAllViews();
         if (totalRounds > 24) {
             roundDotsLayout.setVisibility(View.GONE);
@@ -483,10 +487,14 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dotSizePx, dotSizePx);
             lp.setMargins(gapPx / 2, 0, gapPx / 2, 0);
             dot.setLayoutParams(lp);
-            dot.setBackground(ContextCompat.getDrawable(this,
-                    i < currentRound ? R.drawable.dot_complete
-                            : i == currentRound ? R.drawable.dot_current
-                            : R.drawable.dot_pending));
+            if (complete) {
+                dot.setBackground(ContextCompat.getDrawable(this, R.drawable.dot_complete));
+            } else {
+                dot.setBackground(ContextCompat.getDrawable(this,
+                        i < currentRound ? R.drawable.dot_complete
+                                : i == currentRound ? R.drawable.dot_current
+                                : R.drawable.dot_pending));
+            }
             roundDotsLayout.addView(dot);
         }
     }
