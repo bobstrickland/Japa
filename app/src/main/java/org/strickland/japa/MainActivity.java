@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
+//import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     private ScreenReceiver  screenReceiver;
     private boolean         autoEnabled = true;
     private GestureDetector swipeDetector;
+    private long            lastKeyBeadTimeMs = 0;
 
     // ── Notification permission (Android 13+) ─────────────────────────────────
     private final ActivityResultLauncher<String> notifPermLauncher =
@@ -299,6 +301,12 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
         int code = event.getKeyCode();
         if (code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) {
             if (event.getAction() == KeyEvent.ACTION_DOWN && isBound && counterService.isRunning() && !counterService.isAutoCounting()) {
+//                Log.d("MainActivity","VolumeButton");
+                long now = System.currentTimeMillis();
+                long beadDuration = counterService.getBeadSoundDuration();
+                long cooldown = beadDuration > 0 ? beadDuration : 300;
+                if (now - lastKeyBeadTimeMs < cooldown) return true; // debounce — sound still playing
+                lastKeyBeadTimeMs = now;
                 counterService.countBead();
                 return true; // consume — volume unchanged
             }
@@ -314,15 +322,14 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     @Override
     public void onCountUpdated(int currentBead, int currentRound,
                                int totalBeads, int totalRounds, boolean isComplete) {
-        // This may be called from a background thread via the volume broadcast receiver
-        runOnUiThread(() -> updateUI(currentBead, currentRound, totalBeads, totalRounds, isComplete));
-        if (counterService != null) {
-            if (counterService.isAutoCounting()) {
-                btnAuto.setText(R.string.auto_stop);
-            } else {
-                btnAuto.setText(R.string.auto_start);
+        // May be called from a background thread — all UI work must go through runOnUiThread.
+        runOnUiThread(() -> {
+            updateUI(currentBead, currentRound, totalBeads, totalRounds, isComplete);
+            if (counterService != null) {
+                btnAuto.setText(counterService.isAutoCounting()
+                        ? R.string.auto_stop : R.string.auto_start);
             }
-        }
+        });
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────

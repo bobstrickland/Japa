@@ -26,6 +26,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.provider.Settings;
+//import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -109,6 +110,16 @@ public class CounterService extends Service {
     private long beadSoundDuration = -1;
     private long roundSoundDuration = -1;
 
+    public long getBeadSoundDuration() {
+        String type = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getString(PREF_FEEDBACK, FEEDBACK_VIBRATION);
+        if (FEEDBACK_SOUND.equals(type)) {
+            return beadSoundDuration;
+        } else {
+            return -1;
+        }
+    }
+
     /**
      * Detects volume button presses when the screen is off.
      * <p>
@@ -123,6 +134,7 @@ public class CounterService extends Service {
     private final BroadcastReceiver volumeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+//            Log.d("CounterService","VolumeButton");
 
             if (!isRunning || isComplete || autoCounting) return;
             if (!"android.media.VOLUME_CHANGED_ACTION".equals(intent.getAction())) return;
@@ -137,14 +149,28 @@ public class CounterService extends Service {
             int prevVol    = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_VALUE",  -1);
 
             // Single-step change = deliberate button press.
-            // Cooldown (300 ms) absorbs the burst of VOLUME_CHANGED_ACTION broadcasts
-            // that Android fires when the screen turns off, preventing phantom counts.
+            // Cooldown spans the full sound duration so a second press during playback
+            // is ignored, matching the behaviour of the blocking sleep it replaces.
             if (newVol >= 0 && Math.abs(newVol - prevVol) == 1) { //  && prevVol >= 0
                 long now = System.currentTimeMillis();
-                if (now - lastBeadTimeMs < 300) return;
+                long cooldownMs = getBeadSoundDuration() > 0 ? getBeadSoundDuration()+300 : 300;
+//                Log.d("CounterService","cooldownMs:"+cooldownMs);
+                if (now - lastBeadTimeMs < cooldownMs) return;
                 lastBeadTimeMs = now;
                 countBead();
                 resetVolumeToPreviousValue(streamType, prevVol);
+//                if (getBeadSoundDuration() > 0) {
+//                    Log.d("CounterService","in first part of if");
+//                    // Defer volume reset until the sound finishes — postDelayed returns
+//                    // immediately so onReceive() is never blocked.
+//                    long resetDelayMs = getBeadSoundDuration() > 0 ? getBeadSoundDuration() + 300 : 0;
+//                    wakeHandler.postDelayed(
+//                            () -> resetVolumeToPreviousValue(streamType, prevVol),
+//                            resetDelayMs);
+//                } else {
+//                    Log.d("CounterService","in second part of if");
+//                    resetVolumeToPreviousValue(streamType, prevVol);
+//                }
             }
         }
     };
@@ -239,9 +265,11 @@ public class CounterService extends Service {
                     stopAutoCounting();
                     break;
                 }
-                sleep(500);
+                // Pace beads on the background thread; use sound duration when available
+                long pauseMs = getBeadSoundDuration() + 500;
+                sleep(pauseMs);
             }
-            notifyCallback();
+            new Handler(Looper.getMainLooper()).post(this::notifyCallback);
         });
     }
 
@@ -493,6 +521,8 @@ public class CounterService extends Service {
 
     private void playRoundSound() {
         MediaPlayer player = MediaPlayer.create(this, Settings.System.DEFAULT_NOTIFICATION_URI);
+        if (player == null) return;
+        player.setOnCompletionListener(mp -> { mp.release(); });
         player.start();
     }
 
@@ -502,20 +532,20 @@ public class CounterService extends Service {
         float rate = 0.5f + (speedPref / 100.0f);
         if (beadSoundId != -1) {
             soundPool.play(beadSoundId, 1f, 1f, 0, 0, rate);
-            if (beadSoundDuration > 0) {
-                sleep(beadSoundDuration);
-            }
+            // Never sleep here — this can be called on the main thread (volume key / receiver).
+            // Auto-counting pacing is handled by the background loop in startAutoCounting().
         }
     }
 
     private long getSoundDuration(int rawId){
         MediaPlayer player = MediaPlayer.create(this, rawId);
+        if (player == null) return -1;
         int duration = player.getDuration();
+        player.release();
         int speedPref = 50+getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(PREF_MANTRA_SPEED, 50);
         if (speedPref != 50) {
             float rate = 0.5f + (speedPref / 100.0f);
-            float dur = new Integer(duration).floatValue() / rate;
-            duration = new Float(dur).intValue();
+            duration = (int)(duration / rate);
         }
         return duration;
     }
