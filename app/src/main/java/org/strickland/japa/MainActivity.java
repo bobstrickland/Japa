@@ -299,7 +299,9 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int code = event.getKeyCode();
-        if (code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) {
+        if (counterService.isAutoCounting()) {
+            return super.dispatchKeyEvent(event);
+        } else if (code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) {
             if (event.getAction() == KeyEvent.ACTION_DOWN && isBound && counterService.isRunning() && !counterService.isAutoCounting()) {
 //                Log.d("MainActivity","VolumeButton");
                 long now = System.currentTimeMillis();
