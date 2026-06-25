@@ -60,8 +60,10 @@ public class PrayerActivity extends AppCompatActivity {
                 if (Math.abs(dX) > Math.abs(dY)
                         && Math.abs(dX) > SWIPE_THRESHOLD
                         && Math.abs(vX) > SWIPE_VEL_THRESHOLD) {
-                    finish();
-                    return true;
+                    if (e1.getX() < e2.getX()) { // swipe right
+                        finish();
+                        return true;
+                    }
                 }
                 return false;
             }

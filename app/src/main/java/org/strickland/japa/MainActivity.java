@@ -187,8 +187,12 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 if (Math.abs(dX) > Math.abs(dY)
                         && Math.abs(dX) > SWIPE_THRESHOLD
                         && Math.abs(vX) > SWIPE_VEL_THRESHOLD) {
-                    startActivity(new Intent(MainActivity.this, PrayerActivity.class));
-                    return true;
+                    if (e1.getX() > e2.getX()) { // swipe left
+                        startActivity(new Intent(MainActivity.this, PrayerActivity.class));
+                        return true;
+                    } else { // swipe right
+                        ///  noting here yet
+                    }
                 }
                 return false;
             }
