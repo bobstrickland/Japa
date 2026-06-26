@@ -213,7 +213,7 @@
     </string-array>
     <string-array name="hanuman_chalisa_prayer">
         <item>Hanuman Chalisa</item>
-        <item></item>
+        <item>hanuman_chalisa</item>
         <item>hanuman</item>
         <item>
             Doha\n\n
