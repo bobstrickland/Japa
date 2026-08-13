@@ -93,6 +93,13 @@
         <item>Om Aim Bhreem Hanumate\nShree Ram Dootaaya Namaha</item>
         <item>ॐ ऐं भ्रीम हनुमते\nश्री राम दूताय नमः</item>
     </string-array>
+    <string-array name="shani_moola">
+        <item>Shani Mantra</item>
+        <item></item>
+        <item>shani</item>
+        <item>Om Sham Shanaishcharaya Namah</item>
+        <item>ॐ शं शनैश्चराय नमः</item>
+    </string-array>
     <string-array name="kali_moola_mantra">
         <item>Dakshina Kali Moola</item>
         <item>kali_moola</item>
