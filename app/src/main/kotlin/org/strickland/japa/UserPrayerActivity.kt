@@ -43,7 +43,6 @@ class UserPrayerActivity : AppCompatActivity() {
     private lateinit var tvText: TextView
     private lateinit var tvEmpty: TextView
     private lateinit var spinner: Spinner
-    private lateinit var spinnerSet: Spinner
     private lateinit var btnAdd: ImageButton
     private lateinit var btnManageSets: ImageButton
     private lateinit var btnPrev: ImageButton
@@ -57,12 +56,11 @@ class UserPrayerActivity : AppCompatActivity() {
     private var records: List<Record> = emptyList()
     private var sets: List<PrayerSet> = emptyList()
 
-    /** Drives which prayers are listed; [ALL_PRAYERS] means every prayer, ordered by name. */
-    private val selectedSetId = MutableStateFlow(ALL_PRAYERS)
+    /** Drives which prayers are listed. Chosen on [PrayerSetActivity] and read back on resume. */
+    private val selectedSetId = MutableStateFlow(PrayerSelection.ALL_PRAYERS)
 
     /** Guards against an adapter's initial callback overwriting the restored selection. */
     private var applyingRecords = false
-    private var applyingSets = false
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +72,6 @@ class UserPrayerActivity : AppCompatActivity() {
         tvText = findViewById(R.id.tv_userrecord_text)
         tvEmpty = findViewById(R.id.tv_userrecord_empty)
         spinner = findViewById(R.id.spinner_userrecord)
-        spinnerSet = findViewById(R.id.spinner_userrecord_set)
         btnAdd = findViewById(R.id.btn_add_userrecord)
         btnManageSets = findViewById(R.id.btn_manage_sets)
         btnPrev = findViewById(R.id.btn_prev_prayer)
@@ -100,7 +97,7 @@ class UserPrayerActivity : AppCompatActivity() {
             }
         })
 
-        selectedSetId.value = savedSetId()
+        selectedSetId.value = PrayerSelection.setId(this)
 
         btnAdd.setOnClickListener {
             startActivity(Intent(this, UserRecordEditActivity::class.java).apply {
@@ -123,18 +120,6 @@ class UserPrayerActivity : AppCompatActivity() {
             override fun onNothingSelected(p: AdapterView<*>?) {}
         }
 
-        spinnerSet.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p: AdapterView<*>?, v: View?, position: Int, id: Long) {
-                if (applyingSets) return
-                // Position 0 is the "All prayers" entry, so sets start at 1.
-                val setId = if (position == 0) ALL_PRAYERS else sets[position - 1].id
-                selectedSetId.value = setId
-                rememberSet(setId)
-            }
-
-            override fun onNothingSelected(p: AdapterView<*>?) {}
-        }
-
         lifecycleScope.launch {
             // Bring records made before images were copied into the store up to date, then reclaim
             // images nothing refers to. Both rewrite the table, so the collectors below refresh.
@@ -150,7 +135,11 @@ class UserPrayerActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 selectedSetId
                     .flatMapLatest { id ->
-                        if (id == ALL_PRAYERS) recordDao.getAll() else setDao.observeMembers(id)
+                        if (id == PrayerSelection.ALL_PRAYERS) {
+                            recordDao.getAll()
+                        } else {
+                            setDao.observeMembers(id)
+                        }
                     }
                     .collectLatest { showRecords(it) }
             }
@@ -183,6 +172,12 @@ class UserPrayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // The set is chosen on the sets screen, so pick up any change made while we were away.
+        selectedSetId.value = PrayerSelection.setId(this)
+    }
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         gestureDetector.onTouchEvent(event)
         return super.dispatchTouchEvent(event)
@@ -192,22 +187,11 @@ class UserPrayerActivity : AppCompatActivity() {
 
     private fun showSets(newSets: List<PrayerSet>) {
         sets = newSets
-        val wanted = selectedSetId.value
-
-        applyingSets = true
-        val labels = listOf(getString(R.string.all_prayers)) + newSets.map { it.name }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerSet.adapter = adapter
-
-        val index = newSets.indexOfFirst { it.id == wanted }
-        spinnerSet.setSelection(if (index >= 0) index + 1 else 0)
-        applyingSets = false
-
-        // A set that has been deleted since falls back to showing everything.
-        if (wanted != ALL_PRAYERS && index < 0) {
-            selectedSetId.value = ALL_PRAYERS
-            rememberSet(ALL_PRAYERS)
+        // A set deleted while we were away falls back to showing everything.
+        val current = selectedSetId.value
+        if (current != PrayerSelection.ALL_PRAYERS && newSets.none { it.id == current }) {
+            selectedSetId.value = PrayerSelection.ALL_PRAYERS
+            PrayerSelection.setSetId(this, PrayerSelection.ALL_PRAYERS)
         }
     }
 
@@ -223,7 +207,11 @@ class UserPrayerActivity : AppCompatActivity() {
         btnPrev.visibility = if (hasRecords) View.VISIBLE else View.GONE
         btnNext.visibility = if (hasRecords) View.VISIBLE else View.GONE
         tvEmpty.setText(
-            if (selectedSetId.value == ALL_PRAYERS) R.string.no_user_prayers else R.string.set_empty
+            if (selectedSetId.value == PrayerSelection.ALL_PRAYERS) {
+                R.string.no_user_prayers
+            } else {
+                R.string.set_empty
+            }
         )
 
         if (!hasRecords) {
@@ -280,27 +268,12 @@ class UserPrayerActivity : AppCompatActivity() {
 
     private fun rememberSelection(position: Int) {
         val record = records.getOrNull(position) ?: return
-        prefs().edit().putLong(PREF_RECORD_ID, record.id).apply()
+        PrayerSelection.setRecordId(this, record.id)
     }
 
-    private fun rememberSet(setId: Long) {
-        prefs().edit().putLong(PREF_SET_ID, setId).apply()
-    }
-
-    private fun savedRecordId(): Long = prefs().getLong(PREF_RECORD_ID, -1L)
-
-    private fun savedSetId(): Long = prefs().getLong(PREF_SET_ID, ALL_PRAYERS)
-
-    private fun prefs() = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+    private fun savedRecordId(): Long = PrayerSelection.recordId(this)
 
     companion object {
-        const val PREFS_NAME = "UserPrayerPrefs"
-        private const val PREF_RECORD_ID = "userPrayerRecordId"
-        private const val PREF_SET_ID = "userPrayerSetId"
-
-        /** Sentinel for the "All prayers" spinner entry; no real set id is negative. */
-        private const val ALL_PRAYERS = -1L
-
         private const val SWIPE_THRESHOLD = 100f
         private const val SWIPE_VEL_THRESHOLD = 100f
         private const val DISABLED_ALPHA = 0.3f

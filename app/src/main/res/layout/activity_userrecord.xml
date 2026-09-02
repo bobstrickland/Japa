@@ -33,12 +33,6 @@
             android:paddingStart="16dp"
             android:paddingEnd="8dp">
 
-            <Spinner
-                android:id="@+id/spinner_userrecord_set"
-                style="@style/SpinnerStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1" />
-
             <ImageButton
                 android:id="@+id/btn_manage_sets"
                 android:layout_width="48dp"
@@ -48,9 +42,15 @@
                 android:src="@drawable/ic_list"
                 app:tint="@color/accent_gold" />
 
+            <!-- Pushes the add button to the far edge, leaving the sets button on the left. -->
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
             <ImageButton
                 android:id="@+id/btn_add_userrecord"
-                android:layout_width="48dp"
+                android:layout_width="46dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/add_user_prayer"

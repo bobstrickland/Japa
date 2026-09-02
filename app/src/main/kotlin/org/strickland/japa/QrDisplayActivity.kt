@@ -39,26 +39,54 @@ class QrDisplayActivity : AppCompatActivity() {
 
         window.attributes = window.attributes.apply { screenBrightness = 1f }
 
-        val setId = intent.getLongExtra(EXTRA_SET_ID, -1L)
-        lifecycleScope.launch { show(setId) }
+        lifecycleScope.launch {
+            val prayerName = intent.getStringExtra(EXTRA_PRAYER_NAME)
+            if (prayerName != null) {
+                // A single prayer travels without a set, so it imports as a loose prayer.
+                showCode(
+                    title = prayerName,
+                    setName = null,
+                    entries = listOf(
+                        PrayerBundle.Entry(
+                            prayerName,
+                            intent.getStringExtra(EXTRA_PRAYER_TEXT).orEmpty(),
+                            null
+                        )
+                    )
+                )
+            } else {
+                showSet(intent.getLongExtra(EXTRA_SET_ID, -1L))
+            }
+        }
     }
 
-    private suspend fun show(setId: Long) {
+    private suspend fun showSet(setId: Long) {
         val db = AppDatabase.getInstance(this)
         val set = db.prayerSetDao().getSet(setId)
         val records = if (set == null) emptyList() else db.prayerSetDao().getMembersOnce(setId)
-        tvTitle.text = set?.name.orEmpty()
+        showCode(
+            title = set?.name.orEmpty(),
+            setName = set?.name,
+            entries = records.map { PrayerBundle.Entry(it.name, it.text, null) }
+        )
+    }
 
-        if (records.isEmpty()) {
+    private suspend fun showCode(
+        title: String,
+        setName: String?,
+        entries: List<PrayerBundle.Entry>
+    ) {
+        tvTitle.text = title
+
+        if (entries.isEmpty()) {
             tvHint.setText(R.string.share_empty)
             return
         }
 
-        val entries = records.map { PrayerBundle.Entry(it.name, it.text, null) }
-        val payload = PrayerQr.encode(set?.name, entries)
+        val payload = PrayerQr.encode(setName, entries)
         if (payload == null) {
             // Deliberately specific: the user needs to know the file share still works.
-            val used = PrayerQr.charCount(set?.name, entries)
+            val used = PrayerQr.charCount(setName, entries)
             tvHint.text = getString(R.string.qr_too_big, used * 100 / PrayerQr.capacity())
             return
         }
@@ -80,5 +108,9 @@ class QrDisplayActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_SET_ID = "setId"
+
+        /** Exporting one prayer, taken from the edit screen as shown rather than as stored. */
+        const val EXTRA_PRAYER_NAME = "prayerName"
+        const val EXTRA_PRAYER_TEXT = "prayerText"
     }
 }

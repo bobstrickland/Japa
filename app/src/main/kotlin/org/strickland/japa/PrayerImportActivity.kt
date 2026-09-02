@@ -56,6 +56,26 @@ class PrayerImportActivity : AppCompatActivity() {
         btnCancel.setOnClickListener { finish() }
         btnImport.setOnClickListener { runImport() }
 
+        load()
+    }
+
+
+    /**
+     * Another bundle can arrive while this screen is already up — a second file opened from a chat
+     * app, say. Without this the new one would be silently ignored and the old preview left in place.
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        load()
+    }
+
+    /** Reads whatever this screen was launched with and describes it, committing nothing. */
+    private fun load() {
+        scanned = null
+        source = null
+        btnImport.isEnabled = false
+
         val payload = intent?.getStringExtra(EXTRA_QR_PAYLOAD)
         if (payload != null) {
             val manifest = PrayerQr.decode(payload)
@@ -98,10 +118,11 @@ class PrayerImportActivity : AppCompatActivity() {
             failed()
             return
         }
+        val count = manifest.entries.size
         tvSummary.text = if (manifest.setName != null) {
-            getString(R.string.import_summary, manifest.setName, manifest.entries.size)
+            resources.getQuantityString(R.plurals.import_summary, count, manifest.setName, count)
         } else {
-            getString(R.string.import_summary_unnamed, manifest.entries.size)
+            resources.getQuantityString(R.plurals.import_summary_unnamed, count, count)
         }
         tvContents.text = manifest.entries.joinToString("\n") { it.name }
         showConflicts(manifest)

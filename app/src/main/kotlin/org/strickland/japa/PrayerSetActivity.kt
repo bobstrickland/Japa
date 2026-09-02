@@ -21,9 +21,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import java.util.Locale
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -119,11 +116,11 @@ class PrayerSetActivity : AppCompatActivity() {
                 )
             }
         }
-        btnScan.setOnClickListener { scanQr() }
+        btnScan.setOnClickListener { QrScan.start(this) }
 
         spinnerSets.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p: AdapterView<*>?, v: View?, position: Int, id: Long) {
-                if (!applyingSets) observeSelectedSet()
+                if (!applyingSets) onSetChosen()
             }
 
             override fun onNothingSelected(p: AdapterView<*>?) {}
@@ -139,43 +136,53 @@ class PrayerSetActivity : AppCompatActivity() {
     // ── Sets ──────────────────────────────────────────────────────────────────
 
     private fun showSets(newSets: List<PrayerSet>) {
-        val target = pendingSelection ?: selectedSet()?.id
+        val target = pendingSelection ?: selectedSet()?.id ?: PrayerSelection.setId(this)
         sets = newSets
 
         applyingSets = true
-        val adapterSets = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            newSets.map { it.name }
-        )
+        // "All prayers" leads the list: this spinner also chooses what the prayer screen shows,
+        // and that screen must be able to show everything.
+        val labels = listOf(getString(R.string.all_prayers)) + newSets.map { it.name }
+        val adapterSets = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
         adapterSets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerSets.adapter = adapterSets
-        val position = newSets.indexOfFirst { it.id == target }.coerceAtLeast(0)
-        if (newSets.isNotEmpty()) spinnerSets.setSelection(position)
+        val index = newSets.indexOfFirst { it.id == target }
+        spinnerSets.setSelection(if (index >= 0) index + 1 else 0)
         applyingSets = false
         if (newSets.any { it.id == pendingSelection }) pendingSelection = null
 
-        val hasSets = newSets.isNotEmpty()
-        spinnerSets.visibility = if (hasSets) View.VISIBLE else View.GONE
-        btnRename.isEnabled = hasSets
-        btnDelete.isEnabled = hasSets
-        btnAddPrayers.isEnabled = hasSets
-        btnShare.isEnabled = hasSets
-        btnQr.isEnabled = hasSets
+        onSetChosen()
+    }
+
+    /**
+     * Applies the spinner's choice: records it for the prayer screen, and scopes this screen's
+     * actions to it. The set-specific buttons mean nothing under "All prayers", so they go dim.
+     */
+    private fun onSetChosen() {
+        val set = selectedSet()
+        PrayerSelection.setSetId(this, set?.id ?: PrayerSelection.ALL_PRAYERS)
+
+        val hasSet = set != null
         listOf(btnRename, btnDelete, btnAddPrayers, btnShare, btnQr).forEach {
-            it.alpha = if (hasSets) 1f else DISABLED_ALPHA
+            it.isEnabled = hasSet
+            it.alpha = if (hasSet) 1f else DISABLED_ALPHA
         }
 
-        if (hasSets) {
-            observeSelectedSet()
-        } else {
+        if (set == null) {
+            membersJob?.cancel()
             members = emptyList()
             adapter.submit(emptyList())
-            showEmpty(R.string.no_sets)
+            showEmpty(if (sets.isEmpty()) R.string.no_sets else R.string.set_pick_hint)
+        } else {
+            observeSelectedSet()
         }
     }
 
-    private fun selectedSet(): PrayerSet? = sets.getOrNull(spinnerSets.selectedItemPosition)
+    /** Null for the leading "All prayers" entry, which is not a set. */
+    private fun selectedSet(): PrayerSet? {
+        val position = spinnerSets.selectedItemPosition
+        return if (position <= 0) null else sets.getOrNull(position - 1)
+    }
 
     private fun observeSelectedSet() {
         val set = selectedSet() ?: return
@@ -264,30 +271,6 @@ class PrayerSetActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.cancel, null)
                 .show()
         }
-    }
-
-    /**
-     * Reads a prayer QR with the Play Services scanner, which supplies its own camera UI and
-     * needs no camera permission of ours.
-     */
-    private fun scanQr() {
-        val options = GmsBarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-            .enableAutoZoom()
-            .build()
-        GmsBarcodeScanning.getClient(this, options).startScan()
-            .addOnSuccessListener { barcode ->
-                val text = barcode.rawValue
-                if (text == null || PrayerQr.decode(text) == null) {
-                    toast(R.string.scan_not_ours)
-                    return@addOnSuccessListener
-                }
-                startActivity(
-                    Intent(this, PrayerImportActivity::class.java)
-                        .putExtra(PrayerImportActivity.EXTRA_QR_PAYLOAD, text)
-                )
-            }
-            .addOnFailureListener { toast(R.string.scan_failed) }
     }
 
     /** Writes the set to a bundle and hands it to the system share sheet. */

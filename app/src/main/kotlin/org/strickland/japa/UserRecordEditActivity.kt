@@ -1,5 +1,6 @@
 package org.strickland.japa
 
+import android.content.Intent
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
@@ -38,6 +41,8 @@ class UserRecordEditActivity : AppCompatActivity() {
     private lateinit var btnAdd: MaterialButton
     private lateinit var btnSave: MaterialButton
     private lateinit var btnCancel: MaterialButton
+    private lateinit var btnExport: MaterialButton
+    private lateinit var btnImport: MaterialButton
     private lateinit var btnClose: ImageButton
 
     private val dao by lazy { AppDatabase.getInstance(this).recordDao() }
@@ -58,6 +63,7 @@ class UserRecordEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_userrecord_edit)
+        keepTypingVisible()
 
         etName = findViewById(R.id.et_record_name)
         etText = findViewById(R.id.et_record_text)
@@ -70,6 +76,8 @@ class UserRecordEditActivity : AppCompatActivity() {
         btnAdd = findViewById(R.id.btn_record_add)
         btnSave = findViewById(R.id.btn_record_save)
         btnCancel = findViewById(R.id.btn_record_cancel)
+        btnExport = findViewById(R.id.btn_record_export)
+        btnImport = findViewById(R.id.btn_record_import)
         btnClose = findViewById(R.id.btn_record_close)
 
         btnImage.setOnClickListener { pickImage.launch(arrayOf("image/*")) }
@@ -83,6 +91,8 @@ class UserRecordEditActivity : AppCompatActivity() {
         btnSave.setOnClickListener { save() }
         btnCancel.setOnClickListener { cancel() }
         btnClose.setOnClickListener { confirmDiscard { finish() } }
+        btnExport.setOnClickListener { exportPrayer() }
+        btnImport.setOnClickListener { QrScan.start(this) }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -120,6 +130,29 @@ class UserRecordEditActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt(STATE_POSITION, position)
         outState.putString(STATE_IMAGE_URI, imageName)
+    }
+
+    /**
+     * Keeps the line being typed above the keyboard.
+     *
+     * `windowSoftInputMode="adjustResize"` alone does nothing from targetSdk 35, where the app is
+     * laid out edge to edge and the window no longer shrinks for the keyboard by itself — the
+     * inset has to be applied here. The layout already reserves room for the navigation bar, so
+     * only the extra height the keyboard adds beyond it is padded, leaving the resting look alone.
+     */
+    private fun keepTypingVisible() {
+        val root = findViewById<View>(R.id.record_edit_root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                (ime.bottom - bars.bottom).coerceAtLeast(0)
+            )
+            insets
+        }
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────
@@ -200,6 +233,28 @@ class UserRecordEditActivity : AppCompatActivity() {
             ivPreview.visibility = View.VISIBLE
             RecordImages.loadInto(ivPreview, image, lifecycleScope)
         }
+    }
+
+    // ── Export ────────────────────────────────────────────────────────────────
+
+    /**
+     * Shows this one prayer as a QR code, exactly as it appears on screen — unsaved edits
+     * included, since that is what "the prayer displayed" means to someone looking at it.
+     *
+     * It travels without a set, so whoever scans it gets a loose prayer rather than a set of one.
+     */
+    private fun exportPrayer() {
+        val name = etName.text.toString().trim()
+        if (name.isEmpty()) {
+            etName.error = getString(R.string.record_name_required)
+            etName.requestFocus()
+            return
+        }
+        startActivity(
+            Intent(this, QrDisplayActivity::class.java)
+                .putExtra(QrDisplayActivity.EXTRA_PRAYER_NAME, name)
+                .putExtra(QrDisplayActivity.EXTRA_PRAYER_TEXT, etText.text.toString())
+        )
     }
 
     // ── Save / cancel ─────────────────────────────────────────────────────────

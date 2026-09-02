@@ -80,6 +80,7 @@
         <activity
             android:name=".PrayerImportActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:label="@string/import_title"
             android:theme="@style/Theme.Japa">
             <!-- Opening a received .japa file. Matching on the path is unreliable for
