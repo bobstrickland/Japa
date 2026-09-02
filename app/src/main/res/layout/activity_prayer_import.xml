@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    tools:context=".PrayerImportActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:text="@string/import_title"
+        android:textColor="@color/text_primary"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_import_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/accent_gold"
+        android:textSize="17sp"
+        tools:text="Sunday Assembly — 5 prayers" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_import_contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="6dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            tools:text="Shanti Path\nGayatri Mantra" />
+    </ScrollView>
+
+    <!-- Shown only when an incoming prayer shares a name with one already here. -->
+    <TextView
+        android:id="@+id/tv_import_conflicts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/accent_gold"
+        android:textSize="15sp"
+        android:visibility="gone"
+        tools:text="You already have 2 of these prayers: Aarti, Shanti"
+        tools:visibility="visible" />
+
+    <RadioGroup
+        android:id="@+id/rg_import_conflict"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <RadioButton
+            android:id="@+id/rb_import_keep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/import_keep_mine"
+            android:textColor="@color/text_secondary"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/rb_import_replace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/import_replace"
+            android:textColor="@color/text_secondary"
+            android:textSize="15sp" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="52dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_import_cancel"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:textColor="@color/accent_gold"
+            android:textSize="16sp"
+            app:strokeColor="@color/accent_gold"
+            app:strokeWidth="2dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_import_confirm"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:enabled="false"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="@string/import_button"
+            android:textColor="@color/accent_gold"
+            android:textSize="16sp"
+            app:strokeColor="@color/accent_gold"
+            app:strokeWidth="2dp" />
+    </LinearLayout>
+
+</LinearLayout>

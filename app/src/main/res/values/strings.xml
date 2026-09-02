@@ -51,10 +51,13 @@
     <string name="hint_record_text">Type or paste the prayer here</string>
     <string name="choose_image">Choose image…</string>
     <string name="no_image">No image selected</string>
+    <string name="image_saved">Background saved with this prayer</string>
+    <string name="image_import_failed">Could not read that image</string>
     <string name="record_position">%1$d / %2$d</string>
     <string name="record_position_new">New</string>
     <string name="record_saved">Prayer saved</string>
     <string name="record_name_required">Please enter a name</string>
+    <string name="record_name_duplicate">A prayer with this name already exists</string>
     <string name="add">Add</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -62,6 +65,62 @@
     <string name="discard_changes_message">This prayer has unsaved changes.</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
+
+    <!-- Prayer sets -->
+    <string name="sets_title">Prayer Sets</string>
+    <string name="manage_sets">Manage prayer sets</string>
+    <string name="all_prayers">All prayers</string>
+    <string name="new_set">New</string>
+    <string name="rename_set">Rename</string>
+    <string name="delete_set">Delete</string>
+    <string name="add_prayers">Add prayers</string>
+    <string name="set_name_hint">Set name</string>
+    <string name="set_name_required">Please enter a set name</string>
+    <string name="no_sets">No sets yet. Tap New to make one.</string>
+    <string name="set_empty">This set is empty. Tap Add prayers.</string>
+    <string name="no_prayers_to_add">Every prayer is already in this set.</string>
+    <string name="delete_set_title">Delete this set?</string>
+    <string name="delete_set_message">The prayers themselves are kept — only the set is removed.</string>
+    <string name="remove_from_set">Remove from set</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="previous_prayer">Previous prayer</string>
+    <string name="next_prayer">Next prayer</string>
+    <string name="set_position">%1$d of %2$d</string>
+
+    <!-- Sharing -->
+    <string name="share_set">Share set</string>
+    <string name="import_prayers">Import</string>
+    <string name="share_via">Share prayers</string>
+    <string name="share_failed">Could not prepare the prayers for sharing</string>
+    <string name="share_empty">This set has no prayers to share</string>
+    <string name="import_title">Import prayers</string>
+    <string name="import_summary">%1$s — %2$d prayers</string>
+    <string name="import_summary_unnamed">%1$d prayers</string>
+    <string name="import_keep_mine">Keep my versions</string>
+    <string name="import_replace">Replace with the imported versions</string>
+    <string name="import_button">Import</string>
+    <string name="import_failed">This file is not a prayer bundle this version can read</string>
+    <string name="import_done">Added %1$d, replaced %2$d, kept %3$d</string>
+
+    <!-- QR sharing -->
+    <string name="show_qr">Show QR</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="qr_title">Prayer QR code</string>
+    <string name="qr_failed">Could not build the QR code</string>
+    <string name="qr_too_big">Too large for one QR code (%1$d%% of the limit). Use Share set to send it as a file instead.</string>
+    <string name="scan_failed">Could not scan that code</string>
+    <string name="scan_not_ours">That code is not a prayer set</string>
+
+    <plurals name="import_conflicts">
+        <item quantity="one">You already have this prayer: %2$s</item>
+        <item quantity="other">You already have %1$d of these prayers: %2$s</item>
+    </plurals>
+
+    <plurals name="qr_hint">
+        <item quantity="one">Others tap Scan QR to add this prayer. Backgrounds are not included.</item>
+        <item quantity="other">Others tap Scan QR to add these %d prayers. Backgrounds are not included.</item>
+    </plurals>
 
     <!-- Notification -->
     <string name="notif_progress">Bead %d/%d · Round %d/%d</string>

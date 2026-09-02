@@ -50,6 +50,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    ksp {
+        // Exported schemas give migrations an exact reference and let Room verify them.
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -67,10 +72,17 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.app.update)
+    // QR: zxing generates the code, the Play Services scanner supplies the camera UI.
+    implementation("com.google.zxing:core:3.5.4")
+    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    // Material pulls in RecyclerView 1.1.0 (2019); 1.3.x has bindingAdapterPosition.
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.room:room-runtime:2.8.4")
     implementation("androidx.room:room-ktx:2.8.4")
     ksp("androidx.room:room-compiler:2.8.4")
     testImplementation(libs.junit)
+    // Real org.json on the unit-test classpath; the stubbed android.jar one throws.
+    testImplementation("org.json:json:20240303")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")

@@ -23,6 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Japa">
 
+        <!-- Have Play Services fetch the code-scanner UI module before it is first needed. -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode_ui" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -64,6 +69,56 @@
             android:label="@string/user_prayer_title"
             android:theme="@style/Theme.Japa"
             android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".QrDisplayActivity"
+            android:exported="false"
+            android:label="@string/qr_title"
+            android:theme="@style/Theme.Japa"
+            android:parentActivityName=".PrayerSetActivity" />
+
+        <activity
+            android:name=".PrayerImportActivity"
+            android:exported="true"
+            android:label="@string/import_title"
+            android:theme="@style/Theme.Japa">
+            <!-- Opening a received .japa file. Matching on the path is unreliable for
+                 content:// URIs, which is why the app also offers an explicit Import. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/octet-stream" />
+                <data android:pathPattern=".*\\.japa" />
+            </intent-filter>
+            <!-- "Share with Japa Counter" from a file manager or chat app. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/zip" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".PrayerSetActivity"
+            android:exported="false"
+            android:label="@string/sets_title"
+            android:theme="@style/Theme.Japa"
+            android:parentActivityName=".UserPrayerActivity" />
 
         <activity
             android:name=".UserRecordEditActivity"

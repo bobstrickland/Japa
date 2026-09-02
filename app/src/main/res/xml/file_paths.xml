@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Bundles written for sharing; nothing else in the app is exposed. -->
+    <cache-path
+        name="shares"
+        path="shares/" />
+</paths>

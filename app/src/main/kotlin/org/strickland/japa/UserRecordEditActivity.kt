@@ -1,6 +1,6 @@
 package org.strickland.japa
 
-import android.content.Intent
+import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -47,12 +47,12 @@ class UserRecordEditActivity : AppCompatActivity() {
     /** Index into [records], or [NEW_POSITION] while a not-yet-saved record is on screen. */
     private var position = NEW_POSITION
 
-    /** URI of the picked background, held separately because it is not an editable field. */
-    private var imageUri: String = ""
+    /** Stored name of the picked background, held separately because it is not an editable field. */
+    private var imageName: String = ""
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-            if (uri != null) takePersistablePermission(uri)
+            if (uri != null) importImage(uri)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +119,7 @@ class UserRecordEditActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(STATE_POSITION, position)
-        outState.putString(STATE_IMAGE_URI, imageUri)
+        outState.putString(STATE_IMAGE_URI, imageName)
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────
@@ -163,32 +163,42 @@ class UserRecordEditActivity : AppCompatActivity() {
     // ── Image ─────────────────────────────────────────────────────────────────
 
     /**
-     * The document picker only grants access for the life of this activity; persisting it keeps the
-     * stored URI usable on later launches.
+     * Copies the picked image into the app's own storage. The picker's grant lasts only for this
+     * activity, so the bytes are taken now rather than the location remembered.
      */
-    private fun takePersistablePermission(uri: Uri) {
-        try {
-            contentResolver.takePersistableUriPermission(
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-        } catch (e: SecurityException) {
-            // Some providers hand back a non-persistable URI; it still works for this session.
+    private fun importImage(source: Uri) {
+        btnImage.isEnabled = false
+        lifecycleScope.launch {
+            val stored = RecordImageStore.importFrom(this@UserRecordEditActivity, source)
+            btnImage.isEnabled = true
+            if (stored == null) {
+                Toast.makeText(
+                    this@UserRecordEditActivity,
+                    R.string.image_import_failed,
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                // Any image this replaces is swept up by RecordImageStore.pruneOrphans.
+                setImage(stored)
+            }
         }
-        setImage(uri.toString())
     }
 
-    private fun setImage(uriString: String) {
-        imageUri = uriString
-        if (uriString.isBlank()) {
+    private fun setImage(image: String) {
+        imageName = image
+        if (image.isBlank()) {
             tvImage.setText(R.string.no_image)
             ivPreview.setImageDrawable(null)
             ivPreview.setTag(R.id.tag_image_uri, null)
             ivPreview.visibility = View.GONE
         } else {
-            tvImage.text = Uri.parse(uriString).lastPathSegment ?: uriString
+            tvImage.text = if (RecordImageStore.isStoredName(image)) {
+                getString(R.string.image_saved)
+            } else {
+                Uri.parse(image).lastPathSegment ?: image
+            }
             ivPreview.visibility = View.VISIBLE
-            RecordImages.loadInto(ivPreview, uriString, lifecycleScope)
+            RecordImages.loadInto(ivPreview, image, lifecycleScope)
         }
     }
 
@@ -204,12 +214,27 @@ class UserRecordEditActivity : AppCompatActivity() {
         val text = etText.text.toString()
         val current = records.getOrNull(position).takeIf { position != NEW_POSITION }
 
+        // Names identify a prayer in the spinner, in a set, and when a shared bundle is matched
+        // against the library, so they have to be unique. Compared without regard to case.
+        if (records.any { it.id != current?.id && it.name.trim().equals(name, ignoreCase = true) }) {
+            etName.error = getString(R.string.record_name_duplicate)
+            etName.requestFocus()
+            return
+        }
+
         lifecycleScope.launch {
-            val savedId = if (current == null) {
-                dao.insert(Record(name = name, image = imageUri, text = text))
-            } else {
-                dao.update(current.copy(name = name, image = imageUri, text = text))
-                current.id
+            val savedId = try {
+                if (current == null) {
+                    dao.insert(Record(name = name, image = imageName, text = text))
+                } else {
+                    dao.update(current.copy(name = name, image = imageName, text = text))
+                    current.id
+                }
+            } catch (e: SQLiteConstraintException) {
+                // The unique index is the backstop if the snapshot above was stale.
+                etName.error = getString(R.string.record_name_duplicate)
+                etName.requestFocus()
+                return@launch
             }
             records = dao.getAllOnce()
             // Sorting is by name, so a rename can move the record — follow it by id.
@@ -243,9 +268,9 @@ class UserRecordEditActivity : AppCompatActivity() {
         val name = etName.text.toString().trim()
         val text = etText.text.toString()
         return if (current == null) {
-            name.isNotEmpty() || text.isNotEmpty() || imageUri.isNotEmpty()
+            name.isNotEmpty() || text.isNotEmpty() || imageName.isNotEmpty()
         } else {
-            name != current.name || text != current.text || imageUri != current.image
+            name != current.name || text != current.text || imageName != current.image
         }
     }
 
