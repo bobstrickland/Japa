@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="56dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="8dp">
+
+    <TextView
+        android:id="@+id/tv_member_position"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/text_hint"
+        android:textSize="14sp"
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/tv_member_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/text_primary"
+        android:textSize="17sp"
+        tools:text="Shanti Mantra" />
+
+    <ImageButton
+        android:id="@+id/btn_member_up"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/move_up"
+        android:src="@drawable/ic_arrow_up"
+        app:tint="@color/accent_gold" />
+
+    <ImageButton
+        android:id="@+id/btn_member_down"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/move_down"
+        android:src="@drawable/ic_arrow_down"
+        app:tint="@color/accent_gold" />
+
+    <ImageButton
+        android:id="@+id/btn_member_remove"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/remove_from_set"
+        android:src="@drawable/ic_close"
+        app:tint="@color/text_secondary" />
+
+</LinearLayout>
