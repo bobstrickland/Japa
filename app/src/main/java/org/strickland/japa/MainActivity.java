@@ -2,6 +2,7 @@ package org.strickland.japa;
 
 import android.Manifest;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -191,7 +192,15 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                         startActivity(new Intent(MainActivity.this, PrayerActivity.class));
                         return true;
                     } else { // swipe right
-                        ///  noting here yet
+                        // Slide the user-prayer screen in from the left so the screens move
+                        // with the finger. ActivityOptions works on every API level here;
+                        // the matching close animation lives in UserPrayerActivity.
+                        startActivity(
+                                new Intent(MainActivity.this, UserPrayerActivity.class),
+                                ActivityOptions.makeCustomAnimation(MainActivity.this,
+                                        R.anim.slide_in_from_left,
+                                        R.anim.slide_out_to_right).toBundle());
+                        return true;
                     }
                 }
                 return false;

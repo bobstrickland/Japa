@@ -58,6 +58,21 @@
             android:theme="@style/Theme.Japa"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".UserPrayerActivity"
+            android:exported="false"
+            android:label="@string/user_prayer_title"
+            android:theme="@style/Theme.Japa"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".UserRecordEditActivity"
+            android:exported="false"
+            android:label="@string/user_prayer_edit_title"
+            android:theme="@style/Theme.Japa"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".UserPrayerActivity" />
+
         <!--
             Foreground service keeps the counter running with screen off.
             The PARTIAL_WAKE_LOCK inside the service keeps the CPU alive.

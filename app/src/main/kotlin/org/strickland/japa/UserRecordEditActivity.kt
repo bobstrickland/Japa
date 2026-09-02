@@ -1,0 +1,272 @@
+package org.strickland.japa
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.launch
+import org.strickland.japa.data.AppDatabase
+import org.strickland.japa.data.Record
+
+/**
+ * Add/edit screen for the user's own prayers.
+ *
+ * Works on a snapshot of the table rather than a live query so that paging with previous/next is
+ * not yanked around while the user is typing. The snapshot is refreshed after every save.
+ */
+class UserRecordEditActivity : AppCompatActivity() {
+
+    private lateinit var etName: EditText
+    private lateinit var etText: EditText
+    private lateinit var tvPosition: TextView
+    private lateinit var tvImage: TextView
+    private lateinit var ivPreview: ImageView
+    private lateinit var btnImage: MaterialButton
+    private lateinit var btnPrev: MaterialButton
+    private lateinit var btnNext: MaterialButton
+    private lateinit var btnAdd: MaterialButton
+    private lateinit var btnSave: MaterialButton
+    private lateinit var btnCancel: MaterialButton
+    private lateinit var btnClose: ImageButton
+
+    private val dao by lazy { AppDatabase.getInstance(this).recordDao() }
+
+    private var records: List<Record> = emptyList()
+
+    /** Index into [records], or [NEW_POSITION] while a not-yet-saved record is on screen. */
+    private var position = NEW_POSITION
+
+    /** URI of the picked background, held separately because it is not an editable field. */
+    private var imageUri: String = ""
+
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri != null) takePersistablePermission(uri)
+        }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_userrecord_edit)
+
+        etName = findViewById(R.id.et_record_name)
+        etText = findViewById(R.id.et_record_text)
+        tvPosition = findViewById(R.id.tv_record_position)
+        tvImage = findViewById(R.id.tv_record_image)
+        ivPreview = findViewById(R.id.iv_record_image_preview)
+        btnImage = findViewById(R.id.btn_record_image)
+        btnPrev = findViewById(R.id.btn_record_prev)
+        btnNext = findViewById(R.id.btn_record_next)
+        btnAdd = findViewById(R.id.btn_record_add)
+        btnSave = findViewById(R.id.btn_record_save)
+        btnCancel = findViewById(R.id.btn_record_cancel)
+        btnClose = findViewById(R.id.btn_record_close)
+
+        btnImage.setOnClickListener { pickImage.launch(arrayOf("image/*")) }
+        btnPrev.setOnClickListener {
+            // From a new record, "previous" steps back into the saved list at the end.
+            val target = if (position == NEW_POSITION) records.lastIndex else position - 1
+            confirmDiscard { moveTo(target) }
+        }
+        btnNext.setOnClickListener { confirmDiscard { moveTo(position + 1) } }
+        btnAdd.setOnClickListener { confirmDiscard { startNewRecord() } }
+        btnSave.setOnClickListener { save() }
+        btnCancel.setOnClickListener { cancel() }
+        btnClose.setOnClickListener { confirmDiscard { finish() } }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                confirmDiscard {
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        })
+
+        val restoring = savedInstanceState != null
+        val restoredPosition = savedInstanceState?.getInt(STATE_POSITION, NEW_POSITION) ?: NEW_POSITION
+        val restoredImage = savedInstanceState?.getString(STATE_IMAGE_URI).orEmpty()
+        val requestedId = intent.getLongExtra(EXTRA_RECORD_ID, -1L)
+
+        lifecycleScope.launch {
+            records = dao.getAllOnce()
+            if (restoring) {
+                // Keep the in-progress edit: the EditTexts have already restored their own text.
+                position = if (restoredPosition == NEW_POSITION || records.isEmpty()) {
+                    NEW_POSITION
+                } else {
+                    restoredPosition.coerceIn(0, records.lastIndex)
+                }
+                setImage(restoredImage)
+                updateChrome()
+            } else {
+                val start = records.indexOfFirst { it.id == requestedId }
+                if (records.isEmpty()) startNewRecord() else moveTo(if (start >= 0) start else 0)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(STATE_POSITION, position)
+        outState.putString(STATE_IMAGE_URI, imageUri)
+    }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    private fun moveTo(newPosition: Int) {
+        if (records.isEmpty()) {
+            startNewRecord()
+            return
+        }
+        position = newPosition.coerceIn(0, records.lastIndex)
+        showRecord(records[position])
+    }
+
+    private fun startNewRecord() {
+        position = NEW_POSITION
+        showRecord(null)
+        etName.requestFocus()
+    }
+
+    private fun showRecord(record: Record?) {
+        etName.error = null
+        etName.setText(record?.name ?: "")
+        etText.setText(record?.text ?: "")
+        setImage(record?.image ?: "")
+        updateChrome()
+    }
+
+    private fun updateChrome() {
+        tvPosition.text = if (position == NEW_POSITION) {
+            getString(R.string.record_position_new)
+        } else {
+            getString(R.string.record_position, position + 1, records.size)
+        }
+        val hasRecords = records.isNotEmpty()
+        btnPrev.isEnabled = hasRecords && (position == NEW_POSITION || position > 0)
+        btnNext.isEnabled = hasRecords && position != NEW_POSITION && position < records.lastIndex
+        btnPrev.alpha = if (btnPrev.isEnabled) 1f else DISABLED_ALPHA
+        btnNext.alpha = if (btnNext.isEnabled) 1f else DISABLED_ALPHA
+    }
+
+    // ── Image ─────────────────────────────────────────────────────────────────
+
+    /**
+     * The document picker only grants access for the life of this activity; persisting it keeps the
+     * stored URI usable on later launches.
+     */
+    private fun takePersistablePermission(uri: Uri) {
+        try {
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (e: SecurityException) {
+            // Some providers hand back a non-persistable URI; it still works for this session.
+        }
+        setImage(uri.toString())
+    }
+
+    private fun setImage(uriString: String) {
+        imageUri = uriString
+        if (uriString.isBlank()) {
+            tvImage.setText(R.string.no_image)
+            ivPreview.setImageDrawable(null)
+            ivPreview.setTag(R.id.tag_image_uri, null)
+            ivPreview.visibility = View.GONE
+        } else {
+            tvImage.text = Uri.parse(uriString).lastPathSegment ?: uriString
+            ivPreview.visibility = View.VISIBLE
+            RecordImages.loadInto(ivPreview, uriString, lifecycleScope)
+        }
+    }
+
+    // ── Save / cancel ─────────────────────────────────────────────────────────
+
+    private fun save() {
+        val name = etName.text.toString().trim()
+        if (name.isEmpty()) {
+            etName.error = getString(R.string.record_name_required)
+            etName.requestFocus()
+            return
+        }
+        val text = etText.text.toString()
+        val current = records.getOrNull(position).takeIf { position != NEW_POSITION }
+
+        lifecycleScope.launch {
+            val savedId = if (current == null) {
+                dao.insert(Record(name = name, image = imageUri, text = text))
+            } else {
+                dao.update(current.copy(name = name, image = imageUri, text = text))
+                current.id
+            }
+            records = dao.getAllOnce()
+            // Sorting is by name, so a rename can move the record — follow it by id.
+            moveTo(records.indexOfFirst { it.id == savedId }.coerceAtLeast(0))
+            Toast.makeText(this@UserRecordEditActivity, R.string.record_saved, Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
+    /**
+     * Throws away whatever is on screen. With no edits to throw away there is nothing left for
+     * cancel to mean, so it closes the screen.
+     */
+    private fun cancel() {
+        if (!isDirty()) {
+            finish()
+            return
+        }
+        if (position == NEW_POSITION) {
+            // Drop the draft and go back to the list, if there is one.
+            if (records.isEmpty()) startNewRecord() else moveTo(0)
+        } else {
+            showRecord(records[position])
+        }
+    }
+
+    // ── Dirty tracking ────────────────────────────────────────────────────────
+
+    private fun isDirty(): Boolean {
+        val current = records.getOrNull(position).takeIf { position != NEW_POSITION }
+        val name = etName.text.toString().trim()
+        val text = etText.text.toString()
+        return if (current == null) {
+            name.isNotEmpty() || text.isNotEmpty() || imageUri.isNotEmpty()
+        } else {
+            name != current.name || text != current.text || imageUri != current.image
+        }
+    }
+
+    private fun confirmDiscard(action: () -> Unit) {
+        if (!isDirty()) {
+            action()
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.discard_changes_title)
+            .setMessage(R.string.discard_changes_message)
+            .setPositiveButton(R.string.discard) { _, _ -> action() }
+            .setNegativeButton(R.string.keep_editing, null)
+            .show()
+    }
+
+    companion object {
+        const val EXTRA_RECORD_ID = "recordId"
+        private const val STATE_POSITION = "position"
+        private const val STATE_IMAGE_URI = "imageUri"
+        private const val NEW_POSITION = -1
+        private const val DISABLED_ALPHA = 0.3f
+    }
+}

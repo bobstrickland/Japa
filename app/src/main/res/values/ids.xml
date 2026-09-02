@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Marks which image URI an ImageView is currently decoding, so a stale async
+         decode cannot overwrite a newer selection. -->
+    <item name="tag_image_uri" type="id" />
+</resources>

@@ -39,6 +39,30 @@
     <string name="prayer_title">Prayer</string>
     <string name="pray">Pray</string>
 
+    <!-- User prayer screens -->
+    <string name="user_prayer_title">My Prayers</string>
+    <string name="user_prayer_edit_title">Add / Edit Prayer</string>
+    <string name="add_user_prayer">Add prayer</string>
+    <string name="no_user_prayers">No prayers yet.\nTap + to add one.</string>
+    <string name="label_record_name">Name</string>
+    <string name="label_record_image">Background image</string>
+    <string name="label_record_text">Prayer text</string>
+    <string name="hint_record_name">Name shown in the list</string>
+    <string name="hint_record_text">Type or paste the prayer here</string>
+    <string name="choose_image">Choose image…</string>
+    <string name="no_image">No image selected</string>
+    <string name="record_position">%1$d / %2$d</string>
+    <string name="record_position_new">New</string>
+    <string name="record_saved">Prayer saved</string>
+    <string name="record_name_required">Please enter a name</string>
+    <string name="add">Add</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="discard_changes_title">Discard changes?</string>
+    <string name="discard_changes_message">This prayer has unsaved changes.</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+
     <!-- Notification -->
     <string name="notif_progress">Bead %d/%d · Round %d/%d</string>
     <string name="notif_complete">All rounds complete!</string>
