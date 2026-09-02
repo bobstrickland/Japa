@@ -133,24 +133,27 @@ class UserRecordEditActivity : AppCompatActivity() {
     }
 
     /**
-     * Keeps the line being typed above the keyboard.
+     * Gives the prayer text the whole screen while the keyboard is up.
      *
      * `windowSoftInputMode="adjustResize"` alone does nothing from targetSdk 35, where the app is
-     * laid out edge to edge and the window no longer shrinks for the keyboard by itself — the
-     * inset has to be applied here. The layout already reserves room for the navigation bar, so
-     * only the extra height the keyboard adds beyond it is padded, leaving the resting look alone.
+     * laid out edge to edge and the window no longer shrinks for the keyboard by itself, so the
+     * inset is applied here. The buttons below the text field are collapsed at the same time —
+     * none of them can be reached while typing, and the space is worth more to the text.
      */
     private fun keepTypingVisible() {
         val root = findViewById<View>(R.id.record_edit_root)
+        val buttonRows = listOf<View>(
+            findViewById(R.id.row_record_paging),
+            findViewById(R.id.row_record_share),
+            findViewById(R.id.row_record_actions)
+        )
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            view.setPadding(
-                view.paddingLeft,
-                view.paddingTop,
-                view.paddingRight,
-                (ime.bottom - bars.bottom).coerceAtLeast(0)
-            )
+            val typing = insets.isVisible(WindowInsetsCompat.Type.ime())
+            buttonRows.forEach { it.visibility = if (typing) View.GONE else View.VISIBLE }
+            // With the rows gone there is nothing left holding space for the navigation bar,
+            // so the full keyboard inset applies; at rest the action row's own padding covers it.
+            val bottom = if (typing) insets.getInsets(WindowInsetsCompat.Type.ime()).bottom else 0
+            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, bottom)
             insets
         }
     }

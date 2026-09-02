@@ -154,6 +154,7 @@
 
     <!-- ─── Paging row ─────────────────────────────────────────────────────── -->
     <LinearLayout
+        android:id="@+id/row_record_paging"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -188,6 +189,7 @@
 
     <!-- ─── Share row ──────────────────────────────────────────────────────── -->
     <LinearLayout
+        android:id="@+id/row_record_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -223,6 +225,7 @@
 
     <!-- ─── Action row ─────────────────────────────────────────────────────── -->
     <LinearLayout
+        android:id="@+id/row_record_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
