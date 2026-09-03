@@ -74,19 +74,13 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:fillViewport="true"
-            android:gravity="bottom">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:orientation="vertical">
+            android:gravity="top">
 
                 <TextView
                     android:id="@+id/tv_userrecord_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="bottom|center_horizontal"
+                    android:gravity="top|center_horizontal"
                     android:padding="24dp"
                     android:shadowColor="#000000"
                     android:shadowDx="1"
@@ -95,7 +89,6 @@
                     android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     tools:text="A prayer the user typed in themselves." />
-            </LinearLayout>
         </ScrollView>
 
         <LinearLayout
