@@ -13,6 +13,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import io.noties.markwon.Markwon;
+import io.noties.markwon.ext.tables.TablePlugin;
+
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -36,7 +39,7 @@ public class InfoActivity extends AppCompatActivity {
         }
         String text = "nothing here.";
         AssetManager assetManager = getAssets();
-        try (InputStream is = assetManager.open("info.txt");
+        try (InputStream is = assetManager.open("info.md");
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 
             StringBuilder content = new StringBuilder();
@@ -48,7 +51,19 @@ public class InfoActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        tvInfoContent.setText(text);
+
+
+
+        //tvInfoContent.setText(text);
+
+        //Markwon markwon = Markwon.create(this);
+
+        Markwon markwon = Markwon.builder(this)
+                .usePlugin(TablePlugin.create(this))
+                .build();
+        markwon.setMarkdown(tvInfoContent, text);
+
+
         ImageButton btnClose = findViewById(R.id.btn_close_info);
         btnClose.setOnClickListener(v -> finish());
     }

@@ -38,6 +38,7 @@ class UserRecordEditActivity : AppCompatActivity() {
     private lateinit var btnImage: MaterialButton
     private lateinit var btnPrev: MaterialButton
     private lateinit var btnNext: MaterialButton
+    private lateinit var btnDelete: MaterialButton
     private lateinit var btnAdd: MaterialButton
     private lateinit var btnSave: MaterialButton
     private lateinit var btnCancel: MaterialButton
@@ -73,6 +74,7 @@ class UserRecordEditActivity : AppCompatActivity() {
         btnImage = findViewById(R.id.btn_record_image)
         btnPrev = findViewById(R.id.btn_record_prev)
         btnNext = findViewById(R.id.btn_record_next)
+        btnDelete = findViewById(R.id.btn_record_delete)
         btnAdd = findViewById(R.id.btn_record_add)
         btnSave = findViewById(R.id.btn_record_save)
         btnCancel = findViewById(R.id.btn_record_cancel)
@@ -87,6 +89,7 @@ class UserRecordEditActivity : AppCompatActivity() {
             confirmDiscard { moveTo(target) }
         }
         btnNext.setOnClickListener { confirmDiscard { moveTo(position + 1) } }
+        btnDelete.setOnClickListener { confirmDelete() }
         btnAdd.setOnClickListener { confirmDiscard { startNewRecord() } }
         btnSave.setOnClickListener { save() }
         btnCancel.setOnClickListener { cancel() }
@@ -192,8 +195,11 @@ class UserRecordEditActivity : AppCompatActivity() {
         val hasRecords = records.isNotEmpty()
         btnPrev.isEnabled = hasRecords && (position == NEW_POSITION || position > 0)
         btnNext.isEnabled = hasRecords && position != NEW_POSITION && position < records.lastIndex
+        // Nothing to delete until the record exists in the table.
+        btnDelete.isEnabled = position != NEW_POSITION
         btnPrev.alpha = if (btnPrev.isEnabled) 1f else DISABLED_ALPHA
         btnNext.alpha = if (btnNext.isEnabled) 1f else DISABLED_ALPHA
+        btnDelete.alpha = if (btnDelete.isEnabled) 1f else DISABLED_ALPHA
     }
 
     // ── Image ─────────────────────────────────────────────────────────────────
@@ -258,6 +264,36 @@ class UserRecordEditActivity : AppCompatActivity() {
                 .putExtra(QrDisplayActivity.EXTRA_PRAYER_NAME, name)
                 .putExtra(QrDisplayActivity.EXTRA_PRAYER_TEXT, etText.text.toString())
         )
+    }
+
+    // ── Delete ────────────────────────────────────────────────────────────────
+
+    /**
+     * Removes the record on screen, after asking. Only reachable for a saved record, so there is
+     * always something to name in the prompt.
+     *
+     * Set memberships cascade away with the record, and the background image is reclaimed by
+     * [RecordImageStore.pruneOrphans] the next time the prayers screen opens.
+     */
+    private fun confirmDelete() {
+        val record = records.getOrNull(position).takeIf { position != NEW_POSITION } ?: return
+        AlertDialog.Builder(this)
+            .setTitle(R.string.delete_record_title)
+            .setMessage(getString(R.string.delete_record_message, record.name))
+            .setPositiveButton(R.string.delete) { _, _ -> delete(record) }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun delete(record: Record) {
+        lifecycleScope.launch {
+            dao.delete(record)
+            records = dao.getAllOnce()
+            // The record that followed has moved into this slot; at the end, step back one.
+            if (records.isEmpty()) startNewRecord() else moveTo(position.coerceAtMost(records.lastIndex))
+            Toast.makeText(this@UserRecordEditActivity, R.string.record_deleted, Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     // ── Save / cancel ─────────────────────────────────────────────────────────
