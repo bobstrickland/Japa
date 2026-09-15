@@ -30,47 +30,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+
+
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="8dp">
-
-            <ImageButton
-                android:id="@+id/btn_manage_sets"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/manage_sets"
-                android:src="@drawable/ic_list"
-                app:tint="@color/accent_gold" />
-
-            <!-- Pushes the add button to the far edge, leaving the sets button on the left. -->
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/btn_add_userrecord"
-                android:layout_width="46dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/add_user_prayer"
-                android:src="@drawable/ic_add"
-                app:tint="@color/accent_gold" />
-        </LinearLayout>
-
         <ScrollView
+            android:layout_marginTop="45dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -141,5 +113,40 @@
         android:textSize="18sp"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp">
+
+        <ImageButton
+            android:id="@+id/btn_manage_sets"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/manage_sets"
+            android:src="@drawable/ic_list"
+            app:tint="@color/accent_gold" />
+
+        <!-- Pushes the add button to the far edge, leaving the sets button on the left. -->
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_add_userrecord"
+            android:layout_width="46dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/add_user_prayer"
+            android:src="@drawable/ic_add"
+            app:tint="@color/accent_gold" />
+    </LinearLayout>
+
 
 </FrameLayout>
