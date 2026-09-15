@@ -3,4 +3,8 @@
     <!-- Marks which image URI an ImageView is currently decoding, so a stale async
          decode cannot overwrite a newer selection. -->
     <item name="tag_image_uri" type="id" />
+
+    <!-- Holds a TextView's as-laid-out size so the chosen text scale is always applied to
+         the design size rather than compounding on an already scaled one. -->
+    <item name="tag_text_size_base" type="id" />
 </resources>

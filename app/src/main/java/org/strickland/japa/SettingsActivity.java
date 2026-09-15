@@ -36,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
     private NumberPicker pickerRounds;
     private Spinner      spinnerMantra;
     private Spinner      spinnerText;
+    private Spinner      spinnerTextSize;
     private Slider       sliderMantraSpeed;
     private RadioGroup   radioFeedback;
     private RadioGroup   radioFeedbackRound;
@@ -76,6 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
         pickerRounds       = findViewById(R.id.picker_rounds);
         spinnerMantra      = findViewById(R.id.spinner_mantra);
         spinnerText        = findViewById(R.id.spinner_text);
+        spinnerTextSize    = findViewById(R.id.spinner_text_size);
         sliderMantraSpeed  = findViewById(R.id.slider_mantra_speed);
         radioFeedback      = findViewById(R.id.radio_feedback);
         radioFeedbackRound = findViewById(R.id.radio_feedback_round);
@@ -159,6 +161,7 @@ public class SettingsActivity extends AppCompatActivity {
         pickerRounds.setValue(p.getInt(CounterService.PREF_TOTAL_ROUNDS,  16));
         spinnerMantra.setSelection(p.getInt(CounterService.PREF_MANTRA_INDEX, 0));
         spinnerText.setSelection(p.getInt(CounterService.PREF_MANTRA_TEXT, 0));
+        spinnerTextSize.setSelection(clampTextSize(p.getInt(CounterService.PREF_TEXT_SIZE, 0)));
         sliderMantraSpeed.setValue(p.getInt(CounterService.PREF_MANTRA_SPEED, 0));
 
         String feedback = p.getString(CounterService.PREF_FEEDBACK, CounterService.FEEDBACK_VIBRATION);
@@ -212,6 +215,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         int mantaIndex = spinnerMantra.getSelectedItemPosition();
         int mantaTextIndex = spinnerText.getSelectedItemPosition();
+        int textSizeIndex = spinnerTextSize.getSelectedItemPosition();
 
         getSharedPreferences(CounterService.PREFS_NAME, MODE_PRIVATE)
                 .edit()
@@ -222,6 +226,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .putInt(CounterService.PREF_MANTRA_INDEX, mantaIndex)
                 .putInt(CounterService.PREF_MANTRA_TEXT, mantaTextIndex)
                 .putInt(CounterService.PREF_MANTRA_SPEED, (int) sliderMantraSpeed.getValue())
+                .putInt(CounterService.PREF_TEXT_SIZE, textSizeIndex)
                 .putBoolean(CounterService.PREF_SETTINGS_CHANGED, true)
                 .apply();
 
@@ -232,9 +237,17 @@ public class SettingsActivity extends AppCompatActivity {
         MainActivity main = MainActivity.instance != null ? MainActivity.instance.get() : null;
         if (main != null) {
             main.applyMantraBackground();
+            main.applyTextSize();
         }
 
         Toast.makeText(this, R.string.settings_saved, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    /** A stored position can outlive the array it indexed, so never seed the spinner past its end. */
+    private int clampTextSize(int index) {
+        int count = getResources().getStringArray(R.array.text_size_labels).length;
+        if (index < 0) return 0;
+        return index >= count ? count - 1 : index;
     }
 }

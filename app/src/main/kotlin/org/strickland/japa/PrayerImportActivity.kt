@@ -56,6 +56,7 @@ class PrayerImportActivity : AppCompatActivity() {
         btnCancel.setOnClickListener { finish() }
         btnImport.setOnClickListener { runImport() }
 
+        TextScale.applyTo(tvSummary, tvContents)
         load()
     }
 

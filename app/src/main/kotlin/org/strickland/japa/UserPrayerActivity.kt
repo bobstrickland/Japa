@@ -178,6 +178,7 @@ class UserPrayerActivity : AppCompatActivity() {
         super.onResume()
         // The set is chosen on the sets screen, so pick up any change made while we were away.
         selectedSetId.value = PrayerSelection.setId(this)
+        TextScale.applyTo(tvText, tvEmpty)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

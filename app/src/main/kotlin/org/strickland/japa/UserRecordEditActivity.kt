@@ -98,6 +98,8 @@ class UserRecordEditActivity : AppCompatActivity() {
         btnExport.setOnClickListener { exportPrayer() }
         btnImport.setOnClickListener { QrScan.start(this) }
 
+        TextScale.applyTo(etName, etText)
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 confirmDiscard {

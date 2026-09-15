@@ -103,6 +103,12 @@ public class PrayerActivity extends AppCompatActivity {
         releaseMediaPlayer();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TextScale.applyTo(tvPrayerText);
+    }
+
     private void loadPrayerArrays() {
         TypedArray prayers = getResources().obtainTypedArray(R.array.prayer_array);
         int count = prayers.length();

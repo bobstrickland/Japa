@@ -24,6 +24,7 @@
     <string name="label_rounds">Total rounds</string>
     <string name="label_mantra">Mantra</string>
     <string name="label_mantra_text">Mantra Text</string>
+    <string name="label_text_size">Text Size</string>
     <string name="label_mantra_speed">Mantra speed</string>
     <string name="label_feedback">Feedback per bead</string>
     <string name="label_feedback_round">Feedback per round</string>
@@ -139,4 +140,17 @@
     <!-- Notification -->
     <string name="notif_progress">Bead %d/%d · Round %d/%d</string>
     <string name="notif_complete">All rounds complete!</string>
+
+    <string-array name="text_size_labels">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>X-Large</item>
+    </string-array>
+    <string-array name="text_size_values">
+        <item>22sp</item>
+        <item>33sp</item>
+        <item>44sp</item>
+        <item>55sp</item>
+    </string-array>
 </resources>

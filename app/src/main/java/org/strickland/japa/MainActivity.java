@@ -257,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
                 applyMantraBackground();
             }
         }
+        applyTextSize();
         appUpdateManager.registerListener(installStateListener);
         // Prompt to complete if an update was already downloaded (e.g. app was backgrounded)
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
@@ -348,6 +349,11 @@ public class MainActivity extends AppCompatActivity implements CounterCallback {
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
+
+    /** Re-sizes the mantra to the setting; also called directly when Settings saves. */
+    void applyTextSize() {
+        TextScale.applyTo(mantraText);
+    }
 
     void applyMantraBackground() {
         SharedPreferences p = getSharedPreferences(CounterService.PREFS_NAME, MODE_PRIVATE);

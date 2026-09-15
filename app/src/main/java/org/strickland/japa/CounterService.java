@@ -70,6 +70,8 @@ public class CounterService extends Service {
     static final String PREF_MANTRA_INDEX     = "mantaIndex";
     static final String PREF_MANTRA_TEXT     = "mantaText";
     static final String PREF_MANTRA_SPEED     = "mantaSpeed"; // 0–100, default 50 = 1.0x rate
+    /** Position within text_size_labels / text_size_values; see {@link TextScale}. */
+    static final String PREF_TEXT_SIZE        = "textSize";
 
     static final String FEEDBACK_VIBRATION = "vibration";
     static final String FEEDBACK_SOUND     = "sound";
