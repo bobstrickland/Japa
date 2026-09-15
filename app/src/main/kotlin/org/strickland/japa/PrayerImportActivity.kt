@@ -100,8 +100,16 @@ class PrayerImportActivity : AppCompatActivity() {
         }
     }
 
-    /** Accepts both a file opened directly and one handed over by a sharing app. */
-    private fun resolveSource(): Uri? = intent?.data ?: extraStream()
+    /**
+     * Accepts a file opened directly, one handed over by a sharing app, and one that arrived
+     * only as clip data — chat apps differ over which of the three they fill in.
+     */
+    private fun resolveSource(): Uri? = intent?.data ?: extraStream() ?: clipUri()
+
+    private fun clipUri(): Uri? {
+        val clip = intent?.clipData ?: return null
+        return (0 until clip.itemCount).firstNotNullOfOrNull { clip.getItemAt(it).uri }
+    }
 
     @Suppress("DEPRECATION")
     private fun extraStream(): Uri? =

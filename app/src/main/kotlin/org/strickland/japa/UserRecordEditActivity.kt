@@ -55,6 +55,7 @@ class UserRecordEditActivity : AppCompatActivity() {
 
     /** Stored name of the picked background, held separately because it is not an editable field. */
     private var imageName: String = ""
+    //private val defaultResourceId: Int = resources.getIdentifier("aum", "drawable", packageName)
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -240,7 +241,9 @@ class UserRecordEditActivity : AppCompatActivity() {
                 Uri.parse(image).lastPathSegment ?: image
             }
             ivPreview.visibility = View.VISIBLE
-            RecordImages.loadInto(ivPreview, image, lifecycleScope)
+            val defaultResourceId: Int = resources.getIdentifier("aum", "drawable", packageName)
+
+            RecordImages.loadInto(ivPreview, image, defaultResourceId, lifecycleScope)
         }
     }
 

@@ -83,8 +83,43 @@
             android:launchMode="singleTop"
             android:label="@string/import_title"
             android:theme="@style/Theme.Japa">
-            <!-- Opening a received .japa file. Matching on the path is unreliable for
-                 content:// URIs, which is why the app also offers an explicit Import. -->
+            <!--
+                Opening a received .japa file.
+
+                Every <data> attribute in one filter has to be satisfied at once, so a
+                pathPattern here would also apply to the typed match below. Chat apps hand
+                over opaque URIs such as content://com.whatsapp.provider.media/item/42 with
+                no ".japa" anywhere in the path, so the two have to stay separate filters.
+
+                Android has no registry of file extensions, so an app that cannot name the
+                type of a .japa file falls back to a generic binary. Claiming octet-stream
+                is what makes the file openable from WhatsApp; the cost is that Japa also
+                appears in the chooser for other unrecognised files, which the import screen
+                turns away after reading them.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/x-zip-compressed" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <!--
+                Extension match, for the senders that pass a name but no type at all. A
+                filter naming no mimeType only matches an intent that carries none, so this
+                complements the one above rather than overlapping it. pathAdvancedPattern is
+                a real regex, but the attribute is only read from API 31. The pathPattern
+                ladder below covers 26-30: that older glob consumes up to the *first* match
+                of whatever follows ".*" and never backtracks, so one pattern per preceding
+                dot is what it takes to catch a name like "Morning v1.2 Set.japa".
+
+                The wildcard host is required, not decoration: IntentFilter only tests the
+                path patterns once an authority has matched, so without it the patterns are
+                skipped and this filter would claim every untyped content:// URI going.
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -92,15 +127,21 @@
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:host="*" />
-                <data android:mimeType="application/zip" />
-                <data android:mimeType="application/octet-stream" />
+                <data
+                    android:pathAdvancedPattern=".*\\.japa"
+                    tools:ignore="UnusedAttribute" />
                 <data android:pathPattern=".*\\.japa" />
+                <data android:pathPattern=".*\\..*\\.japa" />
+                <data android:pathPattern=".*\\..*\\..*\\.japa" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.japa" />
             </intent-filter>
             <!-- "Share with Japa Counter" from a file manager or chat app. -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="application/zip" />
+                <data android:mimeType="application/x-zip-compressed" />
+                <data android:mimeType="application/octet-stream" />
             </intent-filter>
         </activity>
 

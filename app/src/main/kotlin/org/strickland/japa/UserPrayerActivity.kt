@@ -76,6 +76,8 @@ class UserPrayerActivity : AppCompatActivity() {
         btnManageSets = findViewById(R.id.btn_manage_sets)
         btnPrev = findViewById(R.id.btn_prev_prayer)
         btnNext = findViewById(R.id.btn_next_prayer)
+        //defaultResourceId
+
 
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDown(e: MotionEvent): Boolean = true
@@ -216,8 +218,11 @@ class UserPrayerActivity : AppCompatActivity() {
 
         if (!hasRecords) {
             tvText.text = ""
-            bgImage.setImageDrawable(null)
-            bgImage.setTag(R.id.tag_image_uri, null)
+            //bgImage.setImageDrawable(null)
+            //bgImage.setTag(R.id.tag_image_uri, null)
+            val defaultResourceId: Int = resources.getIdentifier("aum", "drawable", packageName)
+
+            RecordImages.loadInto(bgImage, null, defaultResourceId, lifecycleScope)
             return
         }
 
@@ -244,7 +249,8 @@ class UserPrayerActivity : AppCompatActivity() {
     private fun applyRecord(position: Int) {
         val record = records.getOrNull(position) ?: return
         tvText.text = record.text
-        RecordImages.loadInto(bgImage, record.image, lifecycleScope)
+        val defaultResourceId: Int = resources.getIdentifier("aum", "drawable", packageName)
+        RecordImages.loadInto(bgImage, record.image, defaultResourceId, lifecycleScope)
     }
 
     /** Moves one prayer along the current set's order — the assembly is worked through in sequence. */

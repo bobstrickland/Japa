@@ -8,12 +8,12 @@ import android.net.Uri
 import android.os.Build
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
-import java.io.File
-import java.io.InputStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.InputStream
 
 /**
  * Displays the background image belonging to a [org.strickland.japa.data.Record].
@@ -30,10 +30,11 @@ object RecordImages {
      * The view is tagged with the value so a slow decode belonging to a previous spinner selection
      * cannot overwrite a newer one.
      */
-    fun loadInto(target: ImageView, image: String?, scope: CoroutineScope) {
+    fun loadInto(target: ImageView, image: String?, defaultResourceId: Int, scope: CoroutineScope) {
         target.setTag(R.id.tag_image_uri, image)
         if (image.isNullOrBlank()) {
             target.setImageDrawable(null)
+            if (defaultResourceId != 0) target.setImageResource(defaultResourceId)
             return
         }
         scope.launch {
