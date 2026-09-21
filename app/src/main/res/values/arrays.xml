@@ -345,5 +345,33 @@
     </array>
 
 
+    <string-array name="gong_sound">
+        <item>Gong</item>
+        <item>gong</item>
+    </string-array>
+    <string-array name="bell_sound">
+        <item>Bell 1</item>
+        <item>bell</item>
+    </string-array>
+    <string-array name="bell_2_sound">
+        <item>Bell 2</item>
+        <item>bell_2</item>
+    </string-array>
+    <string-array name="conch_sound">
+        <item>Conch 1</item>
+        <item>conch</item>
+    </string-array>
+    <string-array name="conch_2_sound">
+        <item>Conch 2</item>
+        <item>conch_2</item>
+    </string-array>
+
+    <array name="vipassana_sound_array">
+        <item>@array/gong_sound</item>
+        <item>@array/bell_sound</item>
+        <item>@array/bell_2_sound</item>
+        <item>@array/conch_sound</item>
+        <item>@array/conch_2_sound</item>
+    </array>
 
 </resources>

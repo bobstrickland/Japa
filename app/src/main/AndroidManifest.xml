@@ -64,6 +64,14 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
+            android:name=".vipassana.VipassanaActivity"
+            android:exported="false"
+            android:label="@string/vipassana_title"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Japa"
+            android:parentActivityName=".PrayerActivity" />
+
+        <activity
             android:name=".UserPrayerActivity"
             android:exported="false"
             android:label="@string/user_prayer_title"

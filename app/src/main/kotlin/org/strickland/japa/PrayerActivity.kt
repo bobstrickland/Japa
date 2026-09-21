@@ -1,5 +1,6 @@
 package org.strickland.japa
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+import org.strickland.japa.vipassana.VipassanaActivity
 import kotlin.math.abs
 
 class PrayerActivity : AppCompatActivity() {
@@ -61,6 +63,11 @@ class PrayerActivity : AppCompatActivity() {
                 if (abs(dX) > abs(dY) && abs(dX) > SWIPE_THRESHOLD && abs(vX) > SWIPE_VEL_THRESHOLD) {
                     if (e1.getX() < e2.getX()) { // swipe right
                         finish()
+                        return true
+                    } else { // swipe left
+                        startActivity(
+                            Intent(this@PrayerActivity, VipassanaActivity::class.java)
+                        )
                         return true
                     }
                 }

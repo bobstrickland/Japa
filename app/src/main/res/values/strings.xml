@@ -40,6 +40,14 @@
     <string name="prayer_title">Prayer</string>
     <string name="pray">Pray</string>
 
+    <!-- Vipassana screen -->
+    <string name="vipassana_title">Vipassana</string>
+    <string name="label_total_time">Total Time</string>
+    <string name="label_notice_time">Notice Time</string>
+    <string name="label_vipassana_sound">Sound</string>
+    <string name="vipassana_start">Start</string>
+    <string name="vipassana_stop">Stop</string>
+
     <!-- User prayer screens -->
     <string name="user_prayer_title">My Prayers</string>
     <string name="user_prayer_edit_title">Add / Edit Prayer</string>
