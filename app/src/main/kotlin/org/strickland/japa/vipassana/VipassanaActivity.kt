@@ -30,7 +30,9 @@ import kotlin.math.abs
 class VipassanaActivity : AppCompatActivity() {
     private var pickerTotal: NumberPicker? = null
     private var pickerNotice: NumberPicker? = null
+    private var pickerFinalCount: NumberPicker? = null
     private var spinnerSound: Spinner? = null
+    private var spinnerFinalSound: Spinner? = null
     private var btnStart: MaterialButton? = null
     private var btnStop: MaterialButton? = null
     private var countdownText: TextView? = null
@@ -52,7 +54,9 @@ class VipassanaActivity : AppCompatActivity() {
 
         pickerTotal = findViewById<NumberPicker>(R.id.picker_total_time)
         pickerNotice = findViewById<NumberPicker>(R.id.picker_notice_time)
+        pickerFinalCount = findViewById<NumberPicker>(R.id.picker_vipassana_final_sound_count)
         spinnerSound = findViewById<Spinner>(R.id.spinner_vipassana_sound)
+        spinnerFinalSound = findViewById<Spinner>(R.id.spinner_vipassana_final_sound)
         btnStart = findViewById<MaterialButton>(R.id.btn_vipassana_start)
         btnStop = findViewById<MaterialButton>(R.id.btn_vipassana_stop)
         countdownText = findViewById<TextView>(R.id.countdownText)
@@ -100,6 +104,13 @@ class VipassanaActivity : AppCompatActivity() {
                 .coerceIn(NOTICE_MIN, pickerTotal!!.getValue())
         )
 
+        pickerFinalCount!!.setMinValue(MIN_STROKES)
+        pickerFinalCount!!.setMaxValue(MAX_STROKES)
+        pickerFinalCount!!.setWrapSelectorWheel(false)
+        pickerFinalCount!!.setValue(
+            prefs.getInt(PREF_FINAL_SOUND_COUNT, DEFAULT_STROKES).coerceIn(MIN_STROKES, MAX_STROKES)
+        )
+
         // Notice Time can never exceed Total Time, so each picker pulls the other along
         // rather than refusing the edit: lowering Total drags Notice down with it, and
         // raising Notice past Total raises Total to match.
@@ -122,6 +133,23 @@ class VipassanaActivity : AppCompatActivity() {
             ) {
                 getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                     .edit().putInt(PREF_SOUND_INDEX, position).apply()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
+
+        val savedFinalSound = prefs.getInt(PREF_FINAL_SOUND_INDEX, 0)
+            .coerceIn(0, (soundNames.size - 1).coerceAtLeast(0))
+        spinnerFinalSound!!.setSelection(savedFinalSound)
+        spinnerFinalSound!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                    .edit().putInt(PREF_FINAL_SOUND_INDEX, position).apply()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -169,6 +197,7 @@ class VipassanaActivity : AppCompatActivity() {
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerSound!!.setAdapter(adapter)
+        spinnerFinalSound!!.setAdapter(adapter)
     }
 
     private fun startTimer() {
@@ -176,10 +205,12 @@ class VipassanaActivity : AppCompatActivity() {
 
         val totalMinutes = pickerTotal!!.getValue()
         val noticeMinutes = pickerNotice!!.getValue()
+        val finalSoundCount = pickerFinalCount!!.getValue()
 
         getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
             .putInt(PREF_TOTAL_TIME, totalMinutes)
             .putInt(PREF_NOTICE_TIME, noticeMinutes)
+            .putInt(PREF_FINAL_SOUND_COUNT, finalSoundCount)
             .apply()
 
         handler.removeCallbacksAndMessages(null)
@@ -197,14 +228,17 @@ class VipassanaActivity : AppCompatActivity() {
         // Every stroke is scheduled up front against the moment Start was pressed, so a
         // delayed notice cannot push the ones behind it — the end still lands on time.
         if (noticeMinutes > 0) {
+            val position = spinnerSound!!.getSelectedItemPosition()
             var elapsed = noticeMinutes
             while (elapsed < totalMinutes) {
-                handler.postDelayed({ playSound(1) }, elapsed * MILLIS_PER_MINUTE)
+                handler.postDelayed({ playSound(1, position) }, elapsed * MILLIS_PER_MINUTE)
                 elapsed += noticeMinutes
             }
         }
         handler.postDelayed({
-            playSound(END_STROKES)
+            val position = spinnerFinalSound!!.getSelectedItemPosition()
+
+            playSound(finalSoundCount, position)
             running = false
             applyRunningState()
         }, totalMinutes * MILLIS_PER_MINUTE)
@@ -233,6 +267,7 @@ class VipassanaActivity : AppCompatActivity() {
         pickerTotal!!.setEnabled(!running)
         pickerNotice!!.setEnabled(!running)
         spinnerSound!!.setEnabled(!running)
+        spinnerFinalSound!!.setEnabled(!running)
 
         // Handler delays are measured in uptime, which stops advancing in deep sleep, so the
         // screen has to stay on for the sitting to be timed at all.
@@ -257,8 +292,7 @@ class VipassanaActivity : AppCompatActivity() {
     }
 
     /** Sounds [times] strokes of the selected sound, one after the last has finished. */
-    private fun playSound(times: Int) {
-        val position = spinnerSound!!.getSelectedItemPosition()
+    private fun playSound(times: Int, position: Int) {
         if (position < 0 || position >= soundFiles.size) return
         val fileName = soundFiles[position]
         if (fileName.isBlank()) return
@@ -296,6 +330,8 @@ class VipassanaActivity : AppCompatActivity() {
         private const val PREF_TOTAL_TIME = "totalTime"
         private const val PREF_NOTICE_TIME = "noticeTime"
         private const val PREF_SOUND_INDEX = "soundIndex"
+        private const val PREF_FINAL_SOUND_INDEX = "soundFinalIndex"
+        private const val PREF_FINAL_SOUND_COUNT = "soundFinalcount"
 
         private const val TOTAL_MIN = 1
         private const val TOTAL_MAX = 60
@@ -303,7 +339,9 @@ class VipassanaActivity : AppCompatActivity() {
         private const val DEFAULT_TOTAL = 15
         private const val DEFAULT_NOTICE = 5
 
-        private const val END_STROKES = 3
+        private const val MAX_STROKES = 5
+        private const val MIN_STROKES = 1
+        private const val DEFAULT_STROKES = 3
         private const val MILLIS_PER_MINUTE = 60_000L
 
         private const val SWIPE_THRESHOLD = 100f

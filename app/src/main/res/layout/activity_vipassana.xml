@@ -125,6 +125,32 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_vipassana_final_sound"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp" />
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+                <NumberPicker
+                    android:id="@+id/picker_vipassana_final_sound_count"
+                    style="@style/NumberPickerEditTextStyle"
+                    android:layout_width="50dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginRight="10dp" />
+                <Spinner
+                    android:id="@+id/spinner_vipassana_final_sound"
+                    style="@style/SpinnerStyle" />
+            </LinearLayout>
+
             <!-- ── Start / Stop ─────────────────────────────────────────────── -->
             <View
                 android:layout_width="match_parent"

@@ -44,7 +44,8 @@
     <string name="vipassana_title">Vipassana</string>
     <string name="label_total_time">Total Time</string>
     <string name="label_notice_time">Notice Time</string>
-    <string name="label_vipassana_sound">Sound</string>
+    <string name="label_vipassana_sound">Sound (Notice)</string>
+    <string name="label_vipassana_final_sound">Sound (Final)</string>
     <string name="vipassana_start">Start</string>
     <string name="vipassana_stop">Stop</string>
 

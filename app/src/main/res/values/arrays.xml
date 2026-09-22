@@ -367,9 +367,9 @@
     </string-array>
 
     <array name="vipassana_sound_array">
-        <item>@array/gong_sound</item>
         <item>@array/bell_sound</item>
         <item>@array/bell_2_sound</item>
+        <item>@array/gong_sound</item>
         <item>@array/conch_sound</item>
         <item>@array/conch_2_sound</item>
     </array>
