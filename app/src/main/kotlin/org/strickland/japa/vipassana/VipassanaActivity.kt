@@ -124,36 +124,12 @@ class VipassanaActivity : AppCompatActivity() {
         val savedSound = prefs.getInt(PREF_SOUND_INDEX, 0)
             .coerceIn(0, (soundNames.size - 1).coerceAtLeast(0))
         spinnerSound!!.setSelection(savedSound)
-        spinnerSound!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                    .edit().putInt(PREF_SOUND_INDEX, position).apply()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
+        bindSoundSpinner(spinnerSound!!, PREF_SOUND_INDEX)
 
         val savedFinalSound = prefs.getInt(PREF_FINAL_SOUND_INDEX, 0)
             .coerceIn(0, (soundNames.size - 1).coerceAtLeast(0))
         spinnerFinalSound!!.setSelection(savedFinalSound)
-        spinnerFinalSound!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                    .edit().putInt(PREF_FINAL_SOUND_INDEX, position).apply()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
+        bindSoundSpinner(spinnerFinalSound!!, PREF_FINAL_SOUND_INDEX)
 
         btnStart!!.setOnClickListener(View.OnClickListener { v: View? -> startTimer() })
         btnStop!!.setOnClickListener(View.OnClickListener { v: View? -> stopTimer() })
@@ -198,6 +174,29 @@ class VipassanaActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerSound!!.setAdapter(adapter)
         spinnerFinalSound!!.setAdapter(adapter)
+    }
+
+    /**
+     * Remembers the choice and sounds a single stroke of it, so a sound can be heard before
+     * it is sat with. The selection restored in onCreate arrives as a selection event of its
+     * own once the spinner is first laid out; that one stays silent, since nothing was chosen.
+     */
+    private fun bindSoundSpinner(spinner: Spinner, prefKey: String) {
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            private var restoring = true
+            override fun onItemSelected(parent: AdapterView<*>?,
+                                        view: View?,
+                                        position: Int,
+                                        id: Long ) {
+                getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putInt(prefKey, position).apply()
+                if (restoring) {
+                    restoring = false
+                    return
+                }
+                playSound(1, position)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
     }
 
     private fun startTimer() {

@@ -18,10 +18,12 @@
         android:scaleType="centerCrop"
         android:src="@drawable/aum" />
 
+    <!--
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#66000000" />
+-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -57,7 +59,7 @@
 
                 <NumberPicker
                     android:id="@+id/picker_total_time"
-                    style="@style/NumberPickerEditTextStyle"
+                    style="@style/NumberPickerSmallStyle"
                     android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
@@ -89,7 +91,7 @@
 
                 <NumberPicker
                     android:id="@+id/picker_notice_time"
-                    style="@style/NumberPickerEditTextStyle"
+                    style="@style/NumberPickerSmallStyle"
                     android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
@@ -124,7 +126,11 @@
                     style="@style/SpinnerStyle" />
 
             </LinearLayout>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:background="@color/track_dim" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,7 +148,7 @@
                     android:layout_weight="1" />
                 <NumberPicker
                     android:id="@+id/picker_vipassana_final_sound_count"
-                    style="@style/NumberPickerEditTextStyle"
+                    style="@style/NumberPickerSmallStyle"
                     android:layout_width="50dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="10dp" />
