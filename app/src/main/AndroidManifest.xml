@@ -63,9 +63,16 @@
             android:theme="@style/Theme.Japa"
             android:parentActivityName=".MainActivity" />
 
+        <!--
+            A sitting is timed in the activity, so a recreate would strand its wake lock and
+            its schedule on the instance being thrown away. sensorPortrait still turns the
+            screen over between the two portraits, and there is no layout here worth laying
+            out again for it.
+        -->
         <activity
             android:name=".vipassana.VipassanaActivity"
             android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/vipassana_title"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Japa"
