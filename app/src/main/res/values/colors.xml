@@ -12,8 +12,9 @@
     <!-- Hint / footnote text -->
     <color name="text_hint">#FF606080</color>
 
-    <!-- Accent: warm gold for the progress ring and active elements -->
+    <!-- Accent: warm gold for the progress ring and active elements   A8A9AD? -->
     <color name="accent_gold">#FFC9A84C</color>
+    <color name="accent_silver">#FFE0E0E0</color> <!--   FFAAA9AD -->
 
     <!-- Track colour for the progress ring background -->
     <color name="track_dim">#FF2A2A40</color>

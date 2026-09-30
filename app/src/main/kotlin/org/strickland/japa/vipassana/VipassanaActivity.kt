@@ -14,10 +14,13 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import org.strickland.japa.R
 import java.util.Locale
@@ -44,7 +47,7 @@ class VipassanaActivity : AppCompatActivity() {
     private var btnStart: MaterialButton? = null
     private var btnStop: MaterialButton? = null
     private var countdownText: TextView? = null
-
+    var backgroundImage : ImageView? = null
     // Filled by loadSoundArrays() before either is read; a missing entry is a blank string
     // rather than a null, which keeps the spinner from rendering the word "null".
     private var soundNames: Array<String> = emptyArray()
@@ -59,7 +62,7 @@ class VipassanaActivity : AppCompatActivity() {
     private var startElapsed = 0L
     private var sittingMinutes = 0
     private var wakeLock: PowerManager.WakeLock? = null
-
+    private var meditationControlLayout: LinearLayout? = null
     private var gestureDetector: GestureDetector? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +77,9 @@ class VipassanaActivity : AppCompatActivity() {
         btnStart = findViewById<MaterialButton>(R.id.btn_vipassana_start)
         btnStop = findViewById<MaterialButton>(R.id.btn_vipassana_stop)
         countdownText = findViewById<TextView>(R.id.countdownText)
+        meditationControlLayout = findViewById<LinearLayout>(R.id.meditationcontrols)
+
+        backgroundImage = findViewById<ImageView>(R.id.bg_image_vipassana)
 
         gestureDetector = GestureDetector(this, object : SimpleOnGestureListener() {
             override fun onDown(e: MotionEvent): Boolean {
@@ -317,11 +323,14 @@ class VipassanaActivity : AppCompatActivity() {
             // made sense of; one that never ends leaves the sitter waiting on a bell.
             playSound(finalSoundCount, position)
             running = false
+            meditationControlLayout!!.visibility = View.VISIBLE
             releaseWakeLock()
             applyRunningState()
         }, totalMinutes * MILLIS_PER_MINUTE)
 
         running = true
+        Glide.with(this).load(R.drawable.candle).into(backgroundImage!!)
+        meditationControlLayout!!.visibility = View.INVISIBLE
         applyRunningState()
     }
 
@@ -334,6 +343,8 @@ class VipassanaActivity : AppCompatActivity() {
         // Back to the resting display: a frozen part-way count would read as a sitting still
         // under way.
         showMinutesLeft(0)
+        backgroundImage!!.setImageResource(R.drawable.aum)
+        meditationControlLayout!!.visibility = View.VISIBLE
     }
 
     /**

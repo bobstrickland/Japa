@@ -38,6 +38,11 @@
             android:paddingTop="64dp"
             android:paddingBottom="32dp">
 
+        <LinearLayout
+            android:id="@+id/meditationcontrols"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <!-- ── Total time ───────────────────────────────────────────────── -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_total_time"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/accent_silver"
                     android:textSize="18sp" />
 
                 <Space
@@ -59,8 +64,8 @@
 
                 <NumberPicker
                     android:id="@+id/picker_total_time"
-                    style="@style/NumberPickerSmallStyle"
-                    android:layout_gravity="center_horizontal" />
+                    style="@style/SilverNumberPickerSmallStyle"
+                    android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
 
@@ -81,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_notice_time"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/accent_silver"
                     android:textSize="18sp" />
 
                 <Space
@@ -91,8 +96,8 @@
 
                 <NumberPicker
                     android:id="@+id/picker_notice_time"
-                    style="@style/NumberPickerSmallStyle"
-                    android:layout_gravity="center_horizontal" />
+                    style="@style/SilverNumberPickerSmallStyle"
+                    android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
 
@@ -113,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_vipassana_sound"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/accent_silver"
                     android:textSize="18sp" />
 
                 <Space
@@ -123,7 +128,7 @@
 
                 <Spinner
                     android:id="@+id/spinner_vipassana_sound"
-                    style="@style/SpinnerStyle" />
+                    style="@style/SilverSpinnerStyle"/>
 
             </LinearLayout>
             <View
@@ -140,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_vipassana_final_sound"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/accent_silver"
                     android:textSize="18sp" />
                 <Space
                     android:layout_width="wrap_content"
@@ -148,13 +153,13 @@
                     android:layout_weight="1" />
                 <NumberPicker
                     android:id="@+id/picker_vipassana_final_sound_count"
-                    style="@style/NumberPickerSmallStyle"
+                    style="@style/SilverNumberPickerSmallStyle"
                     android:layout_width="50dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginRight="10dp" />
+                    android:layout_marginRight="10dp"/>
                 <Spinner
                     android:id="@+id/spinner_vipassana_final_sound"
-                    style="@style/SpinnerStyle" />
+                    style="@style/SilverSpinnerStyle"/>
             </LinearLayout>
 
             <!-- ── Start / Stop ─────────────────────────────────────────────── -->
@@ -173,7 +178,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/aum" />
             -->
-
+        </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
@@ -191,7 +196,7 @@
                 android:shadowRadius="4"
                 android:text="00"
                 android:textAlignment="center"
-                android:textColor="@color/accent_gold"
+                android:textColor="@color/accent_silver"
                 android:textSize="52sp"
                 android:textStyle="bold" />
 
@@ -214,10 +219,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/vipassana_start"
-                    android:textColor="@color/accent_gold"
+                    android:textColor="@color/accent_silver"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    app:strokeColor="@color/accent_gold"
+                    app:strokeColor="@color/accent_silver"
                     app:strokeWidth="2dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -227,10 +232,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:text="@string/vipassana_stop"
-                    android:textColor="@color/accent_gold"
+                    android:textColor="@color/accent_silver"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    app:strokeColor="@color/accent_gold"
+                    app:strokeColor="@color/accent_silver"
                     app:strokeWidth="2dp" />
 
             </LinearLayout>

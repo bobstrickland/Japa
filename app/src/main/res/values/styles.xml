@@ -18,7 +18,6 @@
         <item name="android:layout_height">48dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
         <item name="android:layout_gravity">center_horizontal</item> <!-- Optional: Adjust padding to prevent text cutoff -->
         <item name="android:background">@color/accent_gold</item> <!-- Optional: Adjust padding to prevent text cutoff -->
-
     </style>
     <style name="SpinnerStyle">
         <item name="android:textSize">24sp</item> <!-- Desired text size in sp -->
@@ -28,6 +27,25 @@
         <item name="android:layout_height">48dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
         <item name="android:background">@color/accent_gold</item> <!-- Optional: Adjust padding to prevent text cutoff -->
         <item name="android:popupBackground">@color/accent_gold</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:editable">false</item>
+    </style>
+    <style name="SilverNumberPickerSmallStyle">
+        <item name="android:textSize">24sp</item> <!-- Desired text size in sp -->
+        <item name="android:textColor">@color/text_primary</item> <!-- Optional: Custom color -->
+        <item name="android:padding">8dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:layout_width">50dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:layout_height">48dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:layout_gravity">center_horizontal</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:background">@color/accent_silver</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+    </style>
+    <style name="SilverSpinnerStyle">
+        <item name="android:textSize">24sp</item> <!-- Desired text size in sp -->
+        <item name="android:textColor">@color/white</item> <!-- Optional: Custom color -->
+        <item name="android:padding">8dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:layout_width">wrap_content</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:layout_height">48dp</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:background">@color/accent_silver</item> <!-- Optional: Adjust padding to prevent text cutoff -->
+        <item name="android:popupBackground">@color/accent_silver</item> <!-- Optional: Adjust padding to prevent text cutoff -->
         <item name="android:editable">false</item>
     </style>
     <style name="RadioStyle">
