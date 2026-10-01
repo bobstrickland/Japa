@@ -324,6 +324,7 @@ class VipassanaActivity : AppCompatActivity() {
             playSound(finalSoundCount, position)
             running = false
             meditationControlLayout!!.visibility = View.VISIBLE
+            backgroundImage!!.setImageResource(R.drawable.aum)
             releaseWakeLock()
             applyRunningState()
         }, totalMinutes * MILLIS_PER_MINUTE)
@@ -374,6 +375,11 @@ class VipassanaActivity : AppCompatActivity() {
      * number — and in Western digits whatever the device locale would otherwise use.
      */
     private fun showMinutesLeft(minutes: Int) {
+        if (minutes === 0) {
+            countdownText!!.visibility = View.INVISIBLE
+        } else {
+            countdownText!!.visibility = View.VISIBLE
+        }
         countdownText!!.setText(String.format(Locale.US, "%02d", minutes))
     }
 

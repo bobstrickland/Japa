@@ -195,6 +195,7 @@
                 android:shadowDy="1"
                 android:shadowRadius="4"
                 android:text="00"
+                android:visibility="invisible"
                 android:textAlignment="center"
                 android:textColor="@color/accent_silver"
                 android:textSize="52sp"
